@@ -1,3 +1,69 @@
 body {
   margin: 0;
+  font-family: 'Roboto', sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 40px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #fff;
+  border: 3px solid #9FB404;
+  cursor: pointer;
+}
+
+.text {
+
+  &-16 {
+    font-size: 16px;
+  }
+
+  &-18 {
+    font-size: 18px;
+  }
+
+  &-400 {
+    font-weight: 400;
+  }
+
+  &-600 {
+    font-weight: 600;
+  }
+}
+
+.color {
+  &-blue {
+    color: #028bf3;
+  }
+
+  &-white {
+    color: #fff;
+  }
+
+  &-lime {
+    color: #9FB404;
+  }
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.m {
+  &r-40 {
+    margin-right: 40px;
+  }
+
+  &l-20 {
+    margin-left: 20px;
+  }
 }

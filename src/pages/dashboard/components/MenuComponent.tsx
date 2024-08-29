@@ -1,7 +1,23 @@
 // MenuComponent.tsx
-import React, { useState } from 'react';
-import { Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
-import { Home, Person, Settings, Menu as MenuIcon } from '@mui/icons-material';
+import React, { useState } from "react";
+import {
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
+import { Menu as MenuIcon } from "@mui/icons-material";
+import WashIcon from "@mui/icons-material/Wash";
+import LocalCarWashIcon from "@mui/icons-material/LocalCarWash";
+import AssignmentIcon from "@mui/icons-material/Assignment";
+import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
+import LocalParkingIcon from "@mui/icons-material/LocalParking";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
+import { Link } from "react-router-dom";
 import "../styles/dashboard.scss";
 
 const MenuComponent: React.FC = () => {
@@ -14,27 +30,90 @@ const MenuComponent: React.FC = () => {
   return (
     <div>
       <IconButton onClick={toggleDrawer(true)}>
-        <MenuIcon className='color-white'/>
+        <MenuIcon className="color-white" />
       </IconButton>
       <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
-        <List>
-          <ListItem component="li" onClick={toggleDrawer(false)}>
+        <List>  
+          <ListItem
+            className="cursor-pointer"
+            component="li"
+            onClick={toggleDrawer(false)}
+          >
             <ListItemIcon>
-              <Home />
+              <AssignmentIcon className="color-blue" />
             </ListItemIcon>
-            <ListItemText primary="Inicio" />
+            <ListItemText primary="Atenciones" />
           </ListItem>
-          <ListItem component="li" onClick={toggleDrawer(false)}>
+          <Link to="/dashboard/vehicles" onClick={toggleDrawer(false)}>
+            <ListItem
+              className="cursor-pointer"
+              component="li"              
+            >
+              <ListItemIcon>
+                <DirectionsCarIcon className="color-blue" />
+              </ListItemIcon>
+              <ListItemText primary="Vehiculos" />
+            </ListItem>
+          </Link>
+          <ListItem
+            className="cursor-pointer"
+            component="li"
+            onClick={toggleDrawer(false)}
+          >
             <ListItemIcon>
-              <Person />
+              <WashIcon className="color-blue" />
             </ListItemIcon>
-            <ListItemText primary="Perfil" />
+            <ListItemText primary="Lavadores" />
           </ListItem>
-          <ListItem component="li" onClick={toggleDrawer(false)}>
+          <ListItem
+            className="cursor-pointer"
+            component="li"
+            onClick={toggleDrawer(false)}
+          >
             <ListItemIcon>
-              <Settings />
+              <LocalParkingIcon className="color-blue" />
             </ListItemIcon>
-            <ListItemText primary="Configuración" />
+            <ListItemText primary="Parqueos" />
+          </ListItem>
+          <ListItem
+            className="cursor-pointer"
+            component="li"
+            onClick={toggleDrawer(false)}
+          >
+            <ListItemIcon>
+              <ShoppingCartIcon className="color-blue" />
+            </ListItemIcon>
+            <ListItemText primary="Compras" />
+          </ListItem>
+          <ListItem
+            className="cursor-pointer"
+            component="li"
+            onClick={toggleDrawer(false)}
+          >
+            <ListItemIcon>
+              <MonetizationOnIcon className="color-blue" />
+            </ListItemIcon>
+            <ListItemText primary="Gastos" />
+          </ListItem>
+          <ListItem
+            className="cursor-pointer"
+            component="li"
+            onClick={toggleDrawer(false)}
+          >
+            <ListItemIcon>
+              <ShoppingBasketIcon className="color-blue" />
+            </ListItemIcon>
+            <ListItemText primary="Productos" />
+          </ListItem>
+          <ListItem
+            className="cursor-pointer"
+            component="li"
+            onClick={toggleDrawer(false)}
+          >
+            <ListItemIcon>
+              <LocalCarWashIcon className="color-blue" />
+            </ListItemIcon>
+            <ListItemText primary="Servicios" />
           </ListItem>
         </List>
       </Drawer>

@@ -4,6 +4,8 @@ import MenuComponent from "./MenuComponent";
 
 export const Header = () => {
   return (
-    <MenuComponent />
+    <div className="ml-20">
+      <MenuComponent />
+    </div>
   );
-}
+};
