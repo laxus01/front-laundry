@@ -34,16 +34,19 @@ const MenuComponent: React.FC = () => {
       </IconButton>
       <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
         <List>  
-          <ListItem
-            className="cursor-pointer"
-            component="li"
-            onClick={toggleDrawer(false)}
-          >
-            <ListItemIcon>
-              <AssignmentIcon className="color-blue" />
-            </ListItemIcon>
-            <ListItemText primary="Atenciones" />
-          </ListItem>
+
+          <Link to="/dashboard/attentions" onClick={toggleDrawer(false)}>
+            <ListItem
+              className="cursor-pointer"
+              component="li"              
+            >
+              <ListItemIcon>
+                <AssignmentIcon className="color-blue" />
+              </ListItemIcon>
+              <ListItemText primary="Atenciones" />
+            </ListItem>
+          </Link>
+
           <Link to="/dashboard/vehicles" onClick={toggleDrawer(false)}>
             <ListItem
               className="cursor-pointer"
@@ -55,6 +58,7 @@ const MenuComponent: React.FC = () => {
               <ListItemText primary="Vehiculos" />
             </ListItem>
           </Link>
+
           <ListItem
             className="cursor-pointer"
             component="li"
