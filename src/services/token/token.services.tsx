@@ -1,10 +1,10 @@
 const Token = () => {
   // userSettings();
-  if (!localStorage.getItem("token_app")) {
-    localStorage.setItem("token_app", "");
+  if (!localStorage.getItem("token")) {
+    localStorage.setItem("token", "");
     return "";
   }
-  return localStorage.getItem("token_app");
+  return localStorage.getItem("token");
 };
 
 
