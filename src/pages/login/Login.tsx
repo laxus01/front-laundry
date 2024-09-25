@@ -12,7 +12,7 @@ const Login = () => {
     e.preventDefault();
     const response = await login({ user, password });
     if (response) {       
-      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("Authorization", response.data.token);
       navigate("/dashboard");
     }
   };

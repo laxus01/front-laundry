@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Dashboard } from "./pages/dashboard/Dashboard";
-import { Vehicle } from "./pages/vehicles/Vehicle";
+import { Vehicles } from "./pages/vehicles/Vehicles";
 import { Attentions } from "./pages/attentions/Attentions";
 import Login from "./pages/login/Login";
 
@@ -27,7 +27,7 @@ function App() {
         >
           <Route
             path="/dashboard/vehicles"
-            element={<Vehicle />}
+            element={<Vehicles />}
           />
           <Route
             path="/dashboard/attentions"

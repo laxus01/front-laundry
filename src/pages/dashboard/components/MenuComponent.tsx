@@ -55,7 +55,7 @@ const MenuComponent: React.FC = () => {
               <ListItemIcon>
                 <DirectionsCarIcon className="color-blue" />
               </ListItemIcon>
-              <ListItemText primary="Vehiculos" />
+              <ListItemText primary="Vehículos" />
             </ListItem>
           </Link>
 
