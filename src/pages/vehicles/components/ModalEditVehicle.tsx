@@ -11,6 +11,8 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import SaveIcon from '@mui/icons-material/Save';
+
 
 const style = {
   position: "absolute" as "absolute",
@@ -24,26 +26,41 @@ const style = {
 };
 
 interface ModalEditVehicleProps {
+  isEditing: boolean;
   openModal: boolean;
+  handleCreate: () => void;
   handleClose: () => void;
   handleEdit: () => void;
   vehicles: any
 }
 
 const ModalEditVehicle: React.FC<ModalEditVehicleProps> = ({
+  isEditing,
   openModal,
+  handleCreate,
   handleClose,
   handleEdit,
   vehicles,
 }) => {
 
   const { dataVehicle, setDataVehicle } = vehicles;
-
-  const handleChangeTypeVehicle = (event: SelectChangeEvent<number>) => {
-    console.log(event.target.value);
-    
+  const handleChangeTypeVehicle = (event: SelectChangeEvent<number>) => {    
     setDataVehicle({ ...dataVehicle, typeVehicleId: event.target.value });
   };
+
+  const validateButtonCreate = () => {
+    if (dataVehicle.plate === "" || dataVehicle.client === "" || dataVehicle.typeVehicleId === 0) {
+      return true;
+    }
+    return false
+  }
+
+  const validateButtonEdit = () => {
+    if (dataVehicle.plate === "" || dataVehicle.client === "") {
+      return true;
+    }
+    return false
+  }
 
   return (
     <div>
@@ -58,6 +75,13 @@ const ModalEditVehicle: React.FC<ModalEditVehicleProps> = ({
             Editar Vehículo
           </Typography>
           <Box display="flex" flexDirection="column" gap={2} mt={3}>
+            <TextField
+              id="plate"
+              label="Placa"
+              variant="outlined"
+              value={dataVehicle.plate}
+              onChange={(e) => setDataVehicle({ ...dataVehicle, plate: e.target.value })}
+            />
             <FormControl fullWidth>
               <InputLabel id="typeVehicleLabel">Tipo Vehículo</InputLabel>
               <Select
@@ -93,13 +117,18 @@ const ModalEditVehicle: React.FC<ModalEditVehicleProps> = ({
             <Button
               variant="contained"
               color="primary"
-              startIcon={<EditIcon />}
+              startIcon={isEditing ? <EditIcon /> : <SaveIcon />}
+              disabled={isEditing ? validateButtonEdit() : validateButtonCreate()}
               onClick={() => {
+              if (isEditing) {
                 handleEdit();
-                handleClose();
+              } else {
+                handleCreate();
+              }
+              handleClose();
               }}
             >
-              Editar
+              {isEditing ? "Editar" : "Guardar"}
             </Button>
             <Button
               variant="contained"

@@ -9,3 +9,11 @@ export interface Vehicle {
         type: string;
     };
 }
+
+export interface VehicleSelected {
+    id: number;
+    plate: string;
+    client: string;
+    phone: string;
+    typeVehicleId: number;
+}

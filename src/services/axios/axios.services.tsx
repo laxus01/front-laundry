@@ -43,3 +43,13 @@ export const requestPut = async (url: string, data: any) => {
   }
 };
 
+export const requestDelete = async (url: string) => {
+  try {
+    const headers = getHeaders();
+    const res = await axios.delete(url, { headers });
+    return res;
+  } catch (error: any) {
+    throw new Error(error.response.data.message);
+  }
+};
+

@@ -10,6 +10,7 @@ import TableRow from '@mui/material/TableRow';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { Tooltip } from '@mui/material';
 
 interface Column {
   id: string;
@@ -81,12 +82,16 @@ export default function TableComponent({ columns, data, onEdit, onDelete }: Tabl
                       );
                     })}
                     <TableCell key="actions" align="center">
-                      <IconButton onClick={() => onEdit(row)} aria-label="edit">
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton onClick={() => onDelete(row)} aria-label="delete">
-                        <DeleteIcon />
-                      </IconButton>
+                        <Tooltip title="Editar">
+                        <IconButton onClick={() => onEdit(row)} aria-label="edit">
+                          <EditIcon />
+                        </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Eliminar">
+                        <IconButton onClick={() => onDelete(row)} aria-label="delete">
+                          <DeleteIcon />
+                        </IconButton>
+                        </Tooltip>
                     </TableCell>
                   </TableRow>
                 );
