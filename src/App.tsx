@@ -4,6 +4,7 @@ import { Dashboard } from "./pages/dashboard/Dashboard";
 import { Vehicles } from "./pages/vehicles/Vehicles";
 import { Attentions } from "./pages/attentions/Attentions";
 import Login from "./pages/login/Login";
+import { Washers } from "./pages/washers/Washers";
 
 function App() {
   return (
@@ -32,6 +33,10 @@ function App() {
           <Route
             path="/dashboard/attentions"
             element={<Attentions />}
+          />
+          <Route
+            path="/dashboard/washers"
+            element={<Washers />}
           />
         </Route>
       </Routes>

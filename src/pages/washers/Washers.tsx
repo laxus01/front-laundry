@@ -1,22 +1,15 @@
 import { useEffect, useState } from "react";
 import TableComponent from "../../components/TableComponent";
-import {
-  getVehicles,
-  queryCreateVehicleById,
-  queryDeleteVehicleById,
-  queryEditVehicleById,
-} from "./services/Vehicle.services";
-import ModalEditVehicle from "./components/ModalEditVehicle";
-import { Vehicle, VehicleSelected } from "../../interfaces/interfaces";
-import { useVehicles } from "./hooks/useVehicles";
 import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { Tooltip } from "@mui/material";
+import { useWashers } from "./hooks/useWashers";
+import { getWashers, queryCreateWasherById, queryDeleteWasherById, queryEditWasherById } from "./services/Washer.services";
+import { Washer } from "./interfaces/washers";
+import ModalEditWasher from "./components/ModalEditWasher";
 
 const columns = [
-  { id: "plate", label: "Placa", minWidth: 200 },
-  { id: "typeVehicle", label: "Tipo Vehículo", minWidth: 200 },
-  { id: "client", label: "Cliente", minWidth: 200 },
+  { id: "washer", label: "Lavador", minWidth: 200 },
   { id: "phone", label: "Teléfono", minWidth: 200 },
 ];
 
@@ -26,25 +19,22 @@ const styleIconAdd = {
   padding: "20px",
 };
 
-export const Vehicles = () => {
-  const vehicles = useVehicles();
-  const { defaultVehicle, dataVehicle, setDataVehicle } = vehicles;
+export const Washers = () => {
+  const washers = useWashers();
+  const { defaultWasher, dataWasher, setDataWasher } = washers;
 
   const [data, setData] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [modalDelete, setModalDelete] = useState(false);
 
-  const getListVehicles = async () => {
-    const response = await getVehicles();
+  const getListWashers = async () => {
+    const response = await getWashers();
     if (response) {
-      const data = response.data.map((item: Vehicle) => {
+      const data = response.data.map((item: Washer) => {
         return {
           id: item.id,
-          plate: item.plate,
-          typeVehicle: item.typeVehicle.type,
-          typeVehicleId: item.typeVehicle.id,
-          client: item.client,
+          washer: item.washer,
           phone: item.phone,
         };
       });
@@ -54,31 +44,27 @@ export const Vehicles = () => {
 
   const handleCreate = async () => {
     const payload = {
-      plate: dataVehicle.plate,
-      typeVehicleId: dataVehicle.typeVehicleId,
-      client: dataVehicle.client,
-      phone: dataVehicle.phone,
+      washer: dataWasher.washer,
+      phone: dataWasher.phone,
     };
-    const response = await queryCreateVehicleById(payload);
+    const response = await queryCreateWasherById(payload);
     if (response) {
-      getListVehicles();
+      getListWashers();
       setOpenModal(false);
-      setDataVehicle(defaultVehicle);
+      setDataWasher(defaultWasher);
     }
   };
 
   const handleEdit = async () => {
     const payload = {
-      plate: dataVehicle.plate,
-      typeVehicleId: dataVehicle.typeVehicleId,
-      client: dataVehicle.client,
-      phone: dataVehicle.phone,
+      washer: dataWasher.washer,
+      phone: dataWasher.phone,
     };
-    const response = await queryEditVehicleById(dataVehicle.id, payload);
+    const response = await queryEditWasherById(dataWasher.id, payload);
     if (response) {
-      getListVehicles();
+      getListWashers();
       setOpenModal(false);
-      setDataVehicle(defaultVehicle);
+      setDataWasher(defaultWasher);
     }
   };
 
@@ -88,43 +74,43 @@ export const Vehicles = () => {
 
   const openModalCreate = () => {
     setIsEditing(false);
-    setDataVehicle(defaultVehicle);
+    setDataWasher(defaultWasher);
     setOpenModal(true);
   };
 
-  const openModalEdit = (row: VehicleSelected) => {
+  const openModalEdit = (row: Washer) => {
     setIsEditing(true);
-    setDataVehicle(row);
+    setDataWasher(row);
     setOpenModal(true);
   };
 
-  const openModalDelete = (row: VehicleSelected) => {
-    setDataVehicle(row);
+  const openModalDelete = (row: Washer) => {
+    setDataWasher(row);
     setModalDelete(true);
   };
 
   const handleDelete = async () => {
-    const response = await queryDeleteVehicleById(dataVehicle.id);
+    const response = await queryDeleteWasherById(dataWasher.id);
     if (response) {
-      setDataVehicle(defaultVehicle);
-      getListVehicles();
+      setDataWasher(defaultWasher);
+      getListWashers();
       setModalDelete(false);
     }
   };
 
   useEffect(() => {
-    getListVehicles();
+    getListWashers();
   }, []);
 
   return (
     <>
-      <ModalEditVehicle
+      <ModalEditWasher
         isEditing={isEditing}
         openModal={openModal}
         handleCreate={handleCreate}
         handleEdit={handleEdit}
         handleClose={handleClose}
-        vehicles={vehicles}
+        washers={washers}
       />
       <ConfirmDeleteModal
         openModalDelete={modalDelete}
@@ -134,7 +120,7 @@ export const Vehicles = () => {
       <div
         style={styleIconAdd}
       >
-        <h2 className="color-lime">Vehículos</h2>
+        <h2 className="color-lime">Lavadores</h2>
         <div>
           <Tooltip title="Agregar Vehículo">
             <AddCircleIcon

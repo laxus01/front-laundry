@@ -24,19 +24,20 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
   message = "Esta seguro que desea eliminar este registro?",
 }) => {
   return (
-    <Dialog
-      open={openModalDelete}
-      aria-labelledby="confirm-delete-dialog"
-    >
+    <Dialog open={openModalDelete} aria-labelledby="confirm-delete-dialog">
       <DialogTitle id="confirm-delete-dialog">{title}</DialogTitle>
       <DialogContent>
         <DialogContentText>{message}</DialogContentText>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleCloseDelete} color="primary">
+      <DialogActions sx={{ display: "flex", justifyContent: "space-around" }}>
+        <Button
+          onClick={handleCloseDelete}
+          variant="contained"
+          sx={{ bgcolor: "#FF3040", "&:hover": { bgcolor: "#d02636" } }}
+        >
           Cancelar
         </Button>
-        <Button onClick={handleDelete} color="secondary" variant="contained">
+        <Button onClick={handleDelete} color="primary" variant="contained">
           Eliminar
         </Button>
       </DialogActions>

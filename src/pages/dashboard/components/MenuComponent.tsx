@@ -59,6 +59,18 @@ const MenuComponent: React.FC = () => {
             </ListItem>
           </Link>
 
+          <Link to="/dashboard/washers" onClick={toggleDrawer(false)}>
+            <ListItem
+              className="cursor-pointer"
+              component="li"              
+            >
+              <ListItemIcon>
+                <WashIcon className="color-blue" />
+              </ListItemIcon>
+              <ListItemText primary="Lavadores" />
+            </ListItem>
+          </Link>
+
           <ListItem
             className="cursor-pointer"
             component="li"
@@ -69,6 +81,7 @@ const MenuComponent: React.FC = () => {
             </ListItemIcon>
             <ListItemText primary="Lavadores" />
           </ListItem>
+
           <ListItem
             className="cursor-pointer"
             component="li"
@@ -79,6 +92,7 @@ const MenuComponent: React.FC = () => {
             </ListItemIcon>
             <ListItemText primary="Parqueos" />
           </ListItem>
+
           <ListItem
             className="cursor-pointer"
             component="li"
@@ -89,6 +103,7 @@ const MenuComponent: React.FC = () => {
             </ListItemIcon>
             <ListItemText primary="Compras" />
           </ListItem>
+
           <ListItem
             className="cursor-pointer"
             component="li"
@@ -99,6 +114,7 @@ const MenuComponent: React.FC = () => {
             </ListItemIcon>
             <ListItemText primary="Gastos" />
           </ListItem>
+
           <ListItem
             className="cursor-pointer"
             component="li"
@@ -109,6 +125,7 @@ const MenuComponent: React.FC = () => {
             </ListItemIcon>
             <ListItemText primary="Productos" />
           </ListItem>
+
           <ListItem
             className="cursor-pointer"
             component="li"
@@ -119,6 +136,7 @@ const MenuComponent: React.FC = () => {
             </ListItemIcon>
             <ListItemText primary="Servicios" />
           </ListItem>
+
         </List>
       </Drawer>
     </div>
