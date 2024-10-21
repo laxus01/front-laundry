@@ -41,9 +41,6 @@ a {
 }
 
 .color {
-  &-blue {
-    color: #028bf3;
-  }
 
   &-white {
     color: #fff;
@@ -51,6 +48,10 @@ a {
 
   &-lime {
     color: #9FB404;
+  }
+
+  &-dark {
+    color: #333;
   }
 }
 
@@ -65,5 +66,13 @@ a {
 
   &l-20 {
     margin-left: 20px;
+  }
+
+  &t-20 {
+    margin-top: 20px;
+  }
+
+  &b-20 {
+    margin-bottom: 20px;
   }
 }

@@ -17,3 +17,8 @@ export interface VehicleSelected {
     phone: string;
     typeVehicleId: number;
 }
+
+export interface OptionsComboBoxAutoComplete {
+  id: number;
+  name: string;
+}

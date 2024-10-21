@@ -1,6 +1,12 @@
-import { Button, Modal, Box, Typography, TextField } from "@mui/material";
+import { Button, Modal, Box, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
+import ComboBoxAutoComplete from "../../../components/ComboBoxAutoComplete";
+
+const percentage = [
+  { id: 1, name: "40" },
+  { id: 2, name: "35" },
+];
 
 const style = {
   position: "absolute" as "absolute",
@@ -13,30 +19,35 @@ const style = {
   p: 4,
 };
 
-interface ModalEditWasherProps {
+interface ModalAttentionsProps {
+  listVehicles: any;
+  listWashers: any;
   isEditing: boolean;
   openModal: boolean;
   handleCreate: () => void;
   handleClose: () => void;
   handleEdit: () => void;
-  washers: any;
 }
 
-const ModalEditWasher: React.FC<ModalEditWasherProps> = ({
+const ModalAttentions: React.FC<ModalAttentionsProps> = ({
+  listVehicles,
+  listWashers,
   isEditing,
   openModal,
   handleCreate,
   handleClose,
   handleEdit,
-  washers,
 }) => {
-  const { dataWasher, setDataWasher } = washers;
+  const handleSelectVehicle = (id: number) => {
+    console.log("Selected ID:", id);
+  };
 
-  const validateButton = () => {
-    if (dataWasher.washer === "") {
-      return true;
-    }
-    return false;
+  const handleSelectWasher = (id: number) => {
+    console.log("Selected ID:", id);
+  };
+
+  const handleSelectPercentage = (id: number) => {
+    console.log("Selected ID:", id);
   };
 
   return (
@@ -49,41 +60,30 @@ const ModalEditWasher: React.FC<ModalEditWasherProps> = ({
       >
         <Box sx={style}>
           <Typography id="modal-title" variant="h6" component="h2">
-            { isEditing ? 'Editar' : 'Nuevo' } Lavador
+            {isEditing ? "Editar" : "Nueva"} Atención
           </Typography>
           <Box display="flex" flexDirection="column" gap={2} mt={3}>
-            <TextField
-              id="washer"
-              label="Lavador"
-              variant="outlined"
-              value={dataWasher.washer}
-              onChange={(e) =>
-                setDataWasher({ ...dataWasher, washer: e.target.value })
-              }
+            <ComboBoxAutoComplete
+              title="Vehiculo"
+              options={listVehicles}
+              onSelect={handleSelectVehicle}
             />
-            <TextField
-              id="phone"
-              label="Teléfono"
-              variant="outlined"
-              value={dataWasher.phone}
-              onChange={(e) =>
-                setDataWasher({ ...dataWasher, phone: e.target.value })
-              }
+            <ComboBoxAutoComplete
+              title="Lavador"
+              options={listWashers}
+              onSelect={handleSelectWasher}
+            />
+            <ComboBoxAutoComplete
+              title="Porcentaje"
+              options={percentage}
+              onSelect={handleSelectPercentage}
             />
           </Box>
           <Box display="flex" justifyContent="space-around" mt={3}>
             <Button
               variant="contained"
-              onClick={handleClose}
-              sx={{ bgcolor: "#FF3040", "&:hover": { bgcolor: "#d02636" } }}
-            >
-              Cancelar
-            </Button>
-            <Button
-              variant="contained"
               color="primary"
               startIcon={isEditing ? <EditIcon /> : <SaveIcon />}
-              disabled={validateButton()}
               onClick={() => {
                 if (isEditing) {
                   handleEdit();
@@ -95,6 +95,13 @@ const ModalEditWasher: React.FC<ModalEditWasherProps> = ({
             >
               {isEditing ? "Editar" : "Guardar"}
             </Button>
+            <Button
+              variant="contained"
+              onClick={handleClose}
+              sx={{ bgcolor: "#FF3040", "&:hover": { bgcolor: "#d02636" } }}
+            >
+              Cancelar
+            </Button>
           </Box>
         </Box>
       </Modal>
@@ -102,4 +109,4 @@ const ModalEditWasher: React.FC<ModalEditWasherProps> = ({
   );
 };
 
-export default ModalEditWasher;
+export default ModalAttentions;

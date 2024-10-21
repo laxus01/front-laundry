@@ -45,7 +45,7 @@ const Login = () => {
           maxWidth: 400,
         }}
       >
-        <Typography variant="h5" component="h2" color="#028bf3" gutterBottom>
+        <Typography variant="h5" component="h2" color="#000000" gutterBottom>
           Iniciar Sesión
         </Typography>
         <TextField
@@ -73,7 +73,7 @@ const Login = () => {
           fullWidth
           sx={{
             mt: 2,
-            backgroundColor: "#028bf3",
+            backgroundColor: "#999",
             "&:hover": {
               backgroundColor: "#026dc2",
             },

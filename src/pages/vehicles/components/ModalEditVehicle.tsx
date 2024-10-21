@@ -72,7 +72,7 @@ const ModalEditVehicle: React.FC<ModalEditVehicleProps> = ({
       >
         <Box sx={style}>
           <Typography id="modal-title" variant="h6" component="h2">
-            Editar Vehículo
+            { isEditing ? 'Editar' : 'Nuevo' } Vehículo
           </Typography>
           <Box display="flex" flexDirection="column" gap={2} mt={3}>
             <TextField

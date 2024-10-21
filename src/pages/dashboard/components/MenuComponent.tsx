@@ -41,7 +41,7 @@ const MenuComponent: React.FC = () => {
               component="li"              
             >
               <ListItemIcon>
-                <AssignmentIcon className="color-blue" />
+                <AssignmentIcon className="color-dark" />
               </ListItemIcon>
               <ListItemText primary="Atenciones" />
             </ListItem>
@@ -53,7 +53,7 @@ const MenuComponent: React.FC = () => {
               component="li"              
             >
               <ListItemIcon>
-                <DirectionsCarIcon className="color-blue" />
+                <DirectionsCarIcon className="color-dark" />
               </ListItemIcon>
               <ListItemText primary="Vehículos" />
             </ListItem>
@@ -65,7 +65,7 @@ const MenuComponent: React.FC = () => {
               component="li"              
             >
               <ListItemIcon>
-                <WashIcon className="color-blue" />
+                <WashIcon className="color-dark" />
               </ListItemIcon>
               <ListItemText primary="Lavadores" />
             </ListItem>
@@ -77,18 +77,7 @@ const MenuComponent: React.FC = () => {
             onClick={toggleDrawer(false)}
           >
             <ListItemIcon>
-              <WashIcon className="color-blue" />
-            </ListItemIcon>
-            <ListItemText primary="Lavadores" />
-          </ListItem>
-
-          <ListItem
-            className="cursor-pointer"
-            component="li"
-            onClick={toggleDrawer(false)}
-          >
-            <ListItemIcon>
-              <LocalParkingIcon className="color-blue" />
+              <LocalParkingIcon className="color-dark" />
             </ListItemIcon>
             <ListItemText primary="Parqueos" />
           </ListItem>
@@ -99,7 +88,7 @@ const MenuComponent: React.FC = () => {
             onClick={toggleDrawer(false)}
           >
             <ListItemIcon>
-              <ShoppingCartIcon className="color-blue" />
+              <ShoppingCartIcon className="color-dark" />
             </ListItemIcon>
             <ListItemText primary="Compras" />
           </ListItem>
@@ -110,7 +99,7 @@ const MenuComponent: React.FC = () => {
             onClick={toggleDrawer(false)}
           >
             <ListItemIcon>
-              <MonetizationOnIcon className="color-blue" />
+              <MonetizationOnIcon className="color-dark" />
             </ListItemIcon>
             <ListItemText primary="Gastos" />
           </ListItem>
@@ -121,7 +110,7 @@ const MenuComponent: React.FC = () => {
             onClick={toggleDrawer(false)}
           >
             <ListItemIcon>
-              <ShoppingBasketIcon className="color-blue" />
+              <ShoppingBasketIcon className="color-dark" />
             </ListItemIcon>
             <ListItemText primary="Productos" />
           </ListItem>
@@ -132,7 +121,7 @@ const MenuComponent: React.FC = () => {
             onClick={toggleDrawer(false)}
           >
             <ListItemIcon>
-              <LocalCarWashIcon className="color-blue" />
+              <LocalCarWashIcon className="color-dark" />
             </ListItemIcon>
             <ListItemText primary="Servicios" />
           </ListItem>
