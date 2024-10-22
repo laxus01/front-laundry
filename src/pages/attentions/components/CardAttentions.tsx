@@ -3,6 +3,10 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { useState } from "react";
 import TableComponent from "../../../components/TableComponent";
+import { Stack, Tooltip } from "@mui/material";
+import FastfoodIcon from '@mui/icons-material/Fastfood';
+import LocalCarWashIcon from "@mui/icons-material/LocalCarWash";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const columns = [
     { id: "service", label: "Servicio", minWidth: 200 },
@@ -11,6 +15,7 @@ const columns = [
 
   const columns2 = [
     { id: "service", label: "Producto", minWidth: 200 },
+    { id: "cant", label: "Cantidad", minWidth: 200 },
     { id: "value", label: "Valor", minWidth: 200 },
   ];
 
@@ -26,8 +31,8 @@ export const CardAttentions = () => {
     ];
 
     const data2 = [
-        { service: "Lavado de carro", value: "$50.000" },
-        { service: "Lavado de moto", value: "$30.000" },
+        { service: "Lavado de carro", cant: "5", value: "$50.000" },
+        { service: "Lavado de moto", cant: "7", value: "$30.000" },
     ];
 
     const openModalEdit = (row: any) => {
@@ -41,7 +46,30 @@ export const CardAttentions = () => {
   return (
     <div className="card">
       <div className="card-header">
-        <div className="card-title">Vehiculo: SEL598</div>
+        <Stack direction="row" spacing={3} alignItems="center">
+          <div className="card-title">Vehiculo: SEL598</div>
+          <div>
+          <Tooltip title="Agregar Servicio">
+            <LocalCarWashIcon
+              style={{ fontSize: 25, color: "#9FB404", cursor: "pointer" }}
+            />
+          </Tooltip>
+        </div>
+        <div>
+          <Tooltip title="Agregar Producto">
+            <FastfoodIcon             
+              style={{ fontSize: 25, color: "#9FB404", cursor: "pointer" }}
+            />
+          </Tooltip>
+        </div>
+        <div>
+          <Tooltip title="Eliminar Atención">
+            <DeleteIcon             
+              style={{ fontSize: 25, color: "#9FB404", cursor: "pointer" }}
+            />
+          </Tooltip>
+        </div>
+        </Stack>
         <div className="card-date">Total a pagar: $65.000</div>
       </div>
       {stateBody && (
