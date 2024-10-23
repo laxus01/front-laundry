@@ -4,92 +4,139 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { useState } from "react";
 import TableComponent from "../../../components/TableComponent";
 import { Stack, Tooltip } from "@mui/material";
-import FastfoodIcon from '@mui/icons-material/Fastfood';
+import FastfoodIcon from "@mui/icons-material/Fastfood";
 import LocalCarWashIcon from "@mui/icons-material/LocalCarWash";
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from "@mui/icons-material/Delete";
+import ModalServices from "./ModalServices";
+import ModalProducts from "./ModalProducts";
 
-const columns = [
-    { id: "service", label: "Servicio", minWidth: 200 },
-    { id: "value", label: "Valor", minWidth: 200 },
-  ];
+interface Product {
+  productId: number;
+  product: string;
+  cant: string;
+  value: string;
+}
 
-  const columns2 = [
-    { id: "service", label: "Producto", minWidth: 200 },
-    { id: "cant", label: "Cantidad", minWidth: 200 },
-    { id: "value", label: "Valor", minWidth: 200 },
-  ];
+interface Service {
+  serviceId: number;
+  service: string;
+  value: string;
+}
+
+const columnsServices = [
+  { id: "service", label: "Servicio", minWidth: 200 },
+  { id: "value", label: "Valor", minWidth: 200 },
+];
+
+const columnsProducts = [
+  { id: "product", label: "Producto", minWidth: 200 },
+  { id: "cant", label: "Cantidad", minWidth: 200 },
+  { id: "value", label: "Valor", minWidth: 200 },
+];
 
 export const CardAttentions = () => {
   const [stateBody, setStateBody] = useState(false);
+  const [openModalServices, setOpenModalServices] = useState(false);
+  const [openModalProducts, setOpenModalProducts] = useState(false);
+  const [dataServices, setDataServices] = useState<Service[]>([]);
+  const [dataProducts, setDataProducts] = useState<Product[]>([]);
 
   const handleStateBody = () => {
     setStateBody(!stateBody);
   };
 
-    const data = [
-        { service: "Lavado de carro", value: "$50.000" },
-    ];
+  const pushServices = (service: Service) => {
+    setDataServices((prevData) => [...prevData, service]);
+  };
 
-    const data2 = [
-        { service: "Lavado de carro", cant: "5", value: "$50.000" },
-        { service: "Lavado de moto", cant: "7", value: "$30.000" },
-    ];
+  const pushProducts = (product: Product) => {
+    setDataProducts((prevData) => [...prevData, product]);
+  };
 
-    const openModalEdit = (row: any) => {
-      console.log("Edit", row);        
-    };
+  const openModalEdit = (row: any) => {
+    console.log("Edit", row);
+  };
 
-    const openModalDelete = (row: any) => {
-        console.log("Delete", row);
-    };
+  const openModalDelete = (row: any) => {
+    console.log("Delete", row);
+  };
+
+  const handleCloseModalServices = () => {
+    setOpenModalServices(false);
+  };
+
+  const handleCloseModalProducts = () => {
+    setOpenModalProducts(false);
+  };
+
+  const listServices = [{ id: 1, name: "Lavado de auto" }];
+  const listProducts = [{ id: 1, name: "CocaCola" }];
 
   return (
     <div className="card">
+      <ModalServices
+        listServices={listServices}
+        isEditing={false}
+        openModal={openModalServices}
+        handleClose={handleCloseModalServices}
+      />
+      <ModalProducts
+        listProducts={listProducts}
+        isEditing={false}
+        openModal={openModalProducts}
+        handleClose={handleCloseModalProducts}
+      />
       <div className="card-header">
         <Stack direction="row" spacing={3} alignItems="center">
           <div className="card-title">Vehiculo: SEL598</div>
           <div>
-          <Tooltip title="Agregar Servicio">
-            <LocalCarWashIcon
-              style={{ fontSize: 25, color: "#9FB404", cursor: "pointer" }}
-            />
-          </Tooltip>
-        </div>
-        <div>
-          <Tooltip title="Agregar Producto">
-            <FastfoodIcon             
-              style={{ fontSize: 25, color: "#9FB404", cursor: "pointer" }}
-            />
-          </Tooltip>
-        </div>
-        <div>
-          <Tooltip title="Eliminar Atención">
-            <DeleteIcon             
-              style={{ fontSize: 25, color: "#9FB404", cursor: "pointer" }}
-            />
-          </Tooltip>
-        </div>
+            <Tooltip title="Agregar Servicio">
+              <LocalCarWashIcon
+                style={{ fontSize: 25, color: "#9FB404", cursor: "pointer" }}
+                onClick={() => {
+                  setOpenModalServices(true);
+                }}
+              />
+            </Tooltip>
+          </div>
+          <div>
+            <Tooltip title="Agregar Producto">
+              <FastfoodIcon
+                style={{ fontSize: 25, color: "#9FB404", cursor: "pointer" }}
+                onClick={() => {
+                  setOpenModalProducts(true);
+                }}
+              />
+            </Tooltip>
+          </div>
+          <div>
+            <Tooltip title="Eliminar Atención">
+              <DeleteIcon
+                style={{ fontSize: 25, color: "#9FB404", cursor: "pointer" }}
+              />
+            </Tooltip>
+          </div>
         </Stack>
         <div className="card-date">Total a pagar: $65.000</div>
       </div>
       {stateBody && (
         <div className="card-content">
           <div className="card-content-left">
-          <TableComponent
-            columns={columns}
-            data={data}
-            paginationEnabled={false}
-            onEdit={openModalEdit}
-            onDelete={openModalDelete}
+            <TableComponent
+              columns={columnsServices}
+              data={dataServices}
+              paginationEnabled={false}
+              onEdit={openModalEdit}
+              onDelete={openModalDelete}
             />
           </div>
           <div className="card-content-right">
-          <TableComponent
-            columns={columns2}
-            data={data2}
-            paginationEnabled={false}
-            onEdit={openModalEdit}
-            onDelete={openModalDelete}
+            <TableComponent
+              columns={columnsProducts}
+              data={dataProducts}
+              paginationEnabled={false}
+              onEdit={openModalEdit}
+              onDelete={openModalDelete}
             />
           </div>
         </div>
