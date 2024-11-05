@@ -1,7 +1,7 @@
 import "../styles/CardAttentions.scss";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TableComponent from "../../../components/TableComponent";
 import { Stack, Tooltip } from "@mui/material";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
@@ -9,22 +9,10 @@ import LocalCarWashIcon from "@mui/icons-material/LocalCarWash";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ModalServices from "./ModalServices";
 import ModalProducts from "./ModalProducts";
-
-interface Product {
-  productId: number;
-  product: string;
-  cant: string;
-  value: string;
-}
-
-interface Service {
-  serviceId: number;
-  service: string;
-  value: string;
-}
+import { OptionsComboBoxAutoComplete } from "../../../interfaces/interfaces";
 
 const columnsServices = [
-  { id: "service", label: "Servicio", minWidth: 200 },
+  { id: "name", label: "Servicio", minWidth: 200 },
   { id: "value", label: "Valor", minWidth: 200 },
 ];
 
@@ -34,57 +22,77 @@ const columnsProducts = [
   { id: "value", label: "Valor", minWidth: 200 },
 ];
 
+const styleIcon = {
+  fontSize: 25, 
+  color: "#9FB404", 
+  cursor: "pointer",
+}
+
 export const CardAttentions = () => {
   const [stateBody, setStateBody] = useState(false);
-  const [openModalServices, setOpenModalServices] = useState(false);
-  const [openModalProducts, setOpenModalProducts] = useState(false);
-  const [dataServices, setDataServices] = useState<Service[]>([]);
-  const [dataProducts, setDataProducts] = useState<Product[]>([]);
+  const [stateModalServices, setStateModalServices] = useState(false);
+  const [stateModalProducts, setStateModalProducts] = useState(false);
+  const [dataServices, setDataServices] = useState<OptionsComboBoxAutoComplete[]>([]);
 
   const handleStateBody = () => {
     setStateBody(!stateBody);
   };
 
-  const pushServices = (service: Service) => {
-    setDataServices((prevData) => [...prevData, service]);
+  const pushServices = (serviceSelected: any) => {    
+    const currentListServices = localStorage.getItem("currentListServices");
+    if (currentListServices) {
+      const parsedList = JSON.parse(currentListServices);
+      parsedList.push(serviceSelected);
+      localStorage.setItem("currentListServices", JSON.stringify(parsedList));
+    } else {
+      localStorage.setItem("currentListServices", JSON.stringify([serviceSelected]));
+    }
+    setDataServices((prevData) => [...prevData, serviceSelected]);
   };
 
-  const pushProducts = (product: Product) => {
-    setDataProducts((prevData) => [...prevData, product]);
+  //Funciones utilizadas por las tablas
+
+  const deleteService = (row: any) => {
+    setDataServices(dataServices.filter((service: any) => service.uuid !== row.uuid));
+    const currentListServices = localStorage.getItem("currentListServices");
+    if (currentListServices) {
+      const parsedList = JSON.parse(currentListServices);
+      const newList = parsedList.filter((service: any) => service.uuid !== row.uuid);
+      localStorage.setItem("currentListServices", JSON.stringify(newList));
+    }
   };
 
-  const openModalEdit = (row: any) => {
-    console.log("Edit", row);
-  };
-
-  const openModalDelete = (row: any) => {
+  const deleteProduct = (row: any) => {
     console.log("Delete", row);
   };
 
-  const handleCloseModalServices = () => {
-    setOpenModalServices(false);
-  };
+  const listProducts = [{ id: 1, name: "CocaCola", value: "2000" }];
 
-  const handleCloseModalProducts = () => {
-    setOpenModalProducts(false);
-  };
-
-  const listServices = [{ id: 1, name: "Lavado de auto" }];
-  const listProducts = [{ id: 1, name: "CocaCola" }];
+  useEffect(() => {
+    const currentListServices = localStorage.getItem("currentListServices");
+    if (currentListServices) {
+      const parsedList = JSON.parse(currentListServices);
+      setDataServices(parsedList);
+    }
+  }, []);
 
   return (
     <div className="card">
       <ModalServices
-        listServices={listServices}
         isEditing={false}
-        openModal={openModalServices}
-        handleClose={handleCloseModalServices}
+        openModal={stateModalServices}
+        handleClose={()=>{
+          setStateModalServices(false);
+        }}
+        setService={pushServices}
       />
       <ModalProducts
         listProducts={listProducts}
         isEditing={false}
-        openModal={openModalProducts}
-        handleClose={handleCloseModalProducts}
+        openModal={stateModalProducts}
+        handleClose={()=>{
+          setStateModalServices(false);
+        }}
       />
       <div className="card-header">
         <Stack direction="row" spacing={3} alignItems="center">
@@ -92,9 +100,9 @@ export const CardAttentions = () => {
           <div>
             <Tooltip title="Agregar Servicio">
               <LocalCarWashIcon
-                style={{ fontSize: 25, color: "#9FB404", cursor: "pointer" }}
+                style={styleIcon}
                 onClick={() => {
-                  setOpenModalServices(true);
+                  setStateModalServices(true);
                 }}
               />
             </Tooltip>
@@ -102,9 +110,9 @@ export const CardAttentions = () => {
           <div>
             <Tooltip title="Agregar Producto">
               <FastfoodIcon
-                style={{ fontSize: 25, color: "#9FB404", cursor: "pointer" }}
+                style={styleIcon}
                 onClick={() => {
-                  setOpenModalProducts(true);
+                  setStateModalProducts(true);
                 }}
               />
             </Tooltip>
@@ -112,7 +120,7 @@ export const CardAttentions = () => {
           <div>
             <Tooltip title="Eliminar Atención">
               <DeleteIcon
-                style={{ fontSize: 25, color: "#9FB404", cursor: "pointer" }}
+                style={styleIcon}
               />
             </Tooltip>
           </div>
@@ -126,17 +134,18 @@ export const CardAttentions = () => {
               columns={columnsServices}
               data={dataServices}
               paginationEnabled={false}
-              onEdit={openModalEdit}
-              onDelete={openModalDelete}
+              edit={false}
+              onEdit={()=>{}}
+              onDelete={deleteService}
             />
           </div>
           <div className="card-content-right">
             <TableComponent
               columns={columnsProducts}
-              data={dataProducts}
+              data={[]}
               paginationEnabled={false}
-              onEdit={openModalEdit}
-              onDelete={openModalDelete}
+              onEdit={()=>{}}
+              onDelete={deleteProduct}
             />
           </div>
         </div>

@@ -5,8 +5,8 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { Tooltip } from "@mui/material";
 import { useWashers } from "./hooks/useWashers";
 import { getWashers, queryCreateWasherById, queryDeleteWasherById, queryEditWasherById } from "./services/Washer.services";
-import { Washer } from "./interfaces/washers";
 import ModalEditWasher from "./components/ModalEditWasher";
+import { Washer } from "../../interfaces/interfaces";
 
 const columns = [
   { id: "washer", label: "Lavador", minWidth: 200 },

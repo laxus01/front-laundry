@@ -3,9 +3,9 @@ import { getVehicles } from "../vehicles/services/Vehicle.services";
 import {
   OptionsComboBoxAutoComplete,
   Vehicle,
+  Washer,
 } from "../../interfaces/interfaces";
 import { getWashers } from "../washers/services/Washer.services";
-import { Washer } from "../washers/interfaces/washers";
 import { Tooltip } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Divider from "@mui/material/Divider";
@@ -21,13 +21,14 @@ const styleIconAdd = {
 export const Attentions = () => {
   const [openModal, setOpenModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+
   const [listVehicles, setListVehicles] = useState<
     OptionsComboBoxAutoComplete[]
   >([{ id: 0, name: "" }]);
 
-  const [listWashers, setListWashers] = useState<OptionsComboBoxAutoComplete[]>(
-    [{ id: 0, name: "" }]
-  );
+  const [listWashers, setListWashers] = useState<
+    OptionsComboBoxAutoComplete[]
+  >([{ id: 0, name: "" }]);
 
   const getListVehicles = async () => {
     const response = await getVehicles();

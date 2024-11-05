@@ -21,4 +21,26 @@ export interface VehicleSelected {
 export interface OptionsComboBoxAutoComplete {
   id: number;
   name: string;
+  value?: number;
+  client?: string;
+}
+
+export interface Service {
+  uuid: string;
+  id: number;
+  name: string;
+  value: number;
+}
+
+export interface Product {
+  id: number;
+  product: string;
+  cant: string;
+  value: string;
+}
+
+export interface Washer {
+  id: number;
+  washer: string;
+  phone: string;
 }

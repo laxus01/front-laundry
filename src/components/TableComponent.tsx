@@ -23,6 +23,7 @@ interface Column {
 interface TableComponentProps {
   columns: Column[];
   data: any[];
+  edit?: boolean;
   onEdit: (row: any) => void;
   onDelete: (row: any) => void;
   paginationEnabled?: boolean;
@@ -31,6 +32,7 @@ interface TableComponentProps {
 export default function TableComponent({
   columns,
   data,
+  edit = true,
   onEdit,
   onDelete,
   paginationEnabled = true,
@@ -111,11 +113,13 @@ export default function TableComponent({
                     align="center"
                     sx={{ padding: "6px" }}
                   >
-                    <Tooltip title="Editar">
+                    {edit && (
+                      <Tooltip title="Editar">
                       <IconButton onClick={() => onEdit(row)} aria-label="edit">
                         <EditIcon />
                       </IconButton>
                     </Tooltip>
+                    )}
                     <Tooltip title="Eliminar">
                       <IconButton
                         onClick={() => onDelete(row)}
