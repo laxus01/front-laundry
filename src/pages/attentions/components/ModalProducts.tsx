@@ -1,7 +1,10 @@
-import { Button, Modal, Box, Typography } from "@mui/material";
+import { Button, Modal, Box, Typography, TextField } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import ComboBoxAutoComplete from "../../../components/ComboBoxAutoComplete";
+import { useAttentions } from "../hooks/useAttentions";
+import { useEffect, useState } from "react";
+import uuid from "react-uuid";
 
 const style = {
   position: "absolute" as "absolute",
@@ -15,22 +18,46 @@ const style = {
 };
 
 interface ModalProductsProps {
-  listProducts: any;
   isEditing: boolean;
   openModal: boolean;
-  handleClose: () => void;
+  handleClose: () => void;  
+  setProduct: (product: any) => void;
 }
 
 const ModalProducts: React.FC<ModalProductsProps> = ({
-  listProducts,
   isEditing,
   openModal,
   handleClose,
+  setProduct,
 }) => {
-  const handleSelectVehicle = (id: number) => {
-    console.log("Selected ID:", id);
+
+  const { listProducts, getListProducts } = useAttentions();
+  
+  const [valueProduct, setValueProduct] = useState<number>(0);
+  const [quantityProduct, setQuantityProduct] = useState<number>(0);
+  const [productId, setProductId] = useState<number>(0);
+
+  const getInfoProduct = (id: number) => {
+    return listProducts.find(product => product.id === id);
   };
 
+  const handleSelectProduct = (id: number) => {   
+    setProductId(id); 
+    const selectedProduct = getInfoProduct(id);
+    setValueProduct(selectedProduct?.value || 0);  
+  };
+
+  const addToListProducts = () => {
+    const productSelected = listProducts.find(
+      (product) => product.id === productId
+    );
+    const product = {...productSelected, uuid: uuid(), quantity: quantityProduct};
+    setProduct(product);
+  };
+
+  useEffect(() => {
+    getListProducts();
+  }, []);
   
 
   return (
@@ -48,7 +75,25 @@ const ModalProducts: React.FC<ModalProductsProps> = ({
             <ComboBoxAutoComplete
               title="Producto"
               options={listProducts}
-              onSelect={handleSelectVehicle}
+              onSelect={handleSelectProduct}
+            />
+          </Box>
+          <Box display="flex" flexDirection="column" gap={2} mt={3}>
+            <TextField
+              id="Valor"
+              label="value"
+              variant="outlined"
+              value={valueProduct}
+              onChange={(e) => setValueProduct(Number(e.target.value))}
+            />
+          </Box>
+          <Box display="flex" flexDirection="column" gap={2} mt={3}>
+            <TextField
+              id="Cantidad"
+              label="quantity"
+              variant="outlined"
+              value={quantityProduct}
+              onChange={(e) => setQuantityProduct(Number(e.target.value))}
             />
           </Box>
           <Box display="flex" justifyContent="space-around" mt={3}>
@@ -56,7 +101,7 @@ const ModalProducts: React.FC<ModalProductsProps> = ({
               variant="contained"
               color="primary"
               startIcon={isEditing ? <EditIcon /> : <SaveIcon />}
-              
+              onClick={addToListProducts}
             >
               {isEditing ? "Editar" : "Guardar"}
             </Button>

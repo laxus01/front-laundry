@@ -5,4 +5,5 @@ export const environment = {
     vehicles: BASE_URL + "/vehicles",
     washers: BASE_URL + "/washers",
     services: BASE_URL + "/services",
+    products: BASE_URL + "/products",
 };

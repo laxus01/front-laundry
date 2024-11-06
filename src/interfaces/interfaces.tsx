@@ -33,10 +33,23 @@ export interface Service {
 }
 
 export interface Product {
+  uuid: string;
+  id: number;
+  name: string;
+  value: number;
+  quantity: number;
+}
+
+export interface ListServices {
+  id: number;
+  service: string;
+  value: number;
+}
+
+export interface ListProducts {
   id: number;
   product: string;
-  cant: string;
-  value: string;
+  saleValue: number;
 }
 
 export interface Washer {
