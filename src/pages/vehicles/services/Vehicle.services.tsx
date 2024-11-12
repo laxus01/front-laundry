@@ -16,11 +16,3 @@ export const queryEditVehicleById = async (id: number, payload: any) => {
 export const queryDeleteVehicleById = async (id: number) => {
     return await requestDelete(`${environment.vehicles}/${id}`);
 };
-
-export const getServices = async () => {
-    return await requestGet(environment.services);
-}
-
-export const getProducts = async () => {
-    return await requestGet(environment.products);
-}

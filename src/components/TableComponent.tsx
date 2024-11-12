@@ -27,6 +27,7 @@ interface TableComponentProps {
   onEdit: (row: any) => void;
   onDelete: (row: any) => void;
   paginationEnabled?: boolean;
+  emptyDataMessage?: string;
 }
 
 export default function TableComponent({
@@ -36,6 +37,7 @@ export default function TableComponent({
   onEdit,
   onDelete,
   paginationEnabled = true,
+  emptyDataMessage = "",
 }: TableComponentProps) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -56,7 +58,9 @@ export default function TableComponent({
     : data;
 
   return (
-    <Paper sx={{ width: "100%", overflow: "hidden" }}>
+    <>
+    {data.length > 0 ? (
+      <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -147,5 +151,9 @@ export default function TableComponent({
         />
       )}
     </Paper>
+    ) : (
+      <div>{emptyDataMessage}</div>
+    )}
+    </>
   );
 }

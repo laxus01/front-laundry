@@ -24,7 +24,11 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
   message = "Esta seguro que desea eliminar este registro?",
 }) => {
   return (
-    <Dialog open={openModalDelete} aria-labelledby="confirm-delete-dialog">
+    <Dialog
+      open={openModalDelete}
+      aria-labelledby="confirm-delete-dialog"
+      PaperProps={{ sx: { padding: "20px" } }}
+    >
       <DialogTitle id="confirm-delete-dialog">{title}</DialogTitle>
       <DialogContent>
         <DialogContentText>{message}</DialogContentText>

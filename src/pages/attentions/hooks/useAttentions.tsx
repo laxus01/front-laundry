@@ -4,10 +4,8 @@ import {
   ListServices,
   ListProducts,
 } from "../../../interfaces/interfaces";
-import {
-  getProducts,
-  getServices,
-} from "../../vehicles/services/Vehicle.services";
+import { getProducts, getServices } from "../services/Attentions.services";
+import { formatPrice } from "../../../utils/utils";
 
 export const useAttentions = () => {
   const [listServices, setListServices] = useState<
@@ -24,7 +22,7 @@ export const useAttentions = () => {
         return {
           id: item.id,
           name: item.service,
-          value: item.value,
+          value: formatPrice(item.value),
         };
       });
       setListServices(services);
@@ -38,7 +36,7 @@ export const useAttentions = () => {
         return {
           id: item.id,
           name: item.product,
-          value: item.saleValue,
+          value: formatPrice(item.saleValue),
         };
       });
       setListProducts(products);

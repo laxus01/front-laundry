@@ -4,7 +4,6 @@ import SaveIcon from "@mui/icons-material/Save";
 import ComboBoxAutoComplete from "../../../components/ComboBoxAutoComplete";
 import { useEffect, useState } from "react";
 import { useAttentions } from "../hooks/useAttentions";
-import uuid from 'react-uuid';
 
 const style = {
   position: "absolute" as "absolute",
@@ -49,8 +48,7 @@ const ModalServices: React.FC<ModalServicesProps> = ({
     const serviceSelected = listServices.find(
       (service) => service.id === serviceId
     );
-    const service = {...serviceSelected, uuid: uuid()};
-    setService(service);
+    setService(serviceSelected);
   };
 
   useEffect(() => {

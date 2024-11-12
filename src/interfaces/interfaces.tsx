@@ -23,17 +23,16 @@ export interface OptionsComboBoxAutoComplete {
   name: string;
   value?: number;
   client?: string;
+  quantity?: number;
 }
 
 export interface Service {
-  uuid: string;
   id: number;
   name: string;
   value: number;
 }
 
 export interface Product {
-  uuid: string;
   id: number;
   name: string;
   value: number;
@@ -56,4 +55,13 @@ export interface Washer {
   id: number;
   washer: string;
   phone: string;
+}
+
+export interface Attention {
+  attentionId: string;
+  vehicle: OptionsComboBoxAutoComplete;
+  washer: OptionsComboBoxAutoComplete;
+  percentage: number;
+  services: Service[];
+  products: Product[];
 }

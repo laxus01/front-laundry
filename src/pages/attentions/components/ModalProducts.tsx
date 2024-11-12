@@ -4,7 +4,6 @@ import SaveIcon from "@mui/icons-material/Save";
 import ComboBoxAutoComplete from "../../../components/ComboBoxAutoComplete";
 import { useAttentions } from "../hooks/useAttentions";
 import { useEffect, useState } from "react";
-import uuid from "react-uuid";
 
 const style = {
   position: "absolute" as "absolute",
@@ -51,8 +50,7 @@ const ModalProducts: React.FC<ModalProductsProps> = ({
     const productSelected = listProducts.find(
       (product) => product.id === productId
     );
-    const product = {...productSelected, uuid: uuid(), quantity: quantityProduct};
-    setProduct(product);
+    setProduct({...productSelected, quantity: quantityProduct});
   };
 
   useEffect(() => {

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getVehicles } from "../vehicles/services/Vehicle.services";
 import {
+  Attention,
   OptionsComboBoxAutoComplete,
   Vehicle,
   Washer,
@@ -21,6 +22,8 @@ const styleIconAdd = {
 export const Attentions = () => {
   const [openModal, setOpenModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+
+  const [listAttentions, setListAttentions] = useState<Attention[]>([]);
 
   const [listVehicles, setListVehicles] = useState<
     OptionsComboBoxAutoComplete[]
@@ -57,10 +60,6 @@ export const Attentions = () => {
     }
   };
 
-  const handleCreate = async () => {
-    console.log("Create");
-  };
-
   const handleEdit = async () => {
     console.log("Edit");
   };
@@ -74,10 +73,43 @@ export const Attentions = () => {
     setOpenModal(true);
   };
 
+  const deleteAttention = (attentionId: string) => {
+    const currentListAttentions = JSON.parse(
+      localStorage.getItem("currentListAttentions") || "[]"
+    );
+    const newListAttentions = currentListAttentions.filter(
+      (attention: Attention) => attention.attentionId !== attentionId
+    );
+    localStorage.setItem(
+      "currentListAttentions",
+      JSON.stringify(newListAttentions)
+    );
+    setListAttentions(newListAttentions);
+  }
+
+  const setAttention = (attention: any) => {
+    const currentListAttentions = JSON.parse(
+      localStorage.getItem("currentListAttentions") || "[]"
+    );
+    currentListAttentions.push(attention);
+    localStorage.setItem(
+      "currentListAttentions",
+      JSON.stringify(currentListAttentions)
+    );
+    setListAttentions(currentListAttentions);
+  }
+
   useEffect(() => {
     getListVehicles();
     getListWashers();
+    
+    const currentListAttentions = JSON.parse(
+      localStorage.getItem("currentListAttentions") || "[]"
+    );
+    setListAttentions(currentListAttentions);
   }, []);
+
+
   return (
     <>
       <ModalAttentions
@@ -85,9 +117,9 @@ export const Attentions = () => {
         listWashers={listWashers}
         isEditing={isEditing}
         openModal={openModal}
-        handleCreate={handleCreate}
         handleEdit={handleEdit}
         handleClose={handleClose}
+        setAttention={setAttention}
       />
       <div style={styleIconAdd}>
         <h2 className="color-lime">Atenciones</h2>
@@ -102,7 +134,9 @@ export const Attentions = () => {
       </div>
       <Divider />
       <div className="mt-20 mb-20">
-        <CardAttentions />
+        {listAttentions.map((attention) => (
+          <CardAttentions key={attention.attentionId} attention={attention} deleteAttention={deleteAttention} />
+        ))}
       </div>
     </>
   );

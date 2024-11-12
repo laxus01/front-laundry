@@ -2,6 +2,9 @@ import { Button, Modal, Box, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import ComboBoxAutoComplete from "../../../components/ComboBoxAutoComplete";
+import { Vehicle, Washer } from "../../../interfaces/interfaces";
+import { useState } from "react";
+import uuid from "react-uuid";
 
 const percentage = [
   { id: 1, name: "40" },
@@ -24,9 +27,9 @@ interface ModalAttentionsProps {
   listWashers: any;
   isEditing: boolean;
   openModal: boolean;
-  handleCreate: () => void;
   handleClose: () => void;
   handleEdit: () => void;
+  setAttention: (attention: any) => void;
 }
 
 const ModalAttentions: React.FC<ModalAttentionsProps> = ({
@@ -34,20 +37,51 @@ const ModalAttentions: React.FC<ModalAttentionsProps> = ({
   listWashers,
   isEditing,
   openModal,
-  handleCreate,
   handleClose,
   handleEdit,
+  setAttention,
 }) => {
-  const handleSelectVehicle = (id: number) => {
-    console.log("Selected ID:", id);
+  
+  const [vehicleSelected, setVehicleSelected] = useState<Vehicle | null>(null);
+  const [washerSelected, setWasherSelected] = useState<Washer | null>(null);
+  const [percentageValue, setPercentageValue] = useState<number>(0);
+
+  const getInfoVehicle = (id: number) => {
+    return listVehicles.find((vehicle: Vehicle) => vehicle.id === id);
   };
 
+  const getInfoWasher = (id: number) => {
+    return listWashers.find((washer: Washer) => washer.id === id);
+  };
+
+  const getInfoAttentions = () => {
+    const payload = {
+      attentionId: uuid(),
+      vehicle: vehicleSelected,
+      washer: washerSelected,
+      percentage: percentageValue,
+      services: [],
+      products: [],
+    };
+    return payload;
+  }
+
+  const handleSelectVehicle = (id: number) => {   
+    const selectedVehicle = getInfoVehicle(id);
+    setVehicleSelected(selectedVehicle);  
+  };
+  
   const handleSelectWasher = (id: number) => {
-    console.log("Selected ID:", id);
+    const selectedWasher = getInfoWasher(id);
+    setWasherSelected(selectedWasher);
   };
 
-  const handleSelectPercentage = (id: number) => {
-    console.log("Selected ID:", id);
+  const handleSelectPercentage = (value: number) => {
+    setPercentageValue(value);  
+  };
+
+  const handleCreate = () => {
+    setAttention(getInfoAttentions());
   };
 
   return (
