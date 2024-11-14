@@ -12,6 +12,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Divider from "@mui/material/Divider";
 import { CardAttentions } from "./components/CardAttentions";
 import ModalAttentions from "./components/ModalAttentions";
+import { saveAttention, saveListProductsByAttention, saveListServicesByAttention } from "./services/Attentions.services";
 
 const styleIconAdd = {
   display: "flex",
@@ -99,6 +100,39 @@ export const Attentions = () => {
     setListAttentions(currentListAttentions);
   }
 
+  const handleFinish = async (attention: Attention) => {
+
+    const payload = {
+      id: attention.attentionId,
+      vehicle: attention.vehicle,
+      washer: attention.washer,
+      percentage: attention.percentage,
+    };
+
+    const payloadServices = attention.services.map((service: any) => {
+      return {
+        attentionId: attention.attentionId,
+        serviceId: service.id,
+        value: service.value,
+      };
+    });
+
+    const payloadProducts = {
+      attentionId: attention.attentionId,
+      products: attention.products,
+    }
+    
+    try {      
+      const response = await saveAttention(payload);      
+        if(response.data) {
+          saveListServicesByAttention(payloadServices);   
+          //saveListProductsByAttention(payloadProducts);
+        }      
+      } catch (error) {
+        console.error(error);
+      }
+  };
+
   useEffect(() => {
     getListVehicles();
     getListWashers();
@@ -135,7 +169,7 @@ export const Attentions = () => {
       <Divider />
       <div className="mt-20 mb-20">
         {listAttentions.map((attention) => (
-          <CardAttentions key={attention.attentionId} attention={attention} deleteAttention={deleteAttention} />
+          <CardAttentions key={attention.attentionId} attention={attention} deleteAttention={deleteAttention} handleFinish={handleFinish} />
         ))}
       </div>
     </>

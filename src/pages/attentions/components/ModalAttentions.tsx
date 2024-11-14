@@ -7,8 +7,8 @@ import { useState } from "react";
 import uuid from "react-uuid";
 
 const percentage = [
-  { id: 1, name: "40" },
-  { id: 2, name: "35" },
+  { id: 40, name: "40" },
+  { id: 35, name: "35" },
 ];
 
 const style = {

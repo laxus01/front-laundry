@@ -1,5 +1,5 @@
 import { environment } from "../../../env";
-import { requestGet } from "../../../services/axios/axios.services";
+import { requestGet, requestPost } from "../../../services/axios/axios.services";
 
 
 export const getServices = async () => {
@@ -12,4 +12,16 @@ export const getProducts = async () => {
 
 export const getAttentions = async () => {
     return await requestGet(environment.attentions);
+}
+
+export const saveAttention = async (attention: any) => {
+    return await requestPost(environment.attentions, attention);
+}
+
+export const saveListServicesByAttention = async (payload: any) => {
+    return await requestPost(`${environment.attentions}/sales/services`, payload);
+}
+
+export const saveListProductsByAttention = async (payload: any) => {
+    return await requestPost(`${environment.attentions}/sales/products`, payload);
 }

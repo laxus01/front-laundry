@@ -37,11 +37,13 @@ const styleIcon = {
 interface CardAttentionsProps {
   attention: Attention;
   deleteAttention: (atention: string) => void;
+  handleFinish: (attention: any) => void;
 }
 
 export const CardAttentions: React.FC<CardAttentionsProps> = ({
   attention,
   deleteAttention,
+  handleFinish,
 }) => {
   const [stateBody, setStateBody] = useState(false);
   const [stateModalServices, setStateModalServices] = useState(false);
@@ -141,7 +143,8 @@ export const CardAttentions: React.FC<CardAttentionsProps> = ({
   };
 
   const handleFinishAttention = () => {
-    console.log("Finish");
+    handleFinish(attention);
+    setStateFinishModal(false);
   };
 
   return (
