@@ -133,8 +133,6 @@ export const Attentions = () => {
   };
 
   useEffect(() => {
-    console.log("useEffect");
-
     getListVehicles();
     getListWashers();
     setListAttentions(currentAttention());

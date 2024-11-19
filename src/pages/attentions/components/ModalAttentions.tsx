@@ -123,6 +123,15 @@ const ModalAttentions: React.FC<ModalAttentionsProps> = ({
           <Box display="flex" justifyContent="space-around" mt={3}>
             <Button
               variant="contained"
+              onClick={() => {
+                closeModal();
+              }}
+              sx={{ bgcolor: "#FF3040", "&:hover": { bgcolor: "#d02636" } }}
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant="contained"
               color="primary"
               startIcon={isEditing ? <EditIcon /> : <SaveIcon />}
               onClick={() => {
@@ -136,15 +145,6 @@ const ModalAttentions: React.FC<ModalAttentionsProps> = ({
               disabled={!vehicleSelected || !washerSelected || !percentageValue}
             >
               {isEditing ? "Editar" : "Guardar"}
-            </Button>
-            <Button
-              variant="contained"
-              onClick={() => {
-                closeModal();
-              }}
-              sx={{ bgcolor: "#FF3040", "&:hover": { bgcolor: "#d02636" } }}
-            >
-              Cancelar
             </Button>
           </Box>
         </Box>

@@ -124,6 +124,13 @@ const ModalEditVehicle: React.FC<ModalEditVehicleProps> = ({
           <Box display="flex" justifyContent="space-around" mt={3}>
             <Button
               variant="contained"
+              onClick={handleClose}
+              sx={{ bgcolor: "#FF3040", "&:hover": { bgcolor: "#d02636" } }}
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant="contained"
               color="primary"
               startIcon={isEditing ? <EditIcon /> : <SaveIcon />}
               disabled={
@@ -139,13 +146,6 @@ const ModalEditVehicle: React.FC<ModalEditVehicleProps> = ({
               }}
             >
               {isEditing ? "Editar" : "Guardar"}
-            </Button>
-            <Button
-              variant="contained"
-              onClick={handleClose}
-              sx={{ bgcolor: "#FF3040", "&:hover": { bgcolor: "#d02636" } }}
-            >
-              Cancelar
             </Button>
           </Box>
         </Box>

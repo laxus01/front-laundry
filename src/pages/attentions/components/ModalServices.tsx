@@ -91,21 +91,21 @@ const ModalServices: React.FC<ModalServicesProps> = ({
           <Box display="flex" justifyContent="space-around" mt={3}>
             <Button
               variant="contained"
-              color="primary"
-              onClick={addToListServices}
-              startIcon={isEditing ? <EditIcon /> : <SaveIcon />}
-              disabled={!serviceId || !valueService}
-            >
-              {isEditing ? "Editar" : "Guardar"}
-            </Button>
-            <Button
-              variant="contained"
               onClick={() => {
                 closeModal();
               }}
               sx={{ bgcolor: "#FF3040", "&:hover": { bgcolor: "#d02636" } }}
             >
               Cancelar
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={addToListServices}
+              startIcon={isEditing ? <EditIcon /> : <SaveIcon />}
+              disabled={!serviceId || !valueService}
+            >
+              {isEditing ? "Editar" : "Guardar"}
             </Button>
           </Box>
         </Box>

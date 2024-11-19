@@ -103,21 +103,21 @@ const ModalProducts: React.FC<ModalProductsProps> = ({
           <Box display="flex" justifyContent="space-around" mt={3}>
             <Button
               variant="contained"
-              color="primary"
-              startIcon={isEditing ? <EditIcon /> : <SaveIcon />}
-              onClick={addToListProducts}
-              disabled={!productId || !quantityProduct || !valueProduct}
-            >
-              {isEditing ? "Editar" : "Guardar"}
-            </Button>
-            <Button
-              variant="contained"
               onClick={() => {
                 closeModal();
               }}
               sx={{ bgcolor: "#FF3040", "&:hover": { bgcolor: "#d02636" } }}
             >
               Cancelar
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={isEditing ? <EditIcon /> : <SaveIcon />}
+              onClick={addToListProducts}
+              disabled={!productId || !quantityProduct || !valueProduct}
+            >
+              {isEditing ? "Editar" : "Guardar"}
             </Button>
           </Box>
         </Box>
