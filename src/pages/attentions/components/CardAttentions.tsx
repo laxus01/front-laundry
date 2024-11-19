@@ -51,13 +51,13 @@ export const CardAttentions: React.FC<CardAttentionsProps> = ({
   const [stateDeleteModal, setStateDeleteModal] = useState(false);
   const [stateFinishModal, setStateFinishModal] = useState(false);
 
-  const [dataServices, setDataServices] = useState<
-    OptionsComboBoxAutoComplete[]
-  >(attention.services);
+  const [dataServices, setDataServices] = useState<Array<any>>(
+    attention.services
+  );
 
-  const [dataProducts, setDataProducts] = useState<
-    OptionsComboBoxAutoComplete[]
-  >(attention.products);
+  const [dataProducts, setDataProducts] = useState<Array<any>>(
+    attention.products
+  );
 
   const handleStateBody = () => {
     setStateBody(!stateBody);

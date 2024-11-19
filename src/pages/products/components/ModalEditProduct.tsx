@@ -1,6 +1,7 @@
 import { Button, Modal, Box, Typography, TextField } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
+import { formatPrice } from "../../../utils/utils";
 
 const style = {
   position: "absolute" as "absolute",
@@ -13,24 +14,24 @@ const style = {
   p: 4,
 };
 
-interface ModalEditWasherProps {
+interface ModalEditProductProps {
   isEditing: boolean;
   openModal: boolean;
   handleCreate: () => void;
   handleClose: () => void;
   handleEdit: () => void;
-  washers: any;
+  products: any;
 }
 
-const ModalEditWasher: React.FC<ModalEditWasherProps> = ({
+const ModalEditProduct: React.FC<ModalEditProductProps> = ({
   isEditing,
   openModal,
   handleCreate,
   handleClose,
   handleEdit,
-  washers,
+  products,
 }) => {
-  const { dataWasher, setDataWasher } = washers;
+  const { dataProduct, setDataProduct } = products;
 
   return (
     <div>
@@ -42,25 +43,52 @@ const ModalEditWasher: React.FC<ModalEditWasherProps> = ({
       >
         <Box sx={style}>
           <Typography id="modal-title" variant="h6" component="h2">
-            {isEditing ? "Editar" : "Nuevo"} Lavador
+            {isEditing ? "Editar" : "Nuevo"} Producto
           </Typography>
           <Box display="flex" flexDirection="column" gap={2} mt={3}>
             <TextField
-              id="washer"
-              label="Lavador"
+              id="product"
+              label="Producto"
               variant="outlined"
-              value={dataWasher.washer}
+              value={dataProduct.product}
               onChange={(e) =>
-                setDataWasher({ ...dataWasher, washer: e.target.value })
+                setDataProduct({ ...dataProduct, product: e.target.value })
               }
             />
             <TextField
-              id="phone"
-              label="Teléfono"
+              id="valueBuys"
+              label="Valor de Compra"
               variant="outlined"
-              value={dataWasher.phone}
+              value={dataProduct.valueBuys}
               onChange={(e) =>
-                setDataWasher({ ...dataWasher, phone: e.target.value })
+                setDataProduct({
+                  ...dataProduct,
+                  valueBuys: formatPrice(Number(e.target.value)),
+                })
+              }
+            />
+            <TextField
+              id="saleValue"
+              label="Valor de Venta"
+              variant="outlined"
+              value={dataProduct.saleValue}
+              onChange={(e) =>
+                setDataProduct({
+                  ...dataProduct,
+                  saleValue: formatPrice(Number(e.target.value)),
+                })
+              }
+            />
+            <TextField
+              id="existence"
+              label="Existencia"
+              variant="outlined"
+              value={dataProduct.existence}
+              onChange={(e) =>
+                setDataProduct({
+                  ...dataProduct,
+                  existence: formatPrice(Number(e.target.value)),
+                })
               }
             />
           </Box>
@@ -76,7 +104,12 @@ const ModalEditWasher: React.FC<ModalEditWasherProps> = ({
               variant="contained"
               color="primary"
               startIcon={isEditing ? <EditIcon /> : <SaveIcon />}
-              disabled={!dataWasher.washer || !dataWasher.phone}
+              disabled={
+                dataProduct.product === "" ||
+                dataProduct.valueBuys === 0 ||
+                dataProduct.saleValue === 0 ||
+                dataProduct.existence === 0
+              }
               onClick={() => {
                 if (isEditing) {
                   handleEdit();
@@ -95,4 +128,4 @@ const ModalEditWasher: React.FC<ModalEditWasherProps> = ({
   );
 };
 
-export default ModalEditWasher;
+export default ModalEditProduct;

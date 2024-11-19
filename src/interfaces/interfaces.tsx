@@ -34,9 +34,10 @@ export interface Service {
 
 export interface Product {
   id: string;
-  name: string;
-  value: number;
-  quantity: number;
+  product: string;
+  valueBuys: number;
+  saleValue: number;
+  existence: number;
 }
 
 export interface ListServices {
@@ -58,6 +59,8 @@ export interface Washer {
   washer: string;
   phone: string;
 }
+
+//export interface Product {
 
 export interface Attention {
   attentionId: string;

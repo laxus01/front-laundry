@@ -97,8 +97,8 @@ export const Attentions = () => {
 
     const payload = {
       id: attentionId,
-      vehicle: newListAttentions.vehicle,
-      washer: newListAttentions.washer,
+      vehicleId: newListAttentions.vehicle.id,
+      washerId: newListAttentions.washer.id,
       percentage: newListAttentions.percentage,
     };
 

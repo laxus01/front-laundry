@@ -156,6 +156,7 @@ export default function TableComponent({
               page={page}
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
+              labelRowsPerPage="Filas por página"
             />
           )}
         </Paper>
