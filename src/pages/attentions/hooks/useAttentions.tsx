@@ -10,10 +10,10 @@ import { formatPrice } from "../../../utils/utils";
 export const useAttentions = () => {
   const [listServices, setListServices] = useState<
     OptionsComboBoxAutoComplete[]
-  >([{ id: 0, name: "" }]);
+  >([{ id: "", name: "" }]);
   const [listProducts, setListProducts] = useState<
     OptionsComboBoxAutoComplete[]
-  >([{ id: 0, name: "" }]);
+  >([{ id: "", name: "" }]);
 
   const getListServices = async () => {
     const response = await getServices();

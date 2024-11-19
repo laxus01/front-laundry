@@ -1,67 +1,67 @@
 .card {
-    margin-top: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  padding: 20px;
+  transition: all 0.3s;
+  cursor: pointer;
+  &:hover {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  }
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
-    padding: 20px;
-    transition: all 0.3s;
-    cursor: pointer;
-    &:hover {
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    .card-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #333;
     }
-    .card-header {
+    .card-date {
+      font-size: 16px;
+      color: #999;
+    }
+  }
+  .card-content {
+    font-size: 16px;
+    color: #666;
+    display: flex;
+
+    &-left {
+      width: 50%;
+      padding: 20px 20px 20px 0;
+    }
+
+    &-right {
+      width: 50%;
+      padding: 20px 0 20px 20px;
+    }
+  }
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    .card-author {
+      font-size: 16px;
+      color: #999;
+    }
+    .card-actions {
+      display: flex;
+      align-items: center;
+      .card-action {
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        margin-bottom: 20px;
-        .card-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: #333;
-        }
-        .card-date {
-            font-size: 16px;
-            color: #999;
-        }
-    }
-    .card-content {
+        margin-right: 10px;
         font-size: 16px;
-        color: #666;
-        display: flex;
-
-        &-left {
-            width: 50%;
-            padding: 20px 20px 20px 0;
+        color: #999;
+        svg {
+          margin-right: 5px;
         }
-
-        &-right {
-            width: 50%;    
-            padding: 20px 0 20px 20px;        
-        }
+      }
     }
-    .card-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 20px;
-        .card-author {
-            font-size: 16px;
-            color: #999;
-        }
-        .card-actions {
-            display: flex;
-            align-items: center;
-            .card-action {
-                display: flex;
-                align-items: center;
-                margin-right: 10px;
-                font-size: 16px;
-                color: #999;
-                svg {
-                    margin-right: 5px;
-                }
-            }
-        }
-    }
+  }
 }

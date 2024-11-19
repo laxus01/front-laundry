@@ -12,7 +12,11 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Divider from "@mui/material/Divider";
 import { CardAttentions } from "./components/CardAttentions";
 import ModalAttentions from "./components/ModalAttentions";
-import { saveAttention, saveListProductsByAttention, saveListServicesByAttention } from "./services/Attentions.services";
+import {
+  saveAttention,
+  saveListProductsByAttention,
+  saveListServicesByAttention,
+} from "./services/Attentions.services";
 
 const styleIconAdd = {
   display: "flex",
@@ -28,11 +32,11 @@ export const Attentions = () => {
 
   const [listVehicles, setListVehicles] = useState<
     OptionsComboBoxAutoComplete[]
-  >([{ id: 0, name: "" }]);
+  >([{ id: "", name: "" }]);
 
-  const [listWashers, setListWashers] = useState<
-    OptionsComboBoxAutoComplete[]
-  >([{ id: 0, name: "" }]);
+  const [listWashers, setListWashers] = useState<OptionsComboBoxAutoComplete[]>(
+    [{ id: "", name: "" }]
+  );
 
   const getListVehicles = async () => {
     const response = await getVehicles();
@@ -61,88 +65,80 @@ export const Attentions = () => {
     }
   };
 
-  const handleEdit = async () => {
-    console.log("Edit");
-  };
-
-  const handleClose = () => {
-    setOpenModal(false);
-  };
-
   const openModalCreate = () => {
     setIsEditing(false);
     setOpenModal(true);
   };
 
-  const deleteAttention = (attentionId: string) => {
-    const currentListAttentions = JSON.parse(
-      localStorage.getItem("currentListAttentions") || "[]"
-    );
+  const updateCurrentListAttentions = (attentions: any) => {
+    localStorage.setItem("currentListAttentions", JSON.stringify(attentions));
+    setListAttentions(attentions);
+  };
+
+  const deleteAttention = async (attentionId: string) => {
+    const currentListAttentions = currentAttention();
     const newListAttentions = currentListAttentions.filter(
       (attention: Attention) => attention.attentionId !== attentionId
     );
-    localStorage.setItem(
-      "currentListAttentions",
-      JSON.stringify(newListAttentions)
-    );
-    setListAttentions(newListAttentions);
-  }
+    updateCurrentListAttentions(newListAttentions);
+  };
 
   const setAttention = (attention: any) => {
-    const currentListAttentions = JSON.parse(
-      localStorage.getItem("currentListAttentions") || "[]"
-    );
+    const currentListAttentions = currentAttention();
     currentListAttentions.push(attention);
-    localStorage.setItem(
-      "currentListAttentions",
-      JSON.stringify(currentListAttentions)
-    );
-    setListAttentions(currentListAttentions);
-  }
+    updateCurrentListAttentions(currentListAttentions);
+  };
 
-  const handleFinish = async (attention: Attention) => {
+  const handleFinish = async (attentionId: string) => {
+    const currentListAttentions = currentAttention();
+    const newListAttentions = currentListAttentions.find(
+      (att: Attention) => att.attentionId === attentionId
+    );
 
     const payload = {
-      id: attention.attentionId,
-      vehicle: attention.vehicle,
-      washer: attention.washer,
-      percentage: attention.percentage,
+      id: attentionId,
+      vehicle: newListAttentions.vehicle,
+      washer: newListAttentions.washer,
+      percentage: newListAttentions.percentage,
     };
 
-    const payloadServices = attention.services.map((service: any) => {
-      return {
-        attentionId: attention.attentionId,
-        serviceId: service.id,
-        value: service.value,
-      };
-    });
+    const payloadServices = newListAttentions.services.map((service: any) => ({
+      attentionId: attentionId,
+      serviceId: service.id,
+      value: service.value,
+    }));
 
-    const payloadProducts = {
-      attentionId: attention.attentionId,
-      products: attention.products,
-    }
-    
-    try {      
-      const response = await saveAttention(payload);      
-        if(response.data) {
-          saveListServicesByAttention(payloadServices);   
-          //saveListProductsByAttention(payloadProducts);
-        }      
-      } catch (error) {
-        console.error(error);
+    const payloadProducts = newListAttentions.products.map((product: any) => ({
+      attentionId: attentionId,
+      productId: product.id,
+      quantity: product.quantity,
+    }));
+
+    try {
+      const response = await saveAttention(payload);
+      if (response.data) {
+        await Promise.all([
+          saveListServicesByAttention(payloadServices),
+          saveListProductsByAttention(payloadProducts),
+        ]);
+        await deleteAttention(attentionId);
       }
+    } catch (error) {
+      console.error("Error saving attention:", error);
+    }
+  };
+
+  const currentAttention = () => {
+    return JSON.parse(localStorage.getItem("currentListAttentions") || "[]");
   };
 
   useEffect(() => {
+    console.log("useEffect");
+
     getListVehicles();
     getListWashers();
-    
-    const currentListAttentions = JSON.parse(
-      localStorage.getItem("currentListAttentions") || "[]"
-    );
-    setListAttentions(currentListAttentions);
+    setListAttentions(currentAttention());
   }, []);
-
 
   return (
     <>
@@ -151,8 +147,10 @@ export const Attentions = () => {
         listWashers={listWashers}
         isEditing={isEditing}
         openModal={openModal}
-        handleEdit={handleEdit}
-        handleClose={handleClose}
+        handleEdit={() => {}}
+        handleClose={() => {
+          setOpenModal(false);
+        }}
         setAttention={setAttention}
       />
       <div style={styleIconAdd}>
@@ -169,7 +167,12 @@ export const Attentions = () => {
       <Divider />
       <div className="mt-20 mb-20">
         {listAttentions.map((attention) => (
-          <CardAttentions key={attention.attentionId} attention={attention} deleteAttention={deleteAttention} handleFinish={handleFinish} />
+          <CardAttentions
+            key={attention.attentionId}
+            attention={attention}
+            deleteAttention={deleteAttention}
+            handleFinish={handleFinish}
+          />
         ))}
       </div>
     </>

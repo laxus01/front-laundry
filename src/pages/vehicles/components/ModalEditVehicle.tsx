@@ -11,8 +11,7 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import SaveIcon from '@mui/icons-material/Save';
-
+import SaveIcon from "@mui/icons-material/Save";
 
 const style = {
   position: "absolute" as "absolute",
@@ -31,7 +30,7 @@ interface ModalEditVehicleProps {
   handleCreate: () => void;
   handleClose: () => void;
   handleEdit: () => void;
-  vehicles: any
+  vehicles: any;
 }
 
 const ModalEditVehicle: React.FC<ModalEditVehicleProps> = ({
@@ -42,25 +41,28 @@ const ModalEditVehicle: React.FC<ModalEditVehicleProps> = ({
   handleEdit,
   vehicles,
 }) => {
-
   const { dataVehicle, setDataVehicle } = vehicles;
-  const handleChangeTypeVehicle = (event: SelectChangeEvent<number>) => {    
+  const handleChangeTypeVehicle = (event: SelectChangeEvent<number>) => {
     setDataVehicle({ ...dataVehicle, typeVehicleId: event.target.value });
   };
 
   const validateButtonCreate = () => {
-    if (dataVehicle.plate === "" || dataVehicle.client === "" || dataVehicle.typeVehicleId === 0) {
+    if (
+      dataVehicle.plate === "" ||
+      dataVehicle.client === "" ||
+      dataVehicle.typeVehicleId === 0
+    ) {
       return true;
     }
-    return false
-  }
+    return false;
+  };
 
   const validateButtonEdit = () => {
     if (dataVehicle.plate === "" || dataVehicle.client === "") {
       return true;
     }
-    return false
-  }
+    return false;
+  };
 
   return (
     <div>
@@ -72,7 +74,7 @@ const ModalEditVehicle: React.FC<ModalEditVehicleProps> = ({
       >
         <Box sx={style}>
           <Typography id="modal-title" variant="h6" component="h2">
-            { isEditing ? 'Editar' : 'Nuevo' } Vehículo
+            {isEditing ? "Editar" : "Nuevo"} Vehículo
           </Typography>
           <Box display="flex" flexDirection="column" gap={2} mt={3}>
             <TextField
@@ -80,7 +82,9 @@ const ModalEditVehicle: React.FC<ModalEditVehicleProps> = ({
               label="Placa"
               variant="outlined"
               value={dataVehicle.plate}
-              onChange={(e) => setDataVehicle({ ...dataVehicle, plate: e.target.value })}
+              onChange={(e) =>
+                setDataVehicle({ ...dataVehicle, plate: e.target.value })
+              }
             />
             <FormControl fullWidth>
               <InputLabel id="typeVehicleLabel">Tipo Vehículo</InputLabel>
@@ -103,14 +107,18 @@ const ModalEditVehicle: React.FC<ModalEditVehicleProps> = ({
               label="Cliente"
               variant="outlined"
               value={dataVehicle.client}
-              onChange={(e) => setDataVehicle({ ...dataVehicle, client: e.target.value })}
+              onChange={(e) =>
+                setDataVehicle({ ...dataVehicle, client: e.target.value })
+              }
             />
             <TextField
               id="phone"
               label="Teléfono"
               variant="outlined"
               value={dataVehicle.phone}
-              onChange={(e) => setDataVehicle({ ...dataVehicle, phone: e.target.value })}
+              onChange={(e) =>
+                setDataVehicle({ ...dataVehicle, phone: e.target.value })
+              }
             />
           </Box>
           <Box display="flex" justifyContent="space-around" mt={3}>
@@ -118,14 +126,16 @@ const ModalEditVehicle: React.FC<ModalEditVehicleProps> = ({
               variant="contained"
               color="primary"
               startIcon={isEditing ? <EditIcon /> : <SaveIcon />}
-              disabled={isEditing ? validateButtonEdit() : validateButtonCreate()}
-              onClick={() => {
-              if (isEditing) {
-                handleEdit();
-              } else {
-                handleCreate();
+              disabled={
+                isEditing ? validateButtonEdit() : validateButtonCreate()
               }
-              handleClose();
+              onClick={() => {
+                if (isEditing) {
+                  handleEdit();
+                } else {
+                  handleCreate();
+                }
+                handleClose();
               }}
             >
               {isEditing ? "Editar" : "Guardar"}

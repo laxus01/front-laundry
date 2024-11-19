@@ -19,7 +19,7 @@ const style = {
 interface ModalProductsProps {
   isEditing: boolean;
   openModal: boolean;
-  handleClose: () => void;  
+  handleClose: () => void;
   setProduct: (product: any) => void;
 }
 
@@ -29,34 +29,40 @@ const ModalProducts: React.FC<ModalProductsProps> = ({
   handleClose,
   setProduct,
 }) => {
-
   const { listProducts, getListProducts } = useAttentions();
-  
+
   const [valueProduct, setValueProduct] = useState<number>(0);
   const [quantityProduct, setQuantityProduct] = useState<number>(0);
-  const [productId, setProductId] = useState<number>(0);
+  const [productId, setProductId] = useState<string>("");
 
-  const getInfoProduct = (id: number) => {
-    return listProducts.find(product => product.id === id);
+  const getInfoProduct = (id: string) => {
+    return listProducts.find((product) => product.id === id);
   };
 
-  const handleSelectProduct = (id: number) => {   
-    setProductId(id); 
+  const handleSelectProduct = (id: string) => {
+    setProductId(id);
     const selectedProduct = getInfoProduct(id);
-    setValueProduct(selectedProduct?.value || 0);  
+    setValueProduct(selectedProduct?.value || 0);
   };
 
   const addToListProducts = () => {
     const productSelected = listProducts.find(
       (product) => product.id === productId
     );
-    setProduct({...productSelected, quantity: quantityProduct});
+    setProduct({ ...productSelected, quantity: quantityProduct });
+    closeModal();
+  };
+
+  const closeModal = () => {
+    setProductId("");
+    setValueProduct(0);
+    setQuantityProduct(0);
+    handleClose();
   };
 
   useEffect(() => {
     getListProducts();
   }, []);
-  
 
   return (
     <div>
@@ -67,7 +73,7 @@ const ModalProducts: React.FC<ModalProductsProps> = ({
       >
         <Box sx={style}>
           <Typography id="modal-title" variant="h6" component="h2">
-            {isEditing ? "Editar Venta" : "Vender Producto"} 
+            {isEditing ? "Editar Venta" : "Vender Producto"}
           </Typography>
           <Box display="flex" flexDirection="column" gap={2} mt={3}>
             <ComboBoxAutoComplete
@@ -100,12 +106,15 @@ const ModalProducts: React.FC<ModalProductsProps> = ({
               color="primary"
               startIcon={isEditing ? <EditIcon /> : <SaveIcon />}
               onClick={addToListProducts}
+              disabled={!productId || !quantityProduct || !valueProduct}
             >
               {isEditing ? "Editar" : "Guardar"}
             </Button>
             <Button
               variant="contained"
-              onClick={() => {handleClose()}}
+              onClick={() => {
+                closeModal();
+              }}
               sx={{ bgcolor: "#FF3040", "&:hover": { bgcolor: "#d02636" } }}
             >
               Cancelar

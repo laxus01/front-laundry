@@ -26,18 +26,9 @@ function App() {
             </Suspense>
           }
         >
-          <Route
-            path="/dashboard/vehicles"
-            element={<Vehicles />}
-          />
-          <Route
-            path="/dashboard/attentions"
-            element={<Attentions />}
-          />
-          <Route
-            path="/dashboard/washers"
-            element={<Washers />}
-          />
+          <Route path="/dashboard/vehicles" element={<Vehicles />} />
+          <Route path="/dashboard/attentions" element={<Attentions />} />
+          <Route path="/dashboard/washers" element={<Washers />} />
         </Route>
       </Routes>
     </BrowserRouter>

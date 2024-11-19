@@ -33,13 +33,9 @@ const MenuComponent: React.FC = () => {
         <MenuIcon className="color-white" />
       </IconButton>
       <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
-        <List>  
-
+        <List>
           <Link to="/dashboard/attentions" onClick={toggleDrawer(false)}>
-            <ListItem
-              className="cursor-pointer"
-              component="li"              
-            >
+            <ListItem className="cursor-pointer" component="li">
               <ListItemIcon>
                 <AssignmentIcon className="color-dark" />
               </ListItemIcon>
@@ -48,10 +44,7 @@ const MenuComponent: React.FC = () => {
           </Link>
 
           <Link to="/dashboard/vehicles" onClick={toggleDrawer(false)}>
-            <ListItem
-              className="cursor-pointer"
-              component="li"              
-            >
+            <ListItem className="cursor-pointer" component="li">
               <ListItemIcon>
                 <DirectionsCarIcon className="color-dark" />
               </ListItemIcon>
@@ -60,10 +53,7 @@ const MenuComponent: React.FC = () => {
           </Link>
 
           <Link to="/dashboard/washers" onClick={toggleDrawer(false)}>
-            <ListItem
-              className="cursor-pointer"
-              component="li"              
-            >
+            <ListItem className="cursor-pointer" component="li">
               <ListItemIcon>
                 <WashIcon className="color-dark" />
               </ListItemIcon>
@@ -125,7 +115,6 @@ const MenuComponent: React.FC = () => {
             </ListItemIcon>
             <ListItemText primary="Servicios" />
           </ListItem>
-
         </List>
       </Drawer>
     </div>

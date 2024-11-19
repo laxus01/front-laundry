@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import TableComponent from "../../components/TableComponent";
 import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { Tooltip } from "@mui/material";
 import { useWashers } from "./hooks/useWashers";
-import { getWashers, queryCreateWasherById, queryDeleteWasherById, queryEditWasherById } from "./services/Washer.services";
+import {
+  getWashers,
+  queryCreateWasherById,
+  queryDeleteWasherById,
+  queryEditWasherById,
+} from "./services/Washer.services";
 import ModalEditWasher from "./components/ModalEditWasher";
 import { Washer } from "../../interfaces/interfaces";
 
@@ -117,9 +122,7 @@ export const Washers = () => {
         handleDelete={handleDelete}
         handleCloseDelete={() => setModalDelete(false)}
       />
-      <div
-        style={styleIconAdd}
-      >
+      <div style={styleIconAdd}>
         <h2 className="color-lime">Lavadores</h2>
         <div>
           <Tooltip title="Agregar Vehículo">

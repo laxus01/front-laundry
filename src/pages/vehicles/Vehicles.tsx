@@ -10,7 +10,7 @@ import ModalEditVehicle from "./components/ModalEditVehicle";
 import { Vehicle, VehicleSelected } from "../../interfaces/interfaces";
 import { useVehicles } from "./hooks/useVehicles";
 import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { Tooltip } from "@mui/material";
 
 const columns = [
@@ -131,9 +131,7 @@ export const Vehicles = () => {
         handleDelete={handleDelete}
         handleCloseDelete={() => setModalDelete(false)}
       />
-      <div
-        style={styleIconAdd}
-      >
+      <div style={styleIconAdd}>
         <h2 className="color-lime">Vehículos</h2>
         <div>
           <Tooltip title="Agregar Vehículo">

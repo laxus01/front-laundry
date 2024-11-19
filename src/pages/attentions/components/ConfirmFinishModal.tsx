@@ -32,7 +32,7 @@ const ConfirmFinishModal: React.FC<ConfirmFinishModalProps> = ({
       PaperProps={{ sx: { padding: "20px" } }}
     >
       <DialogTitle id="confirm-finish-dialog">{title}</DialogTitle>
-      <DialogContent sx={{display: "flex", alignItems: "center"}}>
+      <DialogContent sx={{ display: "flex", alignItems: "center" }}>
         <DialogContentText>{message}</DialogContentText>
         <DialogTitle>${totalValue}</DialogTitle>
       </DialogContent>

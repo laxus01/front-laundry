@@ -49,7 +49,7 @@ const ModalEditWasher: React.FC<ModalEditWasherProps> = ({
       >
         <Box sx={style}>
           <Typography id="modal-title" variant="h6" component="h2">
-            { isEditing ? 'Editar' : 'Nuevo' } Lavador
+            {isEditing ? "Editar" : "Nuevo"} Lavador
           </Typography>
           <Box display="flex" flexDirection="column" gap={2} mt={3}>
             <TextField

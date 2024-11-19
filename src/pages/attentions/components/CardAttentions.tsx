@@ -85,8 +85,6 @@ export const CardAttentions: React.FC<CardAttentionsProps> = ({
     type: "services" | "products",
     setData: React.Dispatch<React.SetStateAction<OptionsComboBoxAutoComplete[]>>
   ) => {
-    console.log(itemSelected);
-
     setData((prevData) => {
       const updatedData = [...prevData, itemSelected];
       updateLocalStorage(updatedData, type);
@@ -109,12 +107,10 @@ export const CardAttentions: React.FC<CardAttentionsProps> = ({
 
   const pushServices = (serviceSelected: any) => {
     pushItem(serviceSelected, "services", setDataServices);
-    setStateModalServices(false);
   };
 
   const pushProducts = (productSelected: any) => {
     pushItem(productSelected, "products", setDataProducts);
-    setStateModalProducts(false);
   };
 
   const deleteService = (service: OptionsComboBoxAutoComplete) => {
@@ -143,7 +139,7 @@ export const CardAttentions: React.FC<CardAttentionsProps> = ({
   };
 
   const handleFinishAttention = () => {
-    handleFinish(attention);
+    handleFinish(attention.attentionId);
     setStateFinishModal(false);
   };
 

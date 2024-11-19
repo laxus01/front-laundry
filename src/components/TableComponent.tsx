@@ -59,101 +59,109 @@ export default function TableComponent({
 
   return (
     <>
-    {data.length > 0 ? (
-      <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      <TableContainer sx={{ maxHeight: 440 }}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                  sx={{
-                    backgroundColor: "#333",
-                    color: "#ffffff",
-                    fontWeight: "bold",
-                    padding: "6px",
-                  }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-              <TableCell
-                key="actions"
-                align="center"
-                sx={{
-                  backgroundColor: "#333",
-                  color: "#ffffff",
-                  fontWeight: "bold",
-                  padding: "6px",
-                }}
-              >
-                Acciones
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {displayedData.map((row, rowIndex) => {
-              return (
-                <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
-                  {columns.map((column) => {
-                    const value = row[column.id];
-                    return (
-                      <TableCell
-                        key={column.id}
-                        align={column.align}
-                        sx={{ padding: "6px" }}
-                      >
-                        {column.format && typeof value === "number"
-                          ? column.format(value)
-                          : value}
-                      </TableCell>
-                    );
-                  })}
+      {data.length > 0 ? (
+        <Paper sx={{ width: "100%", overflow: "hidden" }}>
+          <TableContainer sx={{ maxHeight: 440 }}>
+            <Table stickyHeader aria-label="sticky table">
+              <TableHead>
+                <TableRow>
+                  {columns.map((column) => (
+                    <TableCell
+                      key={column.id}
+                      align={column.align}
+                      style={{ minWidth: column.minWidth }}
+                      sx={{
+                        backgroundColor: "#333",
+                        color: "#ffffff",
+                        fontWeight: "bold",
+                        padding: "6px",
+                      }}
+                    >
+                      {column.label}
+                    </TableCell>
+                  ))}
                   <TableCell
                     key="actions"
                     align="center"
-                    sx={{ padding: "6px" }}
+                    sx={{
+                      backgroundColor: "#333",
+                      color: "#ffffff",
+                      fontWeight: "bold",
+                      padding: "6px",
+                    }}
                   >
-                    {edit && (
-                      <Tooltip title="Editar">
-                      <IconButton onClick={() => onEdit(row)} aria-label="edit">
-                        <EditIcon />
-                      </IconButton>
-                    </Tooltip>
-                    )}
-                    <Tooltip title="Eliminar">
-                      <IconButton
-                        onClick={() => onDelete(row)}
-                        aria-label="delete"
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Tooltip>
+                    Acciones
                   </TableCell>
                 </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      {paginationEnabled && (
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="div"
-          count={data.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+              </TableHead>
+              <TableBody>
+                {displayedData.map((row, rowIndex) => {
+                  return (
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={rowIndex}
+                    >
+                      {columns.map((column) => {
+                        const value = row[column.id];
+                        return (
+                          <TableCell
+                            key={column.id}
+                            align={column.align}
+                            sx={{ padding: "6px" }}
+                          >
+                            {column.format && typeof value === "number"
+                              ? column.format(value)
+                              : value}
+                          </TableCell>
+                        );
+                      })}
+                      <TableCell
+                        key="actions"
+                        align="center"
+                        sx={{ padding: "6px" }}
+                      >
+                        {edit && (
+                          <Tooltip title="Editar">
+                            <IconButton
+                              onClick={() => onEdit(row)}
+                              aria-label="edit"
+                            >
+                              <EditIcon />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                        <Tooltip title="Eliminar">
+                          <IconButton
+                            onClick={() => onDelete(row)}
+                            aria-label="delete"
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          {paginationEnabled && (
+            <TablePagination
+              rowsPerPageOptions={[10, 25, 100]}
+              component="div"
+              count={data.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          )}
+        </Paper>
+      ) : (
+        <div>{emptyDataMessage}</div>
       )}
-    </Paper>
-    ) : (
-      <div>{emptyDataMessage}</div>
-    )}
     </>
   );
 }

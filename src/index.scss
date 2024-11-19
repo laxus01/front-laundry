@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 a {
@@ -17,12 +17,11 @@ a {
   height: 40px;
   border-radius: 50%;
   background-color: #fff;
-  border: 3px solid #9FB404;
+  border: 3px solid #9fb404;
   cursor: pointer;
 }
 
 .text {
-
   &-16 {
     font-size: 16px;
   }
@@ -41,13 +40,12 @@ a {
 }
 
 .color {
-
   &-white {
     color: #fff;
   }
 
   &-lime {
-    color: #9FB404;
+    color: #9fb404;
   }
 
   &-dark {

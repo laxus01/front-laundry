@@ -8,10 +8,9 @@ const getHeaders = () => {
 
   if (token != "") {
     headers.Authorization = "Bearer " + token;
-  } 
+  }
   return headers;
 };
-
 
 export const requestGet = async (url: string, params: any = {}) => {
   try {
@@ -52,4 +51,3 @@ export const requestDelete = async (url: string) => {
     throw new Error(error.response.data.message);
   }
 };
-

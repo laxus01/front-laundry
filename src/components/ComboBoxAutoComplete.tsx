@@ -5,7 +5,7 @@ import { OptionsComboBoxAutoComplete } from "../interfaces/interfaces";
 interface ComboBoxAutoCompleteProps {
   title: string;
   options: OptionsComboBoxAutoComplete[];
-  onSelect: (id: number) => void;
+  onSelect: (id: string) => void;
 }
 
 export default function ComboBoxAutoComplete({

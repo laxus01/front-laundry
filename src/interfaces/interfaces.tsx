@@ -1,25 +1,25 @@
 export interface Vehicle {
+  id: string;
+  plate: string;
+  client: string;
+  phone: string;
+  createAt: string;
+  typeVehicle: {
     id: number;
-    plate: string;
-    client: string;
-    phone: string;
-    createAt: string;
-    typeVehicle: {
-        id: number;
-        type: string;
-    };
+    type: string;
+  };
 }
 
 export interface VehicleSelected {
-    id: number;
-    plate: string;
-    client: string;
-    phone: string;
-    typeVehicleId: number;
+  id: string;
+  plate: string;
+  client: string;
+  phone: string;
+  typeVehicleId: number;
 }
 
 export interface OptionsComboBoxAutoComplete {
-  id: number;
+  id: string;
   name: string;
   value?: number;
   client?: string;
@@ -27,32 +27,32 @@ export interface OptionsComboBoxAutoComplete {
 }
 
 export interface Service {
-  id: number;
+  id: string;
   name: string;
   value: number;
 }
 
 export interface Product {
-  id: number;
+  id: string;
   name: string;
   value: number;
   quantity: number;
 }
 
 export interface ListServices {
-  id: number;
+  id: string;
   service: string;
   value: number;
 }
 
 export interface ListProducts {
-  id: number;
+  id: string;
   product: string;
   saleValue: number;
 }
 
 export interface Washer {
-  id: number;
+  id: string;
   washer: string;
   phone: string;
 }

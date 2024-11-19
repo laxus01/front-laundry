@@ -3,7 +3,7 @@ import { Washer } from "../../../interfaces/interfaces";
 
 export const useWashers = () => {
   const defaultWasher = {
-    id: 0,
+    id: "",
     washer: "",
     phone: "",
   };

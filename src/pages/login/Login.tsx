@@ -11,7 +11,7 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const response = await login({ user, password });
-    if (response) {       
+    if (response) {
       localStorage.setItem("Authorization", response.data.token);
       navigate("/dashboard");
     }

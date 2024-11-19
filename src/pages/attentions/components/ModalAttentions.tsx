@@ -7,8 +7,8 @@ import { useState } from "react";
 import uuid from "react-uuid";
 
 const percentage = [
-  { id: 40, name: "40" },
-  { id: 35, name: "35" },
+  { id: "40", name: "40" },
+  { id: "35", name: "35" },
 ];
 
 const style = {
@@ -41,16 +41,15 @@ const ModalAttentions: React.FC<ModalAttentionsProps> = ({
   handleEdit,
   setAttention,
 }) => {
-  
   const [vehicleSelected, setVehicleSelected] = useState<Vehicle | null>(null);
   const [washerSelected, setWasherSelected] = useState<Washer | null>(null);
   const [percentageValue, setPercentageValue] = useState<number>(0);
 
-  const getInfoVehicle = (id: number) => {
+  const getInfoVehicle = (id: string) => {
     return listVehicles.find((vehicle: Vehicle) => vehicle.id === id);
   };
 
-  const getInfoWasher = (id: number) => {
+  const getInfoWasher = (id: string) => {
     return listWashers.find((washer: Washer) => washer.id === id);
   };
 
@@ -64,24 +63,32 @@ const ModalAttentions: React.FC<ModalAttentionsProps> = ({
       products: [],
     };
     return payload;
-  }
-
-  const handleSelectVehicle = (id: number) => {   
-    const selectedVehicle = getInfoVehicle(id);
-    setVehicleSelected(selectedVehicle);  
   };
-  
-  const handleSelectWasher = (id: number) => {
+
+  const handleSelectVehicle = (id: string) => {
+    const selectedVehicle = getInfoVehicle(id);
+    setVehicleSelected(selectedVehicle);
+  };
+
+  const handleSelectWasher = (id: string) => {
     const selectedWasher = getInfoWasher(id);
     setWasherSelected(selectedWasher);
   };
 
-  const handleSelectPercentage = (value: number) => {
-    setPercentageValue(value);  
+  const handleSelectPercentage = (value: string) => {
+    const newValue = parseInt(value);
+    setPercentageValue(newValue);
   };
 
   const handleCreate = () => {
     setAttention(getInfoAttentions());
+  };
+
+  const closeModal = () => {
+    setPercentageValue(0);
+    setVehicleSelected(null);
+    setWasherSelected(null);
+    handleClose();
   };
 
   return (
@@ -124,14 +131,17 @@ const ModalAttentions: React.FC<ModalAttentionsProps> = ({
                 } else {
                   handleCreate();
                 }
-                handleClose();
+                closeModal();
               }}
+              disabled={!vehicleSelected || !washerSelected || !percentageValue}
             >
               {isEditing ? "Editar" : "Guardar"}
             </Button>
             <Button
               variant="contained"
-              onClick={handleClose}
+              onClick={() => {
+                closeModal();
+              }}
               sx={{ bgcolor: "#FF3040", "&:hover": { bgcolor: "#d02636" } }}
             >
               Cancelar

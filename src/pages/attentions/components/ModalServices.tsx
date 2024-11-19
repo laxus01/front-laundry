@@ -29,19 +29,18 @@ const ModalServices: React.FC<ModalServicesProps> = ({
   handleClose,
   setService,
 }) => {
-
   const { listServices, getListServices } = useAttentions();
   const [valueService, setValueService] = useState<number>(0);
-  const [serviceId, setServiceId] = useState<number>(0);
+  const [serviceId, setServiceId] = useState<string>("");
 
-  const getInfoService = (id: number) => {
-    return listServices.find(service => service.id === id);
+  const getInfoService = (id: string) => {
+    return listServices.find((service) => service.id === id);
   };
 
-  const handleSelectService = (id: number) => {   
-    setServiceId(id); 
+  const handleSelectService = (id: string) => {
+    setServiceId(id);
     const selectedService = getInfoService(id);
-    setValueService(selectedService?.value || 0);  
+    setValueService(selectedService?.value || 0);
   };
 
   const addToListServices = () => {
@@ -49,6 +48,13 @@ const ModalServices: React.FC<ModalServicesProps> = ({
       (service) => service.id === serviceId
     );
     setService(serviceSelected);
+    closeModal();
+  };
+
+  const closeModal = () => {
+    setServiceId("");
+    setValueService(0);
+    handleClose();
   };
 
   useEffect(() => {
@@ -88,14 +94,14 @@ const ModalServices: React.FC<ModalServicesProps> = ({
               color="primary"
               onClick={addToListServices}
               startIcon={isEditing ? <EditIcon /> : <SaveIcon />}
+              disabled={!serviceId || !valueService}
             >
               {isEditing ? "Editar" : "Guardar"}
             </Button>
             <Button
               variant="contained"
               onClick={() => {
-                handleClose();
-                setValueService(0);
+                closeModal();
               }}
               sx={{ bgcolor: "#FF3040", "&:hover": { bgcolor: "#d02636" } }}
             >

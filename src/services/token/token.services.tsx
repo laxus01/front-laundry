@@ -7,5 +7,4 @@ const Token = () => {
   return localStorage.getItem("token");
 };
 
-
 export { Token };
