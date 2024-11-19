@@ -49,6 +49,8 @@ export interface ListProducts {
   id: string;
   product: string;
   saleValue: number;
+  valueBuys: number;
+  existence: number;
 }
 
 export interface Washer {

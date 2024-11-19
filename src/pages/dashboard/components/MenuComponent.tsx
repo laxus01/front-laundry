@@ -61,6 +61,15 @@ const MenuComponent: React.FC = () => {
             </ListItem>
           </Link>
 
+          <Link to="/dashboard/products" onClick={toggleDrawer(false)}>
+            <ListItem className="cursor-pointer" component="li">
+              <ListItemIcon>
+                <ShoppingBasketIcon className="color-dark" />
+              </ListItemIcon>
+              <ListItemText primary="Productos" />
+            </ListItem>
+          </Link>
+
           <ListItem
             className="cursor-pointer"
             component="li"
@@ -92,17 +101,6 @@ const MenuComponent: React.FC = () => {
               <MonetizationOnIcon className="color-dark" />
             </ListItemIcon>
             <ListItemText primary="Gastos" />
-          </ListItem>
-
-          <ListItem
-            className="cursor-pointer"
-            component="li"
-            onClick={toggleDrawer(false)}
-          >
-            <ListItemIcon>
-              <ShoppingBasketIcon className="color-dark" />
-            </ListItemIcon>
-            <ListItemText primary="Productos" />
           </ListItem>
 
           <ListItem

@@ -5,6 +5,7 @@ import { Vehicles } from "./pages/vehicles/Vehicles";
 import { Attentions } from "./pages/attentions/Attentions";
 import Login from "./pages/login/Login";
 import { Washers } from "./pages/washers/Washers";
+import { Products } from "./pages/products/Products";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <Route path="/dashboard/vehicles" element={<Vehicles />} />
           <Route path="/dashboard/attentions" element={<Attentions />} />
           <Route path="/dashboard/washers" element={<Washers />} />
+          <Route path="/dashboard/products" element={<Products />} />
         </Route>
       </Routes>
     </BrowserRouter>
