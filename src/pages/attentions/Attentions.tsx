@@ -17,6 +17,7 @@ import {
   saveListProductsByAttention,
   saveListServicesByAttention,
 } from "./services/Attentions.services";
+import { removeFormatPrice } from "../../utils/utils";
 
 const styleIconAdd = {
   display: "flex",
@@ -105,7 +106,7 @@ export const Attentions = () => {
     const payloadServices = newListAttentions.services.map((service: any) => ({
       attentionId: attentionId,
       serviceId: service.id,
-      value: service.value,
+      value: removeFormatPrice(service.value.toString()),
     }));
 
     const payloadProducts = newListAttentions.products.map((product: any) => ({
@@ -117,10 +118,10 @@ export const Attentions = () => {
     try {
       const response = await saveAttention(payload);
       if (response.data) {
-        await Promise.all([
-          saveListServicesByAttention(payloadServices),
-          saveListProductsByAttention(payloadProducts),
-        ]);
+        await saveListServicesByAttention(payloadServices);
+        if (payloadProducts.length > 0) {
+          await saveListProductsByAttention(payloadProducts);
+        }
         await deleteAttention(attentionId);
       }
     } catch (error) {

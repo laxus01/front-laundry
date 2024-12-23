@@ -28,7 +28,7 @@ export interface OptionsComboBoxAutoComplete {
 
 export interface Service {
   id: string;
-  name: string;
+  service: string;
   value: number;
 }
 
@@ -38,6 +38,36 @@ export interface Product {
   valueBuys: number;
   saleValue: number;
   existence: number;
+}
+
+export interface Sale {
+    id: string;
+  quantity: number;
+    productId: string;
+    date?: string;
+    washerId?: string;
+}
+
+export interface ListSales {
+  id: string;
+  quantity: number;
+  createAt: string;
+  productId: {
+    id: string;
+    product: string;
+    valueBuys: number;
+    saleValue: number;
+    existence: number;
+    state: number;
+    createAt: string;
+  };
+  washerId: {
+    id: string;
+    washer: string;
+    phone: string;
+    state: number;
+    createAt: string;
+  };
 }
 
 export interface ListServices {

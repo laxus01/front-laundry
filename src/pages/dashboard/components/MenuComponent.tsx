@@ -17,6 +17,7 @@ import LocalParkingIcon from "@mui/icons-material/LocalParking";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
+import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import { Link } from "react-router-dom";
 import "../styles/dashboard.scss";
 
@@ -70,6 +71,24 @@ const MenuComponent: React.FC = () => {
             </ListItem>
           </Link>
 
+          <Link to="/dashboard/services" onClick={toggleDrawer(false)}>
+            <ListItem className="cursor-pointer" component="li">
+              <ListItemIcon>
+                <LocalCarWashIcon className="color-dark" />
+              </ListItemIcon>
+              <ListItemText primary="Servicios" />
+            </ListItem>
+          </Link>
+
+          <Link to="/dashboard/sales" onClick={toggleDrawer(false)}>
+            <ListItem className="cursor-pointer" component="li">
+              <ListItemIcon>
+                <PointOfSaleIcon className="color-dark" />
+              </ListItemIcon>
+              <ListItemText primary="Ventas" />
+            </ListItem>
+          </Link>
+
           <ListItem
             className="cursor-pointer"
             component="li"
@@ -103,16 +122,6 @@ const MenuComponent: React.FC = () => {
             <ListItemText primary="Gastos" />
           </ListItem>
 
-          <ListItem
-            className="cursor-pointer"
-            component="li"
-            onClick={toggleDrawer(false)}
-          >
-            <ListItemIcon>
-              <LocalCarWashIcon className="color-dark" />
-            </ListItemIcon>
-            <ListItemText primary="Servicios" />
-          </ListItem>
         </List>
       </Drawer>
     </div>

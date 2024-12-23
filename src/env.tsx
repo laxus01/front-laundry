@@ -7,5 +7,6 @@ export const environment = {
   services: BASE_URL + "/services",
   products: BASE_URL + "/products",
   attentions: BASE_URL + "/attentions",
+  sales: BASE_URL + "/sales",
   backup: BASE_URL + "/attentions/backup",
 };

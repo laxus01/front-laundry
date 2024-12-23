@@ -6,6 +6,8 @@ import { Attentions } from "./pages/attentions/Attentions";
 import Login from "./pages/login/Login";
 import { Washers } from "./pages/washers/Washers";
 import { Products } from "./pages/products/Products";
+import { Services } from "./pages/services/Services";
+import { Sales } from "./pages/sales/Sales";
 
 function App() {
   return (
@@ -31,6 +33,8 @@ function App() {
           <Route path="/dashboard/attentions" element={<Attentions />} />
           <Route path="/dashboard/washers" element={<Washers />} />
           <Route path="/dashboard/products" element={<Products />} />
+          <Route path="/dashboard/services" element={<Services />} />
+          <Route path="/dashboard/sales" element={<Sales />} />
         </Route>
       </Routes>
     </BrowserRouter>

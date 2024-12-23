@@ -41,9 +41,9 @@ export const Products = () => {
   const handleCreate = async () => {    
     const payload = {
       product: dataProduct.product,
-      valueBuys: dataProduct.valueBuys,
-      saleValue: dataProduct.saleValue,
-      existence: dataProduct.existence,
+      valueBuys: removeFormatPrice(dataProduct.valueBuys.toString()),
+      saleValue: removeFormatPrice(dataProduct.saleValue.toString()),
+      existence: removeFormatPrice(dataProduct.existence.toString()),
     };    
     const response = await queryCreateProduct(payload);
     if (response) {
