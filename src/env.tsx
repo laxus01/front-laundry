@@ -1,4 +1,4 @@
-export const BASE_URL = "http://localhost:4000";
+export const BASE_URL = "https://back-laundry-production.up.railway.app/:4000";
 
 export const environment = {
   auth: BASE_URL + "/auth/login",
