@@ -63,7 +63,7 @@ const ModalEditService: React.FC<ModalEditServiceProps> = ({
               onChange={(e) =>
                 setDataService({
                   ...dataService,
-                  value: formatPrice(Number(e.target.value)),
+                  value: formatPrice(e.target.value),
                 })
               }
             />
