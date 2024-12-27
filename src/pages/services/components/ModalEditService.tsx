@@ -2,6 +2,7 @@ import { Button, Modal, Box, Typography, TextField } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import { formatPrice, removeFormatPrice } from "../../../utils/utils";
+import { InputFormat } from "../../../components/InputFormat";
 
 const style = {
   position: "absolute" as "absolute",
@@ -55,7 +56,7 @@ const ModalEditService: React.FC<ModalEditServiceProps> = ({
                 setDataService({ ...dataService, service: e.target.value })
               }
             />
-            <TextField
+            {/* <TextField
               id="value"
               label="Valor"
               variant="outlined"
@@ -66,7 +67,8 @@ const ModalEditService: React.FC<ModalEditServiceProps> = ({
                   value: formatPrice(Number(removeFormatPrice(e.target.value))),
                 })
               }
-            />
+            /> */}
+            <InputFormat value={dataService.value} />
           </Box>
           <Box display="flex" justifyContent="space-around" mt={3}>
             <Button
