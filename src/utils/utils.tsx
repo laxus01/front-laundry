@@ -1,4 +1,4 @@
-export const formatPrice = (value: number): string => {
+export const formatPrice = (value: any): string => {
   // Convertir el número a cadena
   const stringValue = value.toString();
 
