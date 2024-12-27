@@ -1,7 +1,7 @@
 import { Button, Modal, Box, Typography, TextField } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
-import { formatPrice } from "../../../utils/utils";
+import { formatPrice, removeFormatPrice } from "../../../utils/utils";
 
 const style = {
   position: "absolute" as "absolute",
@@ -63,7 +63,7 @@ const ModalEditService: React.FC<ModalEditServiceProps> = ({
               onChange={(e) =>
                 setDataService({
                   ...dataService,
-                  value: formatPrice(e.target.value),
+                  value: formatPrice(removeFormatPrice(e.target.value)),
                 })
               }
             />
