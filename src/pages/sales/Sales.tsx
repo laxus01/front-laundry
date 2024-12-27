@@ -62,7 +62,7 @@ export const Sales = () => {
     const payload = {
       productId: dataSale.productId,
       quantity: dataSale.quantity,
-      washerId: dataSale.washerId ? dataSale.washerId : null,
+      washerId: dataSale.washerId ? dataSale.washerId : 'Venta Cliente',
     };
     const response = await queryCreateSale(payload);
     if (response) {

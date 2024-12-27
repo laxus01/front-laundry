@@ -3,6 +3,6 @@ export const formatPrice = (value: number): string => {
   return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
 
-export const removeFormatPrice = (value: string): string => {
-  return value.replace(/\./g, "");
+export const removeFormatPrice = (value: string): number => {
+  return parseFloat(value.replace(/\./g, "").replace(",", "."));
 };
