@@ -1,6 +1,5 @@
 export const formatPrice = (value: any): string => {
-  const stringValue = value.toString();
-  const formattedValue = stringValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  const formattedValue = value.toLocaleString('es-ES');
   return formattedValue;
 };
 
