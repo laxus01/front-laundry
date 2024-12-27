@@ -1,5 +1,7 @@
+import numeral from 'numeral';
+
 export const formatPrice = (value: number): string => {
-  const formattedValue = value.toLocaleString('es-ES');
+  const formattedValue = numeral(value).format("0,0").replace(/,/g, ".");
   return formattedValue;
 };
 
