@@ -56,19 +56,14 @@ const ModalEditService: React.FC<ModalEditServiceProps> = ({
                 setDataService({ ...dataService, service: e.target.value })
               }
             />
-            {/* <TextField
+            <TextField
               id="value"
               label="Valor"
               variant="outlined"
-              value={dataService.value}
-              onChange={(e) =>
-                setDataService({
-                  ...dataService,
-                  value: formatPrice(Number(removeFormatPrice(e.target.value))),
-                })
-              }
-            /> */}
+            >
+
             <InputFormat value={dataService.value} />
+            </TextField>
           </Box>
           <Box display="flex" justifyContent="space-around" mt={3}>
             <Button
