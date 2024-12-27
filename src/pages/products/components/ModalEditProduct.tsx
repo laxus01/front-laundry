@@ -1,7 +1,7 @@
 import { Button, Modal, Box, Typography, TextField } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
-import { formatPrice } from "../../../utils/utils";
+import { formatPrice, removeFormatPrice } from "../../../utils/utils";
 
 const style = {
   position: "absolute" as "absolute",
@@ -63,7 +63,7 @@ const ModalEditProduct: React.FC<ModalEditProductProps> = ({
               onChange={(e) =>
                 setDataProduct({
                   ...dataProduct,
-                  valueBuys: formatPrice(Number(e.target.value)),
+                  valueBuys: formatPrice(Number(removeFormatPrice(e.target.value))),
                 })
               }
             />
@@ -75,7 +75,7 @@ const ModalEditProduct: React.FC<ModalEditProductProps> = ({
               onChange={(e) =>
                 setDataProduct({
                   ...dataProduct,
-                  saleValue: formatPrice(Number(e.target.value)),
+                  saleValue: formatPrice(Number(removeFormatPrice(e.target.value))),
                 })
               }
             />
@@ -87,7 +87,7 @@ const ModalEditProduct: React.FC<ModalEditProductProps> = ({
               onChange={(e) =>
                 setDataProduct({
                   ...dataProduct,
-                  existence: formatPrice(Number(e.target.value)),
+                  existence: formatPrice(Number(removeFormatPrice(e.target.value))),
                 })
               }
             />
