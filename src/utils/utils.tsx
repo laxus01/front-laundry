@@ -1,5 +1,6 @@
 export const formatPrice = (value: number): string => {
-  return value.toLocaleString('es-ES'); 
+  const formattedValue = value.toLocaleString('es-ES');
+  return formattedValue;
 };
 
 export const removeFormatPrice = (value: string): string => {
