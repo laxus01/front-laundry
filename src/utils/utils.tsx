@@ -1,8 +1,7 @@
 export const formatPrice = (value: number): string => {
-  const val = value.toFixed(2).replace(".", ",");
-  return val.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  return value.toLocaleString('es-ES'); 
 };
 
-export const removeFormatPrice = (value: string): number => {
-  return parseFloat(value.replace(/\./g, "").replace(",", "."));
+export const removeFormatPrice = (value: string): string => {
+  return value.replace(/\./g, "");
 };
