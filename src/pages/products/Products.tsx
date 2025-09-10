@@ -8,6 +8,7 @@ import ModalEditProduct from "./components/ModalEditProduct";
 import { getProducts, queryCreateProduct, queryDeleteProductById, queryEditProductById } from "./services/Products.services";
 import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
 import { useProducts } from "./hooks/useProducts";
+import { useSnackbar } from "../../contexts/SnackbarContext";
 
 const columns = [
   { id: "product", label: "Producto", minWidth: 200 },
@@ -26,6 +27,7 @@ export const Products = () => {
 
   const products = useProducts();
   const { dataProduct, setDataProduct, defaultProduct } = products;
+  const { showSnackbar } = useSnackbar();
 
   const [data, setData] = useState([]);
   const [openModal, setOpenModal] = useState(false);
@@ -50,6 +52,7 @@ export const Products = () => {
       getListProducts();
       setOpenModal(false);
       setDataProduct(defaultProduct);
+      showSnackbar("Producto creado exitosamente", "success");
     }
   };
 

@@ -12,6 +12,7 @@ import {
 } from "./services/Washer.services";
 import ModalEditWasher from "./components/ModalEditWasher";
 import { Washer } from "../../interfaces/interfaces";
+import { useSnackbar } from "../../contexts/SnackbarContext";
 
 const columns = [
   { id: "washer", label: "Lavador", minWidth: 200 },
@@ -27,6 +28,7 @@ const styleIconAdd = {
 export const Washers = () => {
   const washers = useWashers();
   const { defaultWasher, dataWasher, setDataWasher } = washers;
+  const { showSnackbar } = useSnackbar();
 
   const [data, setData] = useState([]);
   const [openModal, setOpenModal] = useState(false);
@@ -57,6 +59,7 @@ export const Washers = () => {
       getListWashers();
       setOpenModal(false);
       setDataWasher(defaultWasher);
+      showSnackbar("Lavador creado exitosamente", "success");
     }
   };
 
@@ -70,6 +73,7 @@ export const Washers = () => {
       getListWashers();
       setOpenModal(false);
       setDataWasher(defaultWasher);
+      showSnackbar("Lavador editado exitosamente", "success");
     }
   };
 
@@ -100,6 +104,7 @@ export const Washers = () => {
       setDataWasher(defaultWasher);
       getListWashers();
       setModalDelete(false);
+      showSnackbar("Lavador eliminado exitosamente", "success");
     }
   };
 

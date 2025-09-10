@@ -14,7 +14,7 @@ import {
 import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
 import { useServices } from "./hooks/useServices";
 import ModalEditService from "./components/ModalEditService";
-//import { useServices } from "./hooks/useServices";
+import { useSnackbar } from "../../contexts/SnackbarContext";
 
 const columns = [
   { id: "service", label: "Servicio", minWidth: 200 },
@@ -30,7 +30,8 @@ const styleIconAdd = {
 export const Services = () => {
   const services = useServices();
   const { dataService, setDataService, defaultService } = services;
-
+  const { showSnackbar } = useSnackbar();
+  
   const [data, setData] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -52,6 +53,7 @@ export const Services = () => {
       getListServices();
       setOpenModal(false);
       setDataService(defaultService);
+      showSnackbar("Servicio creado exitosamente", "success");
     }
   };
 
@@ -65,6 +67,7 @@ export const Services = () => {
       getListServices();
       setOpenModal(false);
       setDataService(defaultService);
+      showSnackbar("Servicio editado exitosamente", "success");
     }
   }; 
 
@@ -74,6 +77,7 @@ export const Services = () => {
       setDataService(defaultService);
       getListServices();
       setModalDelete(false);
+      showSnackbar("Servicio eliminado exitosamente", "success");
     }
   };
 

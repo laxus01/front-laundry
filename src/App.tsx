@@ -8,6 +8,7 @@ import { Washers } from "./pages/washers/Washers";
 import { Products } from "./pages/products/Products";
 import { Services } from "./pages/services/Services";
 import { Sales } from "./pages/sales/Sales";
+import GlobalSnackbar from "./components/GlobalSnackbar";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
           <Route path="/dashboard/sales" element={<Sales />} />
         </Route>
       </Routes>
+      <GlobalSnackbar />
     </BrowserRouter>
   );
 }

@@ -12,6 +12,7 @@ import { useVehicles } from "./hooks/useVehicles";
 import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { Tooltip } from "@mui/material";
+import { useSnackbar } from "../../contexts/SnackbarContext";
 
 const columns = [
   { id: "plate", label: "Placa", minWidth: 200 },
@@ -29,6 +30,7 @@ const styleIconAdd = {
 export const Vehicles = () => {
   const vehicles = useVehicles();
   const { defaultVehicle, dataVehicle, setDataVehicle } = vehicles;
+  const { showSnackbar } = useSnackbar();
 
   const [data, setData] = useState([]);
   const [openModal, setOpenModal] = useState(false);
@@ -53,32 +55,43 @@ export const Vehicles = () => {
   };
 
   const handleCreate = async () => {
-    const payload = {
-      plate: dataVehicle.plate,
-      typeVehicleId: dataVehicle.typeVehicleId,
-      client: dataVehicle.client,
-      phone: dataVehicle.phone,
-    };
-    const response = await queryCreateVehicleById(payload);
-    if (response) {
-      getListVehicles();
-      setOpenModal(false);
-      setDataVehicle(defaultVehicle);
+    try {
+      const payload = {
+        plate: dataVehicle.plate,
+        typeVehicleId: dataVehicle.typeVehicleId,
+        client: dataVehicle.client,
+        phone: dataVehicle.phone,
+      };
+      const response = await queryCreateVehicleById(payload);
+      if (response.data) {
+        getListVehicles();
+        setOpenModal(false);
+        setDataVehicle(defaultVehicle);
+        showSnackbar(response.data.message, response.data.success ? "success" : "error");
+      }
+    } catch (error: any) {
+      // Handle the specific error response from backend
+      showSnackbar(error.message || "Error al crear el vehículo", "error");
     }
   };
 
   const handleEdit = async () => {
-    const payload = {
-      plate: dataVehicle.plate,
-      typeVehicleId: dataVehicle.typeVehicleId,
-      client: dataVehicle.client,
-      phone: dataVehicle.phone,
-    };
-    const response = await queryEditVehicleById(dataVehicle.id, payload);
-    if (response) {
-      getListVehicles();
-      setOpenModal(false);
-      setDataVehicle(defaultVehicle);
+    try {
+      const payload = {
+        plate: dataVehicle.plate,
+        typeVehicleId: dataVehicle.typeVehicleId,
+        client: dataVehicle.client,
+        phone: dataVehicle.phone,
+      };
+      const response = await queryEditVehicleById(dataVehicle.id, payload);
+      if (response) {
+        getListVehicles();
+        setOpenModal(false);
+        setDataVehicle(defaultVehicle);
+        showSnackbar("Vehículo actualizado exitosamente", "success");
+      }
+    } catch (error: any) {
+      showSnackbar(error.message || "Error al actualizar el vehículo", "error");
     }
   };
 
@@ -104,11 +117,16 @@ export const Vehicles = () => {
   };
 
   const handleDelete = async () => {
-    const response = await queryDeleteVehicleById(dataVehicle.id);
-    if (response) {
-      setDataVehicle(defaultVehicle);
-      getListVehicles();
-      setModalDelete(false);
+    try {
+      const response = await queryDeleteVehicleById(dataVehicle.id);
+      if (response) {
+        setDataVehicle(defaultVehicle);
+        getListVehicles();
+        setModalDelete(false);
+        showSnackbar("Vehículo eliminado exitosamente", "success");
+      }
+    } catch (error: any) {
+      showSnackbar(error.message || "Error al eliminar el vehículo", "error");
     }
   };
 
