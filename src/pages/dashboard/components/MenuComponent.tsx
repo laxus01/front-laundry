@@ -7,8 +7,14 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Collapse,
 } from "@mui/material";
-import { Menu as MenuIcon } from "@mui/icons-material";
+import { 
+  Menu as MenuIcon,
+  ExpandLess,
+  ExpandMore,
+  FormatListBulleted as ListIcon
+} from "@mui/icons-material";
 import WashIcon from "@mui/icons-material/Wash";
 import LocalCarWashIcon from "@mui/icons-material/LocalCarWash";
 import AssignmentIcon from "@mui/icons-material/Assignment";
@@ -23,9 +29,14 @@ import "../styles/dashboard.scss";
 
 const MenuComponent: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [listadosOpen, setListadosOpen] = useState(false);
 
   const toggleDrawer = (open: boolean) => () => {
     setDrawerOpen(open);
+  };
+
+  const handleListadosClick = () => {
+    setListadosOpen(!listadosOpen);
   };
 
   return (
@@ -44,41 +55,53 @@ const MenuComponent: React.FC = () => {
             </ListItem>
           </Link>
 
-          <Link to="/dashboard/vehicles" onClick={toggleDrawer(false)}>
-            <ListItem className="cursor-pointer" component="li">
-              <ListItemIcon>
-                <DirectionsCarIcon className="color-dark" />
-              </ListItemIcon>
-              <ListItemText primary="Vehículos" />
-            </ListItem>
-          </Link>
+          <ListItem className="cursor-pointer" component="li" onClick={handleListadosClick}>
+            <ListItemIcon>
+              <ListIcon className="color-dark" />
+            </ListItemIcon>
+            <ListItemText primary="Listados" />
+            {listadosOpen ? <ExpandLess /> : <ExpandMore />}
+          </ListItem>
+          
+          <Collapse in={listadosOpen} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <Link to="/dashboard/vehicles" onClick={toggleDrawer(false)}>
+                <ListItem className="cursor-pointer" component="li" sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <DirectionsCarIcon className="color-dark" />
+                  </ListItemIcon>
+                  <ListItemText primary="Vehículos" />
+                </ListItem>
+              </Link>
 
-          <Link to="/dashboard/washers" onClick={toggleDrawer(false)}>
-            <ListItem className="cursor-pointer" component="li">
-              <ListItemIcon>
-                <WashIcon className="color-dark" />
-              </ListItemIcon>
-              <ListItemText primary="Lavadores" />
-            </ListItem>
-          </Link>
+              <Link to="/dashboard/washers" onClick={toggleDrawer(false)}>
+                <ListItem className="cursor-pointer" component="li" sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <WashIcon className="color-dark" />
+                  </ListItemIcon>
+                  <ListItemText primary="Lavadores" />
+                </ListItem>
+              </Link>
 
-          <Link to="/dashboard/products" onClick={toggleDrawer(false)}>
-            <ListItem className="cursor-pointer" component="li">
-              <ListItemIcon>
-                <ShoppingBasketIcon className="color-dark" />
-              </ListItemIcon>
-              <ListItemText primary="Productos" />
-            </ListItem>
-          </Link>
+              <Link to="/dashboard/products" onClick={toggleDrawer(false)}>
+                <ListItem className="cursor-pointer" component="li" sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <ShoppingBasketIcon className="color-dark" />
+                  </ListItemIcon>
+                  <ListItemText primary="Productos" />
+                </ListItem>
+              </Link>
 
-          <Link to="/dashboard/services" onClick={toggleDrawer(false)}>
-            <ListItem className="cursor-pointer" component="li">
-              <ListItemIcon>
-                <LocalCarWashIcon className="color-dark" />
-              </ListItemIcon>
-              <ListItemText primary="Servicios" />
-            </ListItem>
-          </Link>
+              <Link to="/dashboard/services" onClick={toggleDrawer(false)}>
+                <ListItem className="cursor-pointer" component="li" sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <LocalCarWashIcon className="color-dark" />
+                  </ListItemIcon>
+                  <ListItemText primary="Servicios" />
+                </ListItem>
+              </Link>
+            </List>
+          </Collapse>
 
           <Link to="/dashboard/sales" onClick={toggleDrawer(false)}>
             <ListItem className="cursor-pointer" component="li">
