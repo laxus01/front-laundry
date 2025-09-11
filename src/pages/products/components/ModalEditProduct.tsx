@@ -1,7 +1,7 @@
 import { Button, Modal, Box, Typography, TextField } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
-import { formatPrice, removeFormatPrice } from "../../../utils/utils";
+import { formatMoneyInput, moneyToInteger } from "../../../utils/utils";
 
 const style = {
   position: "absolute" as "absolute",
@@ -63,7 +63,7 @@ const ModalEditProduct: React.FC<ModalEditProductProps> = ({
               onChange={(e) =>
                 setDataProduct({
                   ...dataProduct,
-                  valueBuys: formatPrice(Number(removeFormatPrice(e.target.value))),
+                  valueBuys: formatMoneyInput(e.target.value),
                 })
               }
             />
@@ -75,7 +75,7 @@ const ModalEditProduct: React.FC<ModalEditProductProps> = ({
               onChange={(e) =>
                 setDataProduct({
                   ...dataProduct,
-                  saleValue: formatPrice(Number(removeFormatPrice(e.target.value))),
+                  saleValue: formatMoneyInput(e.target.value),
                 })
               }
             />
@@ -87,7 +87,7 @@ const ModalEditProduct: React.FC<ModalEditProductProps> = ({
               onChange={(e) =>
                 setDataProduct({
                   ...dataProduct,
-                  existence: formatPrice(Number(removeFormatPrice(e.target.value))),
+                  existence: formatMoneyInput(e.target.value),
                 })
               }
             />
@@ -106,9 +106,9 @@ const ModalEditProduct: React.FC<ModalEditProductProps> = ({
               startIcon={isEditing ? <EditIcon /> : <SaveIcon />}
               disabled={
                 dataProduct.product === "" ||
-                dataProduct.valueBuys === 0 ||
-                dataProduct.saleValue === 0 ||
-                dataProduct.existence === 0
+                moneyToInteger(dataProduct.valueBuys) === 0 ||
+                moneyToInteger(dataProduct.saleValue) === 0 ||
+                moneyToInteger(dataProduct.existence) === 0
               }
               onClick={() => {
                 if (isEditing) {

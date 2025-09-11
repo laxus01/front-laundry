@@ -4,6 +4,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import ComboBoxAutoComplete from "../../../components/ComboBoxAutoComplete";
 import { useAttentions } from "../hooks/useAttentions";
 import { useEffect, useState } from "react";
+import { formatMoneyInput, moneyToInteger } from "../../../utils/utils";
 
 const style = {
   position: "absolute" as "absolute",
@@ -31,7 +32,7 @@ const ModalProducts: React.FC<ModalProductsProps> = ({
 }) => {
   const { listProducts, getListProducts } = useAttentions();
 
-  const [valueProduct, setValueProduct] = useState<number>(0);
+  const [valueProduct, setValueProduct] = useState<string>("");
   const [quantityProduct, setQuantityProduct] = useState<number>(0);
   const [productId, setProductId] = useState<string>("");
 
@@ -42,20 +43,29 @@ const ModalProducts: React.FC<ModalProductsProps> = ({
   const handleSelectProduct = (id: string) => {
     setProductId(id);
     const selectedProduct = getInfoProduct(id);
-    setValueProduct(selectedProduct?.value || 0);
+    const value = selectedProduct?.value || 0;
+    setValueProduct(formatMoneyInput(value.toString()));
   };
 
   const addToListProducts = () => {
     const productSelected = listProducts.find(
       (product) => product.id === productId
     );
-    setProduct({ ...productSelected, quantity: quantityProduct });
+    
+    // Convert formatted value back to integer before saving
+    const productWithUpdatedValue = {
+      ...productSelected,
+      value: moneyToInteger(valueProduct),
+      quantity: quantityProduct
+    };
+    
+    setProduct(productWithUpdatedValue);
     closeModal();
   };
 
   const closeModal = () => {
     setProductId("");
-    setValueProduct(0);
+    setValueProduct("");
     setQuantityProduct(0);
     handleClose();
   };
@@ -88,7 +98,7 @@ const ModalProducts: React.FC<ModalProductsProps> = ({
               label="value"
               variant="outlined"
               value={valueProduct}
-              onChange={(e) => setValueProduct(Number(e.target.value))}
+              onChange={(e) => setValueProduct(formatMoneyInput(e.target.value))}
             />
           </Box>
           <Box display="flex" flexDirection="column" gap={2} mt={3}>
@@ -115,7 +125,7 @@ const ModalProducts: React.FC<ModalProductsProps> = ({
               color="primary"
               startIcon={isEditing ? <EditIcon /> : <SaveIcon />}
               onClick={addToListProducts}
-              disabled={!productId || !quantityProduct || !valueProduct}
+              disabled={!productId || !quantityProduct || !valueProduct || moneyToInteger(valueProduct) === 0}
             >
               {isEditing ? "Editar" : "Guardar"}
             </Button>

@@ -56,6 +56,9 @@ const Login = () => {
           value={user}
           onChange={(e) => setUser(e.target.value)}
           required
+          InputLabelProps={{
+            shrink: true,
+          }}
         />
         <TextField
           label="Contraseña"
@@ -66,6 +69,9 @@ const Login = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          InputLabelProps={{
+            shrink: true,
+          }}
         />
         <Button
           type="submit"

@@ -4,6 +4,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import ComboBoxAutoComplete from "../../../components/ComboBoxAutoComplete";
 import { useEffect, useState } from "react";
 import { useAttentions } from "../hooks/useAttentions";
+import { formatMoneyInput, moneyToInteger } from "../../../utils/utils";
 
 const style = {
   position: "absolute" as "absolute",
@@ -30,7 +31,7 @@ const ModalServices: React.FC<ModalServicesProps> = ({
   setService,
 }) => {
   const { listServices, getListServices } = useAttentions();
-  const [valueService, setValueService] = useState<number>(0);
+  const [valueService, setValueService] = useState<string>("");
   const [serviceId, setServiceId] = useState<string>("");
 
   const getInfoService = (id: string) => {
@@ -40,20 +41,28 @@ const ModalServices: React.FC<ModalServicesProps> = ({
   const handleSelectService = (id: string) => {
     setServiceId(id);
     const selectedService = getInfoService(id);
-    setValueService(selectedService?.value || 0);
+    const value = selectedService?.value || 0;
+    setValueService(formatMoneyInput(value.toString()));
   };
 
   const addToListServices = () => {
     const serviceSelected = listServices.find(
       (service) => service.id === serviceId
     );
-    setService(serviceSelected);
+    
+    // Convert formatted value back to integer before saving
+    const serviceWithUpdatedValue = {
+      ...serviceSelected,
+      value: moneyToInteger(valueService)
+    };
+    
+    setService(serviceWithUpdatedValue);
     closeModal();
   };
 
   const closeModal = () => {
     setServiceId("");
-    setValueService(0);
+    setValueService("");
     handleClose();
   };
 
@@ -85,7 +94,7 @@ const ModalServices: React.FC<ModalServicesProps> = ({
               label="value"
               variant="outlined"
               value={valueService}
-              onChange={(e) => setValueService(Number(e.target.value))}
+              onChange={(e) => setValueService(formatMoneyInput(e.target.value))}
             />
           </Box>
           <Box display="flex" justifyContent="space-around" mt={3}>
@@ -103,7 +112,7 @@ const ModalServices: React.FC<ModalServicesProps> = ({
               color="primary"
               onClick={addToListServices}
               startIcon={isEditing ? <EditIcon /> : <SaveIcon />}
-              disabled={!serviceId || !valueService}
+              disabled={!serviceId || !valueService || moneyToInteger(valueService) === 0}
             >
               {isEditing ? "Editar" : "Guardar"}
             </Button>

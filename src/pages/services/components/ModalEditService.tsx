@@ -1,7 +1,7 @@
 import { Button, Modal, Box, Typography, TextField } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
-import { formatPrice, removeFormatPrice } from "../../../utils/utils";
+import { formatMoneyInput, moneyToInteger } from "../../../utils/utils";
 
 const style = {
   position: "absolute" as "absolute",
@@ -63,7 +63,7 @@ const ModalEditService: React.FC<ModalEditServiceProps> = ({
               onChange={(e) =>
                 setDataService({
                   ...dataService,
-                  value: formatPrice(Number(removeFormatPrice(e.target.value))),
+                  value: formatMoneyInput(e.target.value),
                 })
               }
             />
@@ -80,7 +80,7 @@ const ModalEditService: React.FC<ModalEditServiceProps> = ({
               variant="contained"
               color="primary"
               startIcon={isEditing ? <EditIcon /> : <SaveIcon />}
-              disabled={dataService.service === "" || dataService.value === 0}
+              disabled={dataService.service === "" || moneyToInteger(dataService.value) === 0}
               onClick={() => {
                 if (isEditing) {
                   handleEdit();
