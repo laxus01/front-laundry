@@ -107,7 +107,7 @@ const ModalPaymentDetails: React.FC<ModalPaymentDetailsProps> = ({
   const handleAddPayment = async () => {
     try {
       const payload = {
-        date: new Date(newPayment.paymentDate).toISOString(),
+        date: newPayment.paymentDate,
         value: newPayment.amount,
         detail: newPayment.detail,
         parkingId: parkingData.id,

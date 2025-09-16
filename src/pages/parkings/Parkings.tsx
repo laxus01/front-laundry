@@ -89,12 +89,10 @@ export const Parkings = () => {
   const handleCreate = async () => {
     try {
       console.log('dataParking before creating payload:', dataParking);
-      const startDate = new Date(dataParking.startDate);
-      const endDate = new Date(dataParking.endDate);
       
       const payload = {
-        dateInitial: startDate.toISOString(),
-        dateFinal: endDate.toISOString(),
+        dateInitial: dataParking.startDate,
+        dateFinal: dataParking.endDate,
         value: dataParking.value,
         paymentStatus: 1,
         state: 1,
@@ -118,12 +116,9 @@ export const Parkings = () => {
 
   const handleEdit = async () => {
     try {
-      const startDate = new Date(dataParking.startDate);
-      const endDate = new Date(dataParking.endDate);
-      
       const payload = {
-        dateInitial: startDate.toISOString(),
-        dateFinal: endDate.toISOString(),
+        dateInitial: dataParking.startDate,
+        dateFinal: dataParking.endDate,
         value: dataParking.value,
         paymentStatus: 2,
         state: 1,
