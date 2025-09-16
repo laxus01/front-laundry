@@ -100,3 +100,37 @@ export interface Attention {
   services: Service[];
   products: Product[];
 }
+
+export interface Parking {
+  id: string;
+  plate: string;
+  vehicleType: string;
+  client: string;
+  phone: string;
+  balance: number;
+  startDate: string;
+  endDate: string;
+  createAt: string;
+}
+
+export interface ParkingSelected {
+  id: string;
+  plate: string;
+  vehicleType: string;
+  client: string;
+  phone: string;
+  balance: number;
+  startDate: string;
+  endDate: string;
+  value?: number;
+  vehicleId?: string;
+  typeParkingId?: string;
+}
+
+export interface ParkingPayment {
+  id: string;
+  paymentDate: string;
+  amount: number;
+  detail: string;
+  parkingId: string;
+}

@@ -112,16 +112,14 @@ const MenuComponent: React.FC = () => {
             </ListItem>
           </Link>
 
-          <ListItem
-            className="cursor-pointer"
-            component="li"
-            onClick={toggleDrawer(false)}
-          >
-            <ListItemIcon>
-              <LocalParkingIcon className="color-dark" />
-            </ListItemIcon>
-            <ListItemText primary="Parqueos" />
-          </ListItem>
+          <Link to="/dashboard/parkings" onClick={toggleDrawer(false)}>
+            <ListItem className="cursor-pointer" component="li">
+              <ListItemIcon>
+                <LocalParkingIcon className="color-dark" />
+              </ListItemIcon>
+              <ListItemText primary="Parqueos" />
+            </ListItem>
+          </Link>
 
           <ListItem
             className="cursor-pointer"

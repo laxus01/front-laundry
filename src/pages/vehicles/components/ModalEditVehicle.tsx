@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
+import { useState, useEffect } from "react";
 
 const style = {
   position: "absolute" as "absolute",
@@ -42,6 +43,20 @@ const ModalEditVehicle: React.FC<ModalEditVehicleProps> = ({
   vehicles,
 }) => {
   const { dataVehicle, setDataVehicle } = vehicles;
+  const [vehicleTypes, setVehicleTypes] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (openModal) {
+      // Load vehicle types from localStorage
+      const staticData = localStorage.getItem("staticData");
+      if (staticData) {
+        const parsedStaticData = JSON.parse(staticData);
+        if (parsedStaticData.typeVehicles) {
+          setVehicleTypes(parsedStaticData.typeVehicles);
+        }
+      }
+    }
+  }, [openModal]);
   const handleChangeTypeVehicle = (event: SelectChangeEvent<number>) => {
     setDataVehicle({ ...dataVehicle, typeVehicleId: event.target.value });
   };
@@ -95,11 +110,11 @@ const ModalEditVehicle: React.FC<ModalEditVehicleProps> = ({
                 label="Tipo Vehículo"
                 onChange={handleChangeTypeVehicle}
               >
-                <MenuItem value={1}>MOTOCICLETA</MenuItem>
-                <MenuItem value={2}>AUTOMOVIL</MenuItem>
-                <MenuItem value={3}>CAMIONETA</MenuItem>
-                <MenuItem value={4}>CAMIÓN PEQUEÑO</MenuItem>
-                <MenuItem value={5}>CAMIÓN GRANDE</MenuItem>
+                {vehicleTypes.map((vehicleType) => (
+                  <MenuItem key={vehicleType.id} value={vehicleType.id}>
+                    {vehicleType.type}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
             <TextField

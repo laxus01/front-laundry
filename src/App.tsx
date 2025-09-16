@@ -8,6 +8,7 @@ import { Washers } from "./pages/washers/Washers";
 import { Products } from "./pages/products/Products";
 import { Services } from "./pages/services/Services";
 import { Sales } from "./pages/sales/Sales";
+import { Parkings } from "./pages/parkings";
 import GlobalSnackbar from "./components/GlobalSnackbar";
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
           <Route path="/dashboard/products" element={<Products />} />
           <Route path="/dashboard/services" element={<Services />} />
           <Route path="/dashboard/sales" element={<Sales />} />
+          <Route path="/dashboard/parkings" element={<Parkings />} />
         </Route>
       </Routes>
       <GlobalSnackbar />

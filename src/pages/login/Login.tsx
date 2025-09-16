@@ -13,6 +13,7 @@ const Login = () => {
     const response = await login({ user, password });
     if (response) {
       localStorage.setItem("Authorization", response.data.token);
+      localStorage.setItem("staticData", JSON.stringify(response.data.staticData));
       navigate("/dashboard");
     }
   };

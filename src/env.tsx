@@ -9,4 +9,5 @@ export const environment = {
   attentions: BASE_URL + "/attentions",
   sales: BASE_URL + "/sales",
   backup: BASE_URL + "/attentions/backup",
+  parkings: BASE_URL + "/parkings",
 };
