@@ -1,0 +1,1 @@
+export { WasherActivityReport } from './WasherActivityReport';

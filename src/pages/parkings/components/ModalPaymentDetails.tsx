@@ -24,6 +24,7 @@ import { useState, useEffect } from "react";
 import { getParkingPayments, queryCreatePayment, queryEditPayment, queryDeletePayment } from "../services/Parking.services";
 import { useSnackbar } from "../../../contexts/SnackbarContext";
 import DatePickerComponent from "../../../components/DatePickerComponent";
+import dayjs from "dayjs";
 import { formatMoneyInput, moneyToInteger, formatPrice } from "../../../utils/utils";
 
 const style = {
@@ -234,9 +235,9 @@ const ModalPaymentDetails: React.FC<ModalPaymentDetailsProps> = ({
             <Box display="flex" flexDirection="column" gap={2}>
               <DatePickerComponent
                 label="Fecha del Pago"
-                value={newPayment.paymentDate ? new Date(newPayment.paymentDate) : null}
+                value={newPayment.paymentDate ? dayjs(newPayment.paymentDate).toDate() : null}
                 onChange={(date) =>
-                  setNewPayment({ ...newPayment, paymentDate: date ? date.toISOString().split('T')[0] : '' })
+                  setNewPayment({ ...newPayment, paymentDate: date ? dayjs(date).format('YYYY-MM-DD') : '' })
                 }
                 required
                 maxDate={new Date()}
@@ -309,9 +310,9 @@ const ModalPaymentDetails: React.FC<ModalPaymentDetailsProps> = ({
                       {editingPayment?.id === payment.id ? (
                         <DatePickerComponent
                           label=""
-                          value={editingPayment.date ? new Date(editingPayment.date) : null}
+                          value={editingPayment.date ? dayjs(editingPayment.date).toDate() : null}
                           onChange={(date) =>
-                            setEditingPayment({ ...editingPayment, date: date ? date.toISOString().split('T')[0] : '' })
+                            setEditingPayment({ ...editingPayment, date: date ? dayjs(date).format('YYYY-MM-DD') : '' })
                           }
                         />
                       ) : (

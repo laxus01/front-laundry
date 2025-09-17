@@ -10,4 +10,7 @@ export const environment = {
   sales: BASE_URL + "/sales",
   backup: BASE_URL + "/attentions/backup",
   parkings: BASE_URL + "/parkings",
+  expenses: BASE_URL + "/expenses",
+  shopping: BASE_URL + "/shopping",
+  reports: BASE_URL + "/reports",
 };

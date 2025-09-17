@@ -24,12 +24,16 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
+import AssessmentIcon from '@mui/icons-material/Assessment';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import { Link } from "react-router-dom";
 import "../styles/dashboard.scss";
 
 const MenuComponent: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [listadosOpen, setListadosOpen] = useState(false);
+  const [informesOpen, setInformesOpen] = useState(false);
 
   const toggleDrawer = (open: boolean) => () => {
     setDrawerOpen(open);
@@ -37,6 +41,10 @@ const MenuComponent: React.FC = () => {
 
   const handleListadosClick = () => {
     setListadosOpen(!listadosOpen);
+  };
+
+  const handleInformesClick = () => {
+    setInformesOpen(!informesOpen);
   };
 
   return (
@@ -103,6 +111,36 @@ const MenuComponent: React.FC = () => {
             </List>
           </Collapse>
 
+          <ListItem className="cursor-pointer" component="li" onClick={handleInformesClick}>
+            <ListItemIcon>
+              <AssessmentIcon className="color-dark" />
+            </ListItemIcon>
+            <ListItemText primary="Informes" />
+            {informesOpen ? <ExpandLess /> : <ExpandMore />}
+          </ListItem>
+          
+          <Collapse in={informesOpen} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <Link to="/dashboard/reports/washer-activity" onClick={toggleDrawer(false)}>
+                <ListItem className="cursor-pointer" component="li" sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <BarChartIcon className="color-dark" />
+                  </ListItemIcon>
+                  <ListItemText primary="Actividad de lavadores" />
+                </ListItem>
+              </Link>
+
+              <Link to="/dashboard" onClick={toggleDrawer(false)}>
+                <ListItem className="cursor-pointer" component="li" sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <TrendingUpIcon className="color-dark" />
+                  </ListItemIcon>
+                  <ListItemText primary="Balance General" />
+                </ListItem>
+              </Link>
+            </List>
+          </Collapse>
+
           <Link to="/dashboard/sales" onClick={toggleDrawer(false)}>
             <ListItem className="cursor-pointer" component="li">
               <ListItemIcon>
@@ -121,27 +159,23 @@ const MenuComponent: React.FC = () => {
             </ListItem>
           </Link>
 
-          <ListItem
-            className="cursor-pointer"
-            component="li"
-            onClick={toggleDrawer(false)}
-          >
-            <ListItemIcon>
-              <ShoppingCartIcon className="color-dark" />
-            </ListItemIcon>
-            <ListItemText primary="Compras" />
-          </ListItem>
+          <Link to="/dashboard/shopping" onClick={toggleDrawer(false)}>
+            <ListItem className="cursor-pointer" component="li">
+              <ListItemIcon>
+                <ShoppingCartIcon className="color-dark" />
+              </ListItemIcon>
+              <ListItemText primary="Compras" />
+            </ListItem>
+          </Link>
 
-          <ListItem
-            className="cursor-pointer"
-            component="li"
-            onClick={toggleDrawer(false)}
-          >
-            <ListItemIcon>
-              <MonetizationOnIcon className="color-dark" />
-            </ListItemIcon>
-            <ListItemText primary="Gastos" />
-          </ListItem>
+          <Link to="/dashboard/expenses" onClick={toggleDrawer(false)}>
+            <ListItem className="cursor-pointer" component="li">
+              <ListItemIcon>
+                <MonetizationOnIcon className="color-dark" />
+              </ListItemIcon>
+              <ListItemText primary="Gastos" />
+            </ListItem>
+          </Link>
 
         </List>
       </Drawer>

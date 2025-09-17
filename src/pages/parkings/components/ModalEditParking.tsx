@@ -17,6 +17,7 @@ import ComboBoxAutoComplete from "../../../components/ComboBoxAutoComplete";
 import { getVehicles } from "../../vehicles/services/Vehicle.services";
 import { formatMoneyInput, moneyToInteger } from "../../../utils/utils";
 import { useState, useEffect } from "react";
+import dayjs from "dayjs"; // Import dayjs
 
 const style = {
   position: "absolute" as "absolute",
@@ -257,20 +258,20 @@ const ModalEditParking: React.FC<ModalEditParkingProps> = ({
             )}
             <DatePickerComponent
               label="Fecha Inicial"
-              value={dataParking.startDate ? new Date(dataParking.startDate) : null}
+              value={dataParking.startDate ? dayjs(dataParking.startDate).toDate() : null}
               onChange={(date) =>
-                setDataParking({ ...dataParking, startDate: date ? date.toISOString().split('T')[0] : '' })
+                setDataParking({ ...dataParking, startDate: date ? dayjs(date).format('YYYY-MM-DD') : '' })
               }
               required
             />
             <DatePickerComponent
               label="Fecha Final"
-              value={dataParking.endDate ? new Date(dataParking.endDate) : null}
+              value={dataParking.endDate ? dayjs(dataParking.endDate).toDate() : null}
               onChange={(date) =>
-                setDataParking({ ...dataParking, endDate: date ? date.toISOString().split('T')[0] : '' })
+                setDataParking({ ...dataParking, endDate: date ? dayjs(date).format('YYYY-MM-DD') : '' })
               }
               required
-              minDate={dataParking.startDate ? new Date(dataParking.startDate) : undefined}
+              minDate={dataParking.startDate ? dayjs(dataParking.startDate).toDate() : undefined}
             />
           </Box>
           <Box display="flex" justifyContent="space-around" mt={3}>

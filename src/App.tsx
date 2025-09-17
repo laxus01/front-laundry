@@ -9,6 +9,9 @@ import { Products } from "./pages/products/Products";
 import { Services } from "./pages/services/Services";
 import { Sales } from "./pages/sales/Sales";
 import { Parkings } from "./pages/parkings";
+import { Expenses } from "./pages/expenses";
+import { Shopping } from "./pages/shopping";
+import { WasherActivityReport } from "./pages/reports";
 import GlobalSnackbar from "./components/GlobalSnackbar";
 
 function App() {
@@ -38,6 +41,9 @@ function App() {
           <Route path="/dashboard/services" element={<Services />} />
           <Route path="/dashboard/sales" element={<Sales />} />
           <Route path="/dashboard/parkings" element={<Parkings />} />
+          <Route path="/dashboard/expenses" element={<Expenses />} />
+          <Route path="/dashboard/shopping" element={<Shopping />} />
+          <Route path="/dashboard/reports/washer-activity" element={<WasherActivityReport />} />
         </Route>
       </Routes>
       <GlobalSnackbar />
