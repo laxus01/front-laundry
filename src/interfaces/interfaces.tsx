@@ -224,3 +224,103 @@ export interface WasherActivityReport {
     totalSaleServices: number;
   };
 }
+
+export interface Client {
+  id: string;
+  client: string;
+  phone?: string;
+  state?: number;
+  createAt?: string;
+}
+
+export interface AccountReceivable {
+  id: string;
+  value: number;
+  date: string;
+  detail: string;
+  clientId: Client;
+  createAt?: string;
+}
+
+export interface AccountReceivableSelected {
+  id: string;
+  value: number;
+  date: string;
+  detail: string;
+  clientId: string;
+  clientName?: string;
+}
+
+export interface AccountReceivablePayment {
+  id: string;
+  date: string;
+  value: number;
+  detail: string;
+  createAt: string;
+  accountsReceivableId: string;
+  accountsReceivable?: {
+    id: string;
+    value: number;
+    date: string;
+    detail: string;
+    clientId: string;
+    createAt: string;
+  };
+}
+
+export interface EditingAccountReceivablePayment {
+  id: string;
+  date: string;
+  value: number;
+  detail: string;
+}
+
+export interface Provider {
+  id: string;
+  provider: string;
+  phone?: string;
+  state?: number;
+  createAt?: string;
+}
+
+export interface AccountPayable {
+  id: string;
+  value: number;
+  date: string;
+  detail: string;
+  providerId: Provider;
+  createAt?: string;
+}
+
+export interface AccountPayableSelected {
+  id: string;
+  value: number;
+  date: string;
+  detail: string;
+  providerId: string;
+  providerName?: string;
+}
+
+export interface AccountPayablePayment {
+  id: string;
+  date: string;
+  value: number;
+  detail: string;
+  createAt: string;
+  accountsPayableId: string;
+  accountsPayable?: {
+    id: string;
+    value: number;
+    date: string;
+    detail: string;
+    providerId: string;
+    createAt: string;
+  };
+}
+
+export interface EditingAccountPayablePayment {
+  id: string;
+  date: string;
+  value: number;
+  detail: string;
+}

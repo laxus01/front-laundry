@@ -16,6 +16,7 @@ import PaymentIcon from "@mui/icons-material/Payment";
 import { Tooltip, IconButton } from "@mui/material";
 import { useSnackbar } from "../../contexts/SnackbarContext";
 import { formatPrice } from "../../utils/utils";
+import dayjs from "dayjs";
 
 const columns = [
   { id: "plate", label: "Placa", minWidth: 150 },
@@ -64,8 +65,8 @@ export const Parkings = () => {
             phone: item.vehicle.phone,
             value: `$${formatPrice(item.value)}`,
             balance: `$${formatPrice(balance)}`,
-            startDate: new Date(item.dateInitial).toLocaleDateString(),
-            endDate: new Date(item.dateFinal).toLocaleDateString(),
+            startDate: dayjs(item.dateInitial).format('DD/MM/YYYY'),
+            endDate: dayjs(item.dateFinal).format('DD/MM/YYYY'),
             // Store original IDs and data for editing
             vehicleId: item.vehicle.id,
             typeParkingId: item.typeParking.id,
@@ -163,8 +164,8 @@ export const Parkings = () => {
       value: row.rawValue || (typeof row.value === 'string' 
         ? parseFloat(row.value.replace('$', '').replace(',', ''))
         : row.value),
-      startDate: row.rawDateInitial ? new Date(row.rawDateInitial).toISOString().split('T')[0] : new Date(row.startDate).toISOString().split('T')[0],
-      endDate: row.rawDateFinal ? new Date(row.rawDateFinal).toISOString().split('T')[0] : new Date(row.endDate).toISOString().split('T')[0],
+      startDate: row.rawDateInitial ? dayjs(row.rawDateInitial).format('YYYY-MM-DD') : dayjs(row.startDate).format('YYYY-MM-DD'),
+      endDate: row.rawDateFinal ? dayjs(row.rawDateFinal).format('YYYY-MM-DD') : dayjs(row.endDate).format('YYYY-MM-DD'),
       // Set the original IDs and vehicle type for editing
       vehicleId: row.vehicleId || '',
       typeParkingId: row.typeParkingId || '',

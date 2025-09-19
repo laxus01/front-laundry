@@ -13,4 +13,10 @@ export const environment = {
   expenses: BASE_URL + "/expenses",
   shopping: BASE_URL + "/shopping",
   reports: BASE_URL + "/reports",
+  clients: BASE_URL + "/clients",
+  accountsReceivable: BASE_URL + "/accounts-receivable",
+  accountsReceivablePayments: BASE_URL + "/accounts-receivable-payments",
+  providers: BASE_URL + "/providers",
+  accountsPayable: BASE_URL + "/accounts-payable",
+  accountsPayablePayments: BASE_URL + "/accounts-payable-payments",
 };
