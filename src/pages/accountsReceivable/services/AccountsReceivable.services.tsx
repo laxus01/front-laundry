@@ -26,6 +26,10 @@ export const getClients = async () => {
   return await requestGet(environment.clients);
 };
 
+export const queryCreateClient = async (payload: any) => {
+  return await requestPost(environment.clients, payload);
+};
+
 // Payment services for accounts receivable
 export const getAccountReceivablePayments = async (accountsReceivableId: string) => {
   return await requestGet(`${environment.accountsReceivablePayments}/by-accounts-receivable/${accountsReceivableId}`);

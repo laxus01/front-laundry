@@ -171,6 +171,14 @@ const ModalPaymentDetailsAccountPayable: React.FC<ModalPaymentDetailsAccountPaya
     setEditingPayment(null);
   };
 
+  // Calculate current balance dynamically
+  const calculateCurrentBalance = () => {
+    const totalPayments = payments.reduce((sum, payment) => sum + payment.value, 0);
+    // Use rawValue (numeric) instead of value (formatted string)
+    const totalValue = accountPayableData.rawValue || 0;
+    return totalValue - totalPayments;
+  };
+
   useEffect(() => {
     if (openModal && accountPayableData.id) {
       getPayments();
@@ -197,7 +205,7 @@ const ModalPaymentDetailsAccountPayable: React.FC<ModalPaymentDetailsAccountPaya
           <Typography variant="body1"><strong>Fecha:</strong> {accountPayableData.date}</Typography>
           <Typography variant="body1"><strong>Detalle:</strong> {accountPayableData.detail}</Typography>
           <Typography variant="body1"><strong>Valor Total:</strong> {accountPayableData.value}</Typography>
-          <Typography variant="body1"><strong>Saldo Actual:</strong> {accountPayableData.balance || accountPayableData.value}</Typography>
+          <Typography variant="body1"><strong>Saldo Actual:</strong> ${formatPrice(calculateCurrentBalance())}</Typography>
         </Box>
 
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>

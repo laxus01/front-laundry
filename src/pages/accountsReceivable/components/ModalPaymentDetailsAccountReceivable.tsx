@@ -171,6 +171,14 @@ const ModalPaymentDetailsAccountReceivable: React.FC<ModalPaymentDetailsAccountR
     setEditingPayment(null);
   };
 
+  // Calculate current balance dynamically
+  const calculateCurrentBalance = () => {
+    const totalPayments = payments.reduce((sum, payment) => sum + payment.value, 0);
+    // Use rawValue (numeric) instead of value (formatted string)
+    const totalValue = accountReceivableData.rawValue || 0;
+    return totalValue - totalPayments;
+  };
+
   useEffect(() => {
     if (openModal && accountReceivableData.id) {
       getPayments();
@@ -197,7 +205,7 @@ const ModalPaymentDetailsAccountReceivable: React.FC<ModalPaymentDetailsAccountR
           <Typography variant="body1"><strong>Fecha:</strong> {accountReceivableData.date}</Typography>
           <Typography variant="body1"><strong>Detalle:</strong> {accountReceivableData.detail}</Typography>
           <Typography variant="body1"><strong>Valor Total:</strong> {accountReceivableData.value}</Typography>
-          <Typography variant="body1"><strong>Saldo Actual:</strong> {accountReceivableData.balance || accountReceivableData.value}</Typography>
+          <Typography variant="body1"><strong>Saldo Actual:</strong> ${formatPrice(calculateCurrentBalance())}</Typography>
         </Box>
 
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
