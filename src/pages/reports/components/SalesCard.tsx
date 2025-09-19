@@ -2,13 +2,22 @@ import React from 'react';
 import { Card, CardContent, Typography, Box, Chip } from '@mui/material';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import { WasherActivitySale } from '../../../interfaces/interfaces';
-import { formatPrice } from '../../../utils/utils';
 
 interface SalesCardProps {
   sales: WasherActivitySale[];
 }
 
 export const SalesCard: React.FC<SalesCardProps> = ({ sales }) => {
+  const formatPrice = (price: number | undefined | null) => {
+    const numPrice = Number(price) || 0;
+    return new Intl.NumberFormat('es-CO', { 
+      style: 'currency', 
+      currency: 'COP',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(numPrice);
+  };
+
   return (
     <Card sx={{ marginBottom: 2, borderRadius: 2, boxShadow: 3 }}>
       <CardContent>
@@ -21,7 +30,7 @@ export const SalesCard: React.FC<SalesCardProps> = ({ sales }) => {
         
         {sales.length === 0 ? (
           <Typography variant="body2" color="text.secondary">
-            No hay productos vendidos para esta fecha y lavador.
+            No hay productos vendidos para este período y lavador.
           </Typography>
         ) : (
           <Box>

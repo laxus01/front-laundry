@@ -26,6 +26,10 @@ export const getProviders = async () => {
   return await requestGet(environment.providers);
 };
 
+export const queryCreateProvider = async (payload: any) => {
+  return await requestPost(environment.providers, payload);
+};
+
 // Payment services for accounts payable
 export const getAccountPayablePayments = async (accountsPayableId: string) => {
   return await requestGet(`${environment.accountsPayablePayments}?accountsPayableId=${accountsPayableId}`);

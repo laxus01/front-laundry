@@ -134,9 +134,9 @@ export const AccountsPayable = () => {
     setOpenModal(true);
   };
 
-  const openModalEdit = (row: any) => {
+  const openModalEdit = (row: AccountPayableSelected) => {
     setIsEditing(true);
-    // Convert formatted data back to raw data for editing
+    console.log('Opening edit modal with row:', row);
     const editData = {
       ...row,
       value: row.rawValue || (typeof row.value === 'string' 
@@ -144,8 +144,9 @@ export const AccountsPayable = () => {
         : row.value),
       date: dayjs(row.rawDate || row.date).format('YYYY-MM-DD'),
       providerId: row.providerId || '',
-      providerName: row.providerName || '',
+      providerName: row.providerName || 'Proveedor no encontrado',
     };
+    console.log('Edit data prepared:', editData);
     setDataAccountPayable(editData);
     setOpenModal(true);
   };

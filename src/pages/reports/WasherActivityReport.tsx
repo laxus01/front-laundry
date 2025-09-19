@@ -29,6 +29,7 @@ import DatePickerComponent from '../../components/DatePickerComponent';
 
 export const WasherActivityReport: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+  const [endDate, setEndDate] = useState<Date | null>(new Date());
   const [selectedWasher, setSelectedWasher] = useState<OptionsComboBoxAutoComplete | null>(null);
   const [washers, setWashers] = useState<OptionsComboBoxAutoComplete[]>([]);
   const [reportData, setReportData] = useState<WasherActivityReportType | null>(null);
@@ -56,8 +57,13 @@ export const WasherActivityReport: React.FC = () => {
   };
 
   const handleSearch = async () => {
-    if (!selectedDate || !selectedWasher) {
-      setError('Por favor selecciona una fecha y un lavador');
+    if (!selectedDate || !endDate || !selectedWasher) {
+      setError('Por favor selecciona ambas fechas y un lavador');
+      return;
+    }
+
+    if (selectedDate > endDate) {
+      setError('La fecha inicial no puede ser mayor que la fecha final');
       return;
     }
 
@@ -65,8 +71,9 @@ export const WasherActivityReport: React.FC = () => {
     setError(null);
 
     try {
-      const formattedDate = format(selectedDate, 'yyyy-MM-dd');
-      const response = await getWasherActivityReport(formattedDate, selectedWasher.id);
+      const formattedStartDate = format(selectedDate, 'yyyy-MM-dd');
+      const formattedEndDate = format(endDate, 'yyyy-MM-dd');
+      const response = await getWasherActivityReport(formattedStartDate, formattedEndDate, selectedWasher.id);
       
       if (response && response.data) {
         setReportData(response.data);
@@ -81,8 +88,14 @@ export const WasherActivityReport: React.FC = () => {
     }
   };
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(price);
+  const formatPrice = (price: number | undefined | null) => {
+    const numPrice = Number(price) || 0;
+    return new Intl.NumberFormat('es-CO', { 
+      style: 'currency', 
+      currency: 'COP',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(numPrice);
   };
 
   return (
@@ -114,6 +127,17 @@ export const WasherActivityReport: React.FC = () => {
             </Box>
             
             <Box sx={{ flex: 1 }}>
+            <DatePickerComponent
+              label="Fecha Final"
+              value={endDate ? dayjs(endDate).toDate() : null}
+              onChange={(date) =>
+                setEndDate(date ? dayjs(date).toDate() : null)
+              }
+              required
+            />
+            </Box>
+            
+            <Box sx={{ flex: 1 }}>
               <Autocomplete
                 options={washers}
                 getOptionLabel={(option) => option.name}
@@ -136,7 +160,7 @@ export const WasherActivityReport: React.FC = () => {
                 variant="contained"
                 startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <SearchIcon />}
                 onClick={handleSearch}
-                disabled={loading || !selectedDate || !selectedWasher}
+                disabled={loading || !selectedDate || !endDate || !selectedWasher}
                 fullWidth
                 sx={{
                   height: 56,
@@ -175,26 +199,7 @@ export const WasherActivityReport: React.FC = () => {
               </Box>
               
               <Box sx={{ flex: 1 }}>
-                <SaleServicesCard 
-                  saleServices={(() => {
-                    // Debug: log the structure
-                    console.log('reportData.attentions:', reportData.attentions);
-                    
-                    // Extract all saleServices from all attentions with vehicle information
-                    const allSaleServices = reportData.attentions.flatMap(attention => {
-                      console.log('attention.saleServices:', attention.saleServices);
-                      
-                      // Map each service to include vehicle plate
-                      return (attention.saleServices || []).map(service => ({
-                        ...service,
-                        vehiclePlate: attention.vehicleId.plate
-                      }));
-                    });
-                    
-                    console.log('allSaleServices:', allSaleServices);
-                    return allSaleServices;
-                  })()}
-                />
+                <SaleServicesCard saleServices={reportData.saleServices} />
               </Box>
               
               <Box sx={{ flex: 1 }}>
@@ -220,13 +225,9 @@ export const WasherActivityReport: React.FC = () => {
                 </Box>
                 <Box sx={{ flex: 1, textAlign: 'center' }}>
                   <Typography variant="h4" fontWeight="bold" color="success.main">
-                    {(() => {
-                      // Calculate total sale services from nested structure
-                      const totalSaleServices = reportData.attentions.reduce((total, attention) => {
-                        return total + (attention.saleServices?.length || 0);
-                      }, 0);
-                      return totalSaleServices;
-                    })()}
+                    {reportData.attentions.reduce((total, attention) => {
+                      return total + attention.saleServices.length;
+                    }, 0)}
                   </Typography>
                   <Typography variant="body1" color="text.secondary">
                     Servicios Vendidos
@@ -242,21 +243,15 @@ export const WasherActivityReport: React.FC = () => {
                 </Box>
                 <Box sx={{ flex: 1, textAlign: 'center' }}>
                   <Typography variant="h4" fontWeight="bold" color="info.main">
-                    {(() => {
-                      // Calculate total washer profit from all attentions
-                      const totalProfit = reportData.attentions.reduce((total, attention) => {
-                        return total + (attention.washerProfit || 0);
-                      }, 0);
-                      
-                      // Calculate total sales value to subtract (saleValue * quantity for each sale)
-                      const totalSalesValue = reportData.sales.reduce((total, sale) => {
-                        const saleTotal = (sale.productId?.saleValue || 0) * (sale.quantity || 0);
-                        return total + saleTotal;
-                      }, 0);
-                      
-                      // Return profit minus total sales value
-                      return formatPrice(totalProfit - totalSalesValue);
-                    })()}
+                    {formatPrice(
+                      // Sumar ganancia del lavador por atenciones
+                      reportData.attentions.reduce((total, attention) => total + attention.washerProfit, 0) -
+                      // Restar el valor total de productos vendidos (saleValue * quantity)
+                      reportData.sales.reduce((total, sale) => {
+                        const productSaleValue = sale.productId.saleValue * sale.quantity;
+                        return total + productSaleValue;
+                      }, 0)
+                    )}
                   </Typography>
                   <Typography variant="body1" color="text.secondary">
                     Total Ganancia

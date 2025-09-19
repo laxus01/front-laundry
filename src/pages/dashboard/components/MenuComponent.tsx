@@ -28,6 +28,7 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import RequestPageIcon from '@mui/icons-material/RequestPage';
+import DateRangeIcon from '@mui/icons-material/DateRange';
 import { Link } from "react-router-dom";
 import "../styles/dashboard.scss";
 
@@ -149,21 +150,21 @@ const MenuComponent: React.FC = () => {
             </ListItem>
           </Link>
 
-          <Link to="/dashboard/accounts-receivable" onClick={toggleDrawer(false)}>
-            <ListItem className="cursor-pointer" component="li">
-              <ListItemIcon>
-                <RequestPageIcon className="color-dark" />
-              </ListItemIcon>
-              <ListItemText primary="Cuentas por cobrar" />
-            </ListItem>
-          </Link>
-
           <Link to="/dashboard/accounts-payable" onClick={toggleDrawer(false)}>
             <ListItem className="cursor-pointer" component="li">
               <ListItemIcon>
                 <RequestPageIcon className="color-dark" />
               </ListItemIcon>
               <ListItemText primary="Cuentas por pagar" />
+            </ListItem>
+          </Link>
+
+          <Link to="/dashboard/accounts-receivable" onClick={toggleDrawer(false)}>
+            <ListItem className="cursor-pointer" component="li">
+              <ListItemIcon>
+                <RequestPageIcon className="color-dark" />
+              </ListItemIcon>
+              <ListItemText primary="Cuentas por cobrar" />
             </ListItem>
           </Link>
 
@@ -192,6 +193,24 @@ const MenuComponent: React.FC = () => {
                     <TrendingUpIcon className="color-dark" />
                   </ListItemIcon>
                   <ListItemText primary="General" />
+                </ListItem>
+              </Link>
+
+              <Link to="/dashboard/reports/attention-search" onClick={toggleDrawer(false)}>
+                <ListItem className="cursor-pointer" component="li" sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <DirectionsCarIcon className="color-dark" />
+                  </ListItemIcon>
+                  <ListItemText primary="Búsqueda de Atenciones" />
+                </ListItem>
+              </Link>
+
+              <Link to="/dashboard/reports/parking-date-range" onClick={toggleDrawer(false)}>
+                <ListItem className="cursor-pointer" component="li" sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <LocalParkingIcon className="color-dark" />
+                  </ListItemIcon>
+                  <ListItemText primary="Parqueos por Fecha" />
                 </ListItem>
               </Link>
             </List>

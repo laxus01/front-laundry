@@ -2,18 +2,22 @@ import React from 'react';
 import { Card, CardContent, Typography, Box, Chip } from '@mui/material';
 import LocalCarWashIcon from '@mui/icons-material/LocalCarWash';
 import { WasherActivitySaleService } from '../../../interfaces/interfaces';
-import { formatPrice } from '../../../utils/utils';
-
-// Extended interface to include vehicle information
-interface SaleServiceWithVehicle extends WasherActivitySaleService {
-  vehiclePlate?: string;
-}
 
 interface SaleServicesCardProps {
-  saleServices: SaleServiceWithVehicle[];
+  saleServices: WasherActivitySaleService[];
 }
 
 export const SaleServicesCard: React.FC<SaleServicesCardProps> = ({ saleServices }) => {
+  const formatPrice = (price: number | undefined | null) => {
+    const numPrice = Number(price) || 0;
+    return new Intl.NumberFormat('es-CO', { 
+      style: 'currency', 
+      currency: 'COP',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(numPrice);
+  };
+
   return (
     <Card sx={{ marginBottom: 2, borderRadius: 2, boxShadow: 3 }}>
       <CardContent>
@@ -26,13 +30,13 @@ export const SaleServicesCard: React.FC<SaleServicesCardProps> = ({ saleServices
         
         {saleServices.length === 0 ? (
           <Typography variant="body2" color="text.secondary">
-            No hay servicios vendidos para esta fecha y lavador.
+            No hay servicios vendidos para este período y lavador.
           </Typography>
         ) : (
           <Box>
-            {saleServices.map((saleService) => (
+            {saleServices.map((service, index) => (
               <Box
-                key={saleService.id}
+                key={`${service.id}-${index}`}
                 sx={{
                   display: 'flex',
                   justifyContent: 'space-between',
@@ -48,16 +52,14 @@ export const SaleServicesCard: React.FC<SaleServicesCardProps> = ({ saleServices
               >
                 <Box>
                   <Typography variant="body1" fontWeight="medium">
-                    {saleService.serviceId.service}
+                    {service.serviceId.service}
                   </Typography>
-                  {saleService.vehiclePlate && (
-                    <Typography variant="body2" color="text.secondary">
-                      Placa: {saleService.vehiclePlate}
-                    </Typography>
-                  )}
+                  <Typography variant="body2" color="text.secondary">
+                    Porcentaje: {service.attentionId.percentage}%
+                  </Typography>
                 </Box>
                 <Chip
-                  label={formatPrice(saleService.serviceId.value)}
+                  label={formatPrice(service.value)}
                   color="success"
                   size="small"
                   sx={{ fontWeight: 'bold' }}

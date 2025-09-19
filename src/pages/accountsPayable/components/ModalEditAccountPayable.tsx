@@ -4,11 +4,14 @@ import {
   Box,
   Typography,
   TextField,
+  IconButton,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import DatePickerComponent from "../../../components/DatePickerComponent";
 import ComboBoxAutoComplete from "../../../components/ComboBoxAutoComplete";
+import ModalCreateProvider from "./ModalCreateProvider";
 import { getProviders } from "../services/AccountsPayable.services";
 import { formatMoneyInput, moneyToInteger } from "../../../utils/utils";
 import { useState, useEffect } from "react";
@@ -45,6 +48,7 @@ const ModalEditAccountPayable: React.FC<ModalEditAccountPayableProps> = ({
   const { dataAccountPayable, setDataAccountPayable } = accountsPayable;
   const [providers, setProviders] = useState<any[]>([]);
   const [valueFormatted, setValueFormatted] = useState<string>("");
+  const [openProviderModal, setOpenProviderModal] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -96,6 +100,29 @@ const ModalEditAccountPayable: React.FC<ModalEditAccountPayableProps> = ({
     }
   };
 
+  const handleProviderCreated = (newProvider: { id: string; name: string }) => {
+    // Add the new provider to the providers list
+    const updatedProviders = [...providers, newProvider];
+    setProviders(updatedProviders);
+    
+    // Auto-select the newly created provider
+    setDataAccountPayable({
+      ...dataAccountPayable,
+      providerId: newProvider.id,
+      providerName: newProvider.name,
+    });
+  };
+
+  const handleOpenProviderModal = () => {
+    if (!isEditing) {
+      setOpenProviderModal(true);
+    }
+  };
+
+  const handleCloseProviderModal = () => {
+    setOpenProviderModal(false);
+  };
+
   const validateButton = () => {
     if (
       !dataAccountPayable.providerId ||
@@ -121,12 +148,31 @@ const ModalEditAccountPayable: React.FC<ModalEditAccountPayableProps> = ({
             {isEditing ? "Editar" : "Nueva"} Cuenta por Pagar
           </Typography>
           <Box display="flex" flexDirection="column" gap={2} mt={3}>
-            <ComboBoxAutoComplete
-              title="Proveedor"
-              options={providers}
-              onSelect={handleSelectProvider}
-              value={dataAccountPayable.providerId}
-              disabled={isEditing}
+            <Box display="flex" alignItems="center" gap={1} width="100%">
+              <Box flexGrow={1}>
+                <ComboBoxAutoComplete
+                  title="Proveedor"
+                  options={providers}
+                  onSelect={handleSelectProvider}
+                  value={dataAccountPayable.providerId}
+                  disabled={isEditing}
+                />
+              </Box>
+              {!isEditing && (
+                <IconButton 
+                  onClick={handleOpenProviderModal}
+                  color="primary"
+                  title="Agregar nuevo proveedor"
+                  sx={{ flexShrink: 0 }}
+                >
+                  <PersonAddIcon />
+                </IconButton>
+              )}
+            </Box>
+            <ModalCreateProvider 
+              openModal={openProviderModal} 
+              handleClose={handleCloseProviderModal} 
+              onProviderCreated={handleProviderCreated} 
             />
             <DatePickerComponent
               label="Fecha"

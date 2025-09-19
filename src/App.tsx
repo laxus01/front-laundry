@@ -12,6 +12,8 @@ import { Parkings } from "./pages/parkings";
 import { Expenses } from "./pages/expenses";
 import { Shopping } from "./pages/shopping";
 import { WasherActivityReport } from "./pages/reports";
+import { AttentionSearch } from "./pages/reports/AttentionSearch";
+import { ParkingDateRangeSearch } from "./pages/reports/ParkingDateRangeSearch";
 import { AccountsReceivable } from "./pages/accountsReceivable";
 import { AccountsPayable } from "./pages/accountsPayable/AccountsPayable";
 import GlobalSnackbar from "./components/GlobalSnackbar";
@@ -46,6 +48,8 @@ function App() {
           <Route path="/dashboard/expenses" element={<Expenses />} />
           <Route path="/dashboard/shopping" element={<Shopping />} />
           <Route path="/dashboard/reports/washer-activity" element={<WasherActivityReport />} />
+          <Route path="/dashboard/reports/attention-search" element={<AttentionSearch />} />
+          <Route path="/dashboard/reports/parking-date-range" element={<ParkingDateRangeSearch />} />
           <Route path="/dashboard/accounts-receivable" element={<AccountsReceivable />} />
           <Route path="/dashboard/accounts-payable" element={<AccountsPayable />} />
         </Route>

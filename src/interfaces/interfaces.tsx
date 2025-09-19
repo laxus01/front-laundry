@@ -189,7 +189,7 @@ export interface WasherActivitySale {
     id: string;
     percentage: number;
     createAt: string;
-  };
+  } | null;
   washerId: {
     id: string;
     washer: string;
@@ -210,10 +210,16 @@ export interface WasherActivitySaleService {
     state: number;
     createAt: string;
   };
+  attentionId: {
+    id: string;
+    percentage: number;
+    createAt: string;
+  };
 }
 
 export interface WasherActivityReport {
-  date: string;
+  startDate: string;
+  endDate: string;
   washerId: string;
   attentions: WasherActivityAttention[];
   sales: WasherActivitySale[];
@@ -222,6 +228,7 @@ export interface WasherActivityReport {
     totalAttentions: number;
     totalSales: number;
     totalSaleServices: number;
+    totalProfit: number;
   };
 }
 
@@ -294,11 +301,16 @@ export interface AccountPayable {
 
 export interface AccountPayableSelected {
   id: string;
-  value: number;
+  value: number | string; // Can be formatted string for display
   date: string;
   detail: string;
   providerId: string;
   providerName?: string;
+  // Additional properties for data processing
+  rawValue?: number;
+  rawDate?: string;
+  rawBalance?: number;
+  balance?: string; // Formatted balance for display
 }
 
 export interface AccountPayablePayment {
@@ -323,4 +335,103 @@ export interface EditingAccountPayablePayment {
   date: string;
   value: number;
   detail: string;
+}
+
+// Interfaces for Attention Date Range Search
+export interface AttentionDateRangeVehicle {
+  id: string;
+  plate: string;
+  client: string;
+  phone: string;
+  state: number;
+  createAt: string;
+}
+
+export interface AttentionDateRangeWasher {
+  id: string;
+  washer: string;
+  phone: string;
+  state: number;
+  createAt: string;
+}
+
+export interface AttentionDateRangeService {
+  id: string;
+  service: string;
+  value: number;
+  state: number;
+  createAt: string;
+}
+
+export interface AttentionDateRangeSaleService {
+  id: string;
+  createAt: string;
+  value: number;
+  serviceId: AttentionDateRangeService;
+}
+
+export interface AttentionDateRangeProduct {
+  id: string;
+  product: string;
+  valueBuys: number;
+  saleValue: number;
+  existence: number;
+  state: number;
+  createAt: string;
+  quantity: number;
+  saleId: string;
+  saleCreateAt: string;
+}
+
+export interface AttentionDateRange {
+  id: string;
+  percentage: number;
+  createAt: string;
+  vehicleId: AttentionDateRangeVehicle;
+  washerId: AttentionDateRangeWasher;
+  saleServices: AttentionDateRangeSaleService[];
+  products: AttentionDateRangeProduct[];
+}
+
+// Interfaces for Parking Date Range Search
+export interface ParkingDateRangeVehicle {
+  id: string;
+  plate: string;
+  client: string;
+  phone: string;
+  state: number;
+  createAt: string;
+  typeVehicle: {
+    id: string;
+    type: string;
+  };
+}
+
+export interface ParkingDateRangeTypeParking {
+  id: string;
+  type: string;
+}
+
+export interface ParkingDateRangePayment {
+  id: string;
+  date: string;
+  value: number;
+  detail: string;
+  createAt: string;
+  parkingId: string;
+}
+
+export interface ParkingDateRange {
+  id: string;
+  dateInitial: string;
+  dateFinal: string;
+  value: number;
+  paymentStatus: number;
+  state: number;
+  createAt: string;
+  typeParkingId: string;
+  vehicleId: string;
+  vehicle: ParkingDateRangeVehicle;
+  typeParking: ParkingDateRangeTypeParking;
+  parkingPayments: ParkingDateRangePayment[];
 }
