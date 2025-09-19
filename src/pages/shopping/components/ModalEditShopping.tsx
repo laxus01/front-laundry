@@ -85,7 +85,7 @@ const ModalEditShopping: React.FC<ModalEditShoppingProps> = ({
               id="quantity"
               label="Cantidad"
               variant="outlined"
-              type="number"
+              type="text"
               value={dataShopping.quantity}
               onChange={(e) =>
                 setDataShopping({ 

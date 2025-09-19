@@ -87,6 +87,7 @@ const ModalEditSale: React.FC<ModalEditSaleProps> = ({
               title="Producto"
               options={listProducts}
               onSelect={handleProduct}
+              value={dataSale.productId}
             />
             <TextField
               id="quantity"
@@ -116,6 +117,7 @@ const ModalEditSale: React.FC<ModalEditSaleProps> = ({
                 title="Lavador"
                 options={listWashers}
                 onSelect={handleSelectWasher}
+                value={dataSale.washerId}
               />
             )}
           </Box>

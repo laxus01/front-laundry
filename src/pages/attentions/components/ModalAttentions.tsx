@@ -108,16 +108,19 @@ const ModalAttentions: React.FC<ModalAttentionsProps> = ({
               title="Vehiculo"
               options={listVehicles}
               onSelect={handleSelectVehicle}
+              value={vehicleSelected?.id}
             />
             <ComboBoxAutoComplete
               title="Lavador"
               options={listWashers}
               onSelect={handleSelectWasher}
+              value={washerSelected?.id}
             />
             <ComboBoxAutoComplete
               title="Porcentaje"
               options={percentage}
               onSelect={handleSelectPercentage}
+              value={percentageValue > 0 ? percentageValue.toString() : undefined}
             />
           </Box>
           <Box display="flex" justifyContent="space-around" mt={3}>

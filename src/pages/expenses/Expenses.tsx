@@ -13,6 +13,7 @@ import {
 } from "./services/Expenses.services";
 import { useSnackbar } from "../../contexts/SnackbarContext";
 import { formatPrice } from "../../utils/utils";
+import dayjs from "dayjs";
 
 const columns = [
   { id: "expense", label: "Gasto", minWidth: 200 },
@@ -44,7 +45,7 @@ export const Expenses = () => {
           id: item.id,
           expense: item.expense,
           value: `$${formatPrice(item.value)}`,
-          date: new Date(item.date).toLocaleDateString(),
+          date: dayjs(item.date).format('DD/MM/YYYY'),
           rawValue: item.value,
           rawDate: item.date,
         }));

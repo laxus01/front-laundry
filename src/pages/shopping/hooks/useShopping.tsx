@@ -2,7 +2,7 @@ import { useState } from "react";
 
 export interface Shopping {
   id: string;
-  quantity: number;
+  quantity: string;
   productId: string;
   date: string;
 }
@@ -10,7 +10,7 @@ export interface Shopping {
 export const useShopping = () => {
   const defaultShopping: Shopping = {
     id: "",
-    quantity: 0,
+    quantity: "",
     productId: "",
     date: new Date().toISOString().split('T')[0],
   };

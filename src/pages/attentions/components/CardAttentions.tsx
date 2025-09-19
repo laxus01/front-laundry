@@ -19,13 +19,13 @@ import { formatPrice, removeFormatPrice } from "../../../utils/utils";
 
 const columnsServices = [
   { id: "name", label: "Servicio", minWidth: 200 },
-  { id: "value", label: "Valor", minWidth: 100, align: "center" },
+  { id: "value", label: "Valor", minWidth: 100, align: "center", format: (value: number) => formatPrice(value) },
 ];
 
 const columnsProducts = [
   { id: "name", label: "Producto", minWidth: 200 },
   { id: "quantity", label: "Cantidad", minWidth: 100, align: "center" },
-  { id: "value", label: "Valor", minWidth: 100, align: "center" },
+  { id: "value", label: "Valor", minWidth: 100, align: "center", format: (value: number) => formatPrice(value) },
 ];
 
 const styleIcon = {
@@ -86,7 +86,12 @@ export const CardAttentions: React.FC<CardAttentionsProps> = ({
     setData: React.Dispatch<React.SetStateAction<OptionsComboBoxAutoComplete[]>>
   ) => {
     setData((prevData) => {
-      const updatedData = [...prevData, itemSelected];
+      // Create a unique identifier for this specific item instance
+      const itemWithUniqueId = {
+        ...itemSelected,
+        uniqueId: `${itemSelected.id}_${Date.now()}_${Math.random()}`
+      };
+      const updatedData = [...prevData, itemWithUniqueId];
       updateLocalStorage(updatedData, type);
       return updatedData;
     });
@@ -99,7 +104,7 @@ export const CardAttentions: React.FC<CardAttentionsProps> = ({
     setData: React.Dispatch<React.SetStateAction<OptionsComboBoxAutoComplete[]>>
   ) => {
     const updatedData = data.filter(
-      (currentItem: OptionsComboBoxAutoComplete) => currentItem.id !== item.id
+      (currentItem: OptionsComboBoxAutoComplete) => (currentItem as any).uniqueId !== (item as any).uniqueId
     );
     setData(updatedData);
     updateLocalStorage(updatedData, type);

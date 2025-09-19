@@ -86,6 +86,7 @@ const ModalServices: React.FC<ModalServicesProps> = ({
               title="Servicio"
               options={listServices}
               onSelect={handleSelectService}
+              value={serviceId}
             />
           </Box>
           <Box display="flex" flexDirection="column" gap={2} mt={3}>

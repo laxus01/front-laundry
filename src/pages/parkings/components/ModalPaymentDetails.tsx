@@ -143,7 +143,7 @@ const ModalPaymentDetails: React.FC<ModalPaymentDetailsProps> = ({
   const handleEditPayment = (payment: Payment) => {
     setEditingPayment({
       id: payment.id,
-      date: new Date(payment.date).toISOString().split('T')[0],
+      date: dayjs(payment.date).format('YYYY-MM-DD'),
       value: payment.value,
       detail: payment.detail,
     });
@@ -156,6 +156,7 @@ const ModalPaymentDetails: React.FC<ModalPaymentDetailsProps> = ({
     
     try {
       const payload = {
+        date: editingPayment.date,
         value: editingPayment.value,
         detail: editingPayment.detail,
       };
@@ -316,7 +317,7 @@ const ModalPaymentDetails: React.FC<ModalPaymentDetailsProps> = ({
                           }
                         />
                       ) : (
-                        new Date(payment.date).toLocaleDateString()
+                        dayjs(payment.date).toDate().toLocaleDateString()
                       )}
                     </TableCell>
                     <TableCell>

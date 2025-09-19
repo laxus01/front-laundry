@@ -14,6 +14,7 @@ import {
 import { useSnackbar } from "../../contexts/SnackbarContext";
 import { OptionsComboBoxAutoComplete } from "../../interfaces/interfaces";
 import { getProducts } from "../attentions/services/Attentions.services";
+import dayjs from "dayjs";
 
 const columns = [
   { id: "product", label: "Producto", minWidth: 200 },
@@ -45,15 +46,12 @@ export const Shopping = () => {
     try {
       const response = await getShopping();
       if (response && response.data && Array.isArray(response.data)) {
-        const data = response.data.map((item: any) => {
-          const dateObj = new Date(item.date + 'T00:00:00');
-          const formattedDate = `${dateObj.getDate()}/${dateObj.getMonth() + 1}/${dateObj.getFullYear()}`;
-          
+        const data = response.data.map((item: any) => {         
           return {
             id: item.id,
             product: item.product?.product || "Producto no encontrado",
             quantity: item.quantity,
-            date: formattedDate,
+            date: dayjs(item.date).format('DD/MM/YYYY'),
             productId: item.productId,
             rawDate: item.date,
           };
@@ -138,7 +136,7 @@ export const Shopping = () => {
     setIsEditing(true);
     const editData = {
       ...row,
-      date: row.rawDate ? new Date(row.rawDate).toISOString().split('T')[0] : new Date(row.date).toISOString().split('T')[0],
+      date: row.rawDate ? dayjs(row.rawDate).format('YYYY-MM-DD') : dayjs(row.date).format('YYYY-MM-DD'),
     };
     setDataShopping(editData);
     setOpenModal(true);
