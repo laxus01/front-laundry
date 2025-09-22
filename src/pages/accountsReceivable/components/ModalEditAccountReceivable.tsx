@@ -8,11 +8,11 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import DatePickerComponent from "../../../components/DatePickerComponent";
 import ComboBoxAutoComplete from "../../../components/ComboBoxAutoComplete";
-import ModalCreateClient from "./ModalCreateClient";
-import { getClients } from "../services/AccountsReceivable.services";
+import ModalCreateVehicle from "./ModalCreateVehicle";
+import { getVehicles } from "../services/AccountsReceivable.services";
 import { formatMoneyInput, moneyToInteger } from "../../../utils/utils";
 import { useState, useEffect } from "react";
 import dayjs from "dayjs";
@@ -46,9 +46,9 @@ const ModalEditAccountReceivable: React.FC<ModalEditAccountReceivableProps> = ({
   accountsReceivable,
 }) => {
   const { dataAccountReceivable, setDataAccountReceivable } = accountsReceivable;
-  const [clients, setClients] = useState<any[]>([]);
+  const [vehicles, setVehicles] = useState<any[]>([]);
   const [valueFormatted, setValueFormatted] = useState<string>("");
-  const [openClientModal, setOpenClientModal] = useState<boolean>(false);
+  const [openVehicleModal, setOpenVehicleModal] = useState<boolean>(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -56,43 +56,34 @@ const ModalEditAccountReceivable: React.FC<ModalEditAccountReceivableProps> = ({
         console.log('LoadData called - isEditing:', isEditing, 'openModal:', openModal);
         console.log('dataAccountReceivable:', dataAccountReceivable);
         
-        // Load clients for the dropdown
-        if (!isEditing) {
-          const clientsResponse = await getClients();
-          if (clientsResponse?.data) {
-            const clientOptions = clientsResponse.data.map((client: any) => ({
-              id: client.id,
-              name: client.client,
-            }));
-            console.log('Setting all clients for create mode:', clientOptions);
-            setClients(clientOptions);
-          }
-        } else {
-          // When editing, create a single client option from the existing data
-          console.log('Edit mode - clientId:', dataAccountReceivable.clientId, 'clientName:', dataAccountReceivable.clientName);
+        // Always load all vehicles (both for create and edit mode)
+        const vehiclesResponse = await getVehicles();
+        if (vehiclesResponse?.data) {
+          const vehicleOptions = vehiclesResponse.data.map((vehicle: any) => ({
+            id: vehicle.id,
+            name: `${vehicle.plate} - ${vehicle.client}`,
+            plate: vehicle.plate,
+            client: vehicle.client,
+            phone: vehicle.phone,
+          }));
           
-          if (dataAccountReceivable.clientId) {
-            const currentClient = {
-              id: dataAccountReceivable.clientId,
-              name: dataAccountReceivable.clientName || "Cliente no encontrado",
-            };
-            console.log('Setting current client for edit mode:', currentClient);
-            setClients([currentClient]);
-          } else {
-            console.warn('No clientId found in edit mode, loading all clients as fallback');
-            // Fallback: load all clients if clientId is missing
-            const clientsResponse = await getClients();
-            if (clientsResponse?.data) {
-              const clientOptions = clientsResponse.data.map((client: any) => ({
-                id: client.id,
-                name: client.client,
-              }));
-              setClients(clientOptions);
+          console.log('All vehicles loaded:', vehicleOptions);
+          setVehicles(vehicleOptions);
+          
+          if (isEditing) {
+            console.log('Edit mode - looking for vehicleId:', dataAccountReceivable.vehicleId);
+            const currentVehicle = vehicleOptions.find((v: any) => v.id === dataAccountReceivable.vehicleId);
+            console.log('Found current vehicle:', currentVehicle);
+            
+            if (!currentVehicle && dataAccountReceivable.vehicleId) {
+              console.warn('Vehicle not found in options, vehicleId:', dataAccountReceivable.vehicleId);
             }
+          } else {
+            console.log('Create mode - vehicles loaded');
           }
         }
       } catch (error) {
-        console.error('Error loading clients:', error);
+        console.error('Error loading vehicles:', error);
       }
     };
 
@@ -105,45 +96,51 @@ const ModalEditAccountReceivable: React.FC<ModalEditAccountReceivableProps> = ({
         setValueFormatted("");
       }
     }
-  }, [openModal, isEditing, dataAccountReceivable.clientId, dataAccountReceivable.clientName, dataAccountReceivable.value]);
+  }, [openModal, isEditing, dataAccountReceivable.vehicleId, dataAccountReceivable.vehicleName, dataAccountReceivable.value]);
 
-  const handleSelectClient = (clientId: string) => {
-    const selectedClient = clients.find(c => c.id === clientId);
-    if (selectedClient) {
+  const handleSelectVehicle = (vehicleId: string) => {
+    const selectedVehicle = vehicles.find(v => v.id === vehicleId);
+    if (selectedVehicle) {
       setDataAccountReceivable({
         ...dataAccountReceivable,
-        clientId: clientId,
-        clientName: selectedClient.name,
+        vehicleId: vehicleId,
+        vehicleName: selectedVehicle.name,
+        plate: selectedVehicle.plate,
+        clientName: selectedVehicle.client,
+        phone: selectedVehicle.phone,
       });
     }
   };
 
-  const handleClientCreated = (newClient: { id: string; name: string }) => {
-    // Add the new client to the clients list
-    const updatedClients = [...clients, newClient];
-    setClients(updatedClients);
+  const handleVehicleCreated = (newVehicle: { id: string; name: string; plate: string; client: string; phone: string }) => {
+    // Add the new vehicle to the vehicles list
+    const updatedVehicles = [...vehicles, newVehicle];
+    setVehicles(updatedVehicles);
     
-    // Auto-select the newly created client
+    // Auto-select the newly created vehicle
     setDataAccountReceivable({
       ...dataAccountReceivable,
-      clientId: newClient.id,
-      clientName: newClient.name,
+      vehicleId: newVehicle.id,
+      vehicleName: newVehicle.name,
+      plate: newVehicle.plate,
+      clientName: newVehicle.client,
+      phone: newVehicle.phone,
     });
   };
 
-  const handleOpenClientModal = () => {
+  const handleOpenVehicleModal = () => {
     if (!isEditing) {
-      setOpenClientModal(true);
+      setOpenVehicleModal(true);
     }
   };
 
-  const handleCloseClientModal = () => {
-    setOpenClientModal(false);
+  const handleCloseVehicleModal = () => {
+    setOpenVehicleModal(false);
   };
 
   const validateButton = () => {
     if (
-      !dataAccountReceivable.clientId ||
+      !dataAccountReceivable.vehicleId ||
       !dataAccountReceivable.value ||
       dataAccountReceivable.date === "" ||
       dataAccountReceivable.detail === ""
@@ -169,28 +166,28 @@ const ModalEditAccountReceivable: React.FC<ModalEditAccountReceivableProps> = ({
             <Box display="flex" alignItems="center" gap={1} width="100%">
               <Box flexGrow={1}>
                 <ComboBoxAutoComplete
-                  title="Cliente"
-                  options={clients}
-                  onSelect={handleSelectClient}
-                  value={dataAccountReceivable.clientId}
+                  title="Vehículo"
+                  options={vehicles}
+                  onSelect={handleSelectVehicle}
+                  value={dataAccountReceivable.vehicleId}
                   disabled={isEditing}
                 />
               </Box>
               {!isEditing && (
                 <IconButton 
-                  onClick={handleOpenClientModal}
+                  onClick={handleOpenVehicleModal}
                   color="primary"
-                  title="Agregar nuevo cliente"
+                  title="Agregar nuevo vehículo"
                   sx={{ flexShrink: 0 }}
                 >
-                  <PersonAddIcon />
+                  <DirectionsCarIcon />
                 </IconButton>
               )}
             </Box>
-            <ModalCreateClient 
-              openModal={openClientModal} 
-              handleClose={handleCloseClientModal} 
-              onClientCreated={handleClientCreated} 
+            <ModalCreateVehicle 
+              openModal={openVehicleModal} 
+              handleClose={handleCloseVehicleModal} 
+              onVehicleCreated={handleVehicleCreated} 
             />
             <DatePickerComponent
               label="Fecha"

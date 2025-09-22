@@ -32,6 +32,10 @@ export const getClients = async () => {
   return await requestGet(environment.clients);
 };
 
+export const getVehicles = async () => {
+  return await requestGet(environment.vehicles);
+};
+
 export const queryCreateClient = async (payload: any) => {
   return await requestPost(environment.clients, payload);
 };

@@ -255,8 +255,11 @@ export interface AccountReceivableSelected {
   value: number;
   date: string;
   detail: string;
-  clientId: string;
+  vehicleId: string;
+  vehicleName?: string;
+  plate?: string;
   clientName?: string;
+  phone?: string;
 }
 
 export interface AccountReceivablePayment {

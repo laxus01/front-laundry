@@ -17,7 +17,11 @@ export default function ComboBoxAutoComplete({
   value,
   disabled = false,
 }: ComboBoxAutoCompleteProps) {
-  const selectedOption = value ? options.find(option => option.id === value) : null;
+  // Ensure value is always a string to maintain controlled state
+  const controlledValue = value || "";
+  const selectedOption = controlledValue && options.length > 0 
+    ? options.find(option => option.id === controlledValue) || null 
+    : null;
   
   return (
     <Autocomplete
@@ -33,6 +37,8 @@ export default function ComboBoxAutoComplete({
         }
       }}
       renderInput={(params) => <TextField {...params} label={title} />}
+      isOptionEqualToValue={(option, value) => option.id === value?.id}
+      noOptionsText="No hay opciones disponibles"
     />
   );
 }

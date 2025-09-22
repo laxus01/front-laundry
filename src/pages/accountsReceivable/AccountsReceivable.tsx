@@ -23,6 +23,7 @@ import dayjs from "dayjs";
 const columns = [
   { id: "clientName", label: "Cliente", minWidth: 200 },
   { id: "phone", label: "Telefono", minWidth: 150 },
+  { id: "vehicle", label: "Vehiculo", minWidth: 150 },
   { id: "date", label: "Fecha", minWidth: 150 },
   { id: "detail", label: "Detalle", minWidth: 250 },
   { id: "value", label: "Valor", minWidth: 150 },
@@ -57,17 +58,30 @@ export const AccountsReceivable = () => {
       const dateEnd = searchEndDate || endDate;
       
       const response = await getAccountsReceivable(dateStart, dateEnd);
+      
       if (response && response.data && Array.isArray(response.data)) {
         const data = response.data.map((item: any) => {
+          
           // Format date properly to avoid timezone issues
           const formatDate = (dateString: string) => {
             return dayjs(dateString).format('DD/MM/YYYY');
           };
 
+          // Handle different possible structures for vehicle data
+          let vehicleInfo = null;
+          if (item.vehicleId && typeof item.vehicleId === 'object') {
+            // If vehicleId is an object (populated)
+            vehicleInfo = item.vehicleId;
+          } else if (item.vehicle && typeof item.vehicle === 'object') {
+            // If vehicle is an object (alternative structure)
+            vehicleInfo = item.vehicle;
+          }
+
           return {
             id: item.id,
-            clientName: item.clientId?.client || "Cliente no encontrado",
-            phone: item.clientId?.phone || "Telefono no encontrado",
+            clientName: vehicleInfo?.client || "Cliente no encontrado",
+            phone: vehicleInfo?.phone || "Telefono no encontrado",
+            vehicle: vehicleInfo?.plate || "Vehiculo no encontrado",
             date: formatDate(item.date),
             detail: item.detail,
             value: `$${formatPrice(item.value)}`,
@@ -76,6 +90,10 @@ export const AccountsReceivable = () => {
             rawValue: item.value,
             rawDate: item.date,
             rawBalance: item.balance,
+            // Store vehicle information for editing
+            vehicleId: vehicleInfo?.id || "",
+            vehicleName: vehicleInfo ? `${vehicleInfo.plate} - ${vehicleInfo.client}` : "",
+            plate: vehicleInfo?.plate || "",
             clientId: item.clientId?.id || "",
           };
         });
@@ -96,7 +114,7 @@ export const AccountsReceivable = () => {
         value: dataAccountReceivable.value,
         date: dataAccountReceivable.date,
         detail: dataAccountReceivable.detail,
-        clientId: dataAccountReceivable.clientId,
+        vehicleId: dataAccountReceivable.vehicleId,
       };
       
       const response = await queryCreateAccountReceivableById(payload);
@@ -117,7 +135,7 @@ export const AccountsReceivable = () => {
         value: dataAccountReceivable.value,
         date: dataAccountReceivable.date,
         detail: dataAccountReceivable.detail,
-        clientId: dataAccountReceivable.clientId,
+        vehicleId: dataAccountReceivable.vehicleId,
       };
       
       const response = await queryEditAccountReceivableById(dataAccountReceivable.id, payload);
@@ -148,16 +166,26 @@ export const AccountsReceivable = () => {
 
   const openModalEdit = (row: any) => {
     setIsEditing(true);
+    console.log('openModalEdit - row data:', row);
+    
     // Convert formatted data back to raw data for editing
     const editData = {
-      ...row,
+      id: row.id,
       value: row.rawValue || (typeof row.value === 'string' 
         ? parseFloat(row.value.replace('$', '').replace(',', ''))
         : row.value),
       date: dayjs(row.rawDate || row.date).format('YYYY-MM-DD'),
-      clientId: row.clientId || '',
+      detail: row.detail,
+      // Vehicle information for proper selection in modal
+      vehicleId: row.vehicleId || '',
+      vehicleName: row.vehicleName || '',
+      plate: row.plate || '',
       clientName: row.clientName || '',
+      phone: row.phone || '',
+      clientId: row.clientId || '',
     };
+    
+    console.log('openModalEdit - setting editData:', editData);
     setDataAccountReceivable(editData);
     setOpenModal(true);
   };

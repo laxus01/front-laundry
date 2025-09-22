@@ -7,8 +7,11 @@ export const useAccountsReceivable = () => {
     value: 0,
     date: "",
     detail: "",
-    clientId: "",
+    vehicleId: "",
+    vehicleName: "",
+    plate: "",
     clientName: "",
+    phone: "",
   };
   
   const [dataAccountReceivable, setDataAccountReceivable] =
