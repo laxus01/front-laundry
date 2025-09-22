@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import TableComponent from "../../components/TableComponent";
+import ModalDateRangeSearch from "../../components/ModalDateRangeSearch";
 import {
   getAccountsReceivable,
   queryCreateAccountReceivableById,
@@ -12,6 +13,7 @@ import { AccountReceivableSelected } from "../../interfaces/interfaces";
 import { useAccountsReceivable } from "./hooks/useAccountsReceivable";
 import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import SearchIcon from "@mui/icons-material/Search";
 import PaymentIcon from "@mui/icons-material/Payment";
 import { Tooltip, IconButton } from "@mui/material";
 import { useSnackbar } from "../../contexts/SnackbarContext";
@@ -20,6 +22,7 @@ import dayjs from "dayjs";
 
 const columns = [
   { id: "clientName", label: "Cliente", minWidth: 200 },
+  { id: "phone", label: "Telefono", minWidth: 150 },
   { id: "date", label: "Fecha", minWidth: 150 },
   { id: "detail", label: "Detalle", minWidth: 250 },
   { id: "value", label: "Valor", minWidth: 150 },
@@ -40,12 +43,20 @@ export const AccountsReceivable = () => {
   const [data, setData] = useState<any[]>([]);
   const [openModal, setOpenModal] = useState(false);
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
+  const [openDateRangeModal, setOpenDateRangeModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [modalDelete, setModalDelete] = useState(false);
 
-  const getListAccountsReceivable = async () => {
+  // Current month date range for initial load
+  const [startDate] = useState(dayjs().startOf('month').format('YYYY-MM-DD'));
+  const [endDate] = useState(dayjs().endOf('month').format('YYYY-MM-DD'));
+
+  const getListAccountsReceivable = async (searchStartDate: string = dayjs().format('YYYY-MM-DD'), searchEndDate: string = dayjs().format('YYYY-MM-DD')) => {
     try {
-      const response = await getAccountsReceivable();
+      const dateStart = searchStartDate || startDate;
+      const dateEnd = searchEndDate || endDate;
+      
+      const response = await getAccountsReceivable(dateStart, dateEnd);
       if (response && response.data && Array.isArray(response.data)) {
         const data = response.data.map((item: any) => {
           // Format date properly to avoid timezone issues
@@ -56,6 +67,7 @@ export const AccountsReceivable = () => {
           return {
             id: item.id,
             clientName: item.clientId?.client || "Cliente no encontrado",
+            phone: item.clientId?.phone || "Telefono no encontrado",
             date: formatDate(item.date),
             detail: item.detail,
             value: `$${formatPrice(item.value)}`,
@@ -174,6 +186,10 @@ export const AccountsReceivable = () => {
     }
   };
 
+  const handleDateRangeSearch = (searchStartDate: string, searchEndDate: string) => {
+    getListAccountsReceivable(searchStartDate, searchEndDate);
+  };
+
   useEffect(() => {
     getListAccountsReceivable();
   }, []);
@@ -199,13 +215,27 @@ export const AccountsReceivable = () => {
         handleDelete={handleDelete}
         handleCloseDelete={() => setModalDelete(false)}
       />
+      <ModalDateRangeSearch
+        title="Buscar Cuentas por Cobrar por Fecha"
+        open={openDateRangeModal}
+        onClose={() => setOpenDateRangeModal(false)}
+        onSearch={handleDateRangeSearch}
+        initialStartDate={startDate}
+        initialEndDate={endDate}
+      />
       <div style={styleIconAdd}>
         <h2 className="color-lime">Cuentas por Cobrar</h2>
-        <div>
+        <div style={{ display: 'flex', gap: '10px' }}>
           <Tooltip title="Agregar Cuenta por Cobrar">
             <AddCircleIcon
               style={{ fontSize: 40, color: "#9FB404", cursor: "pointer" }}
               onClick={openModalCreate}
+            />
+          </Tooltip>
+          <Tooltip title="Buscar por Fecha">
+            <SearchIcon
+              style={{ fontSize: 40, color: "#9FB404", cursor: "pointer" }}
+              onClick={() => setOpenDateRangeModal(true)}
             />
           </Tooltip>
         </div>

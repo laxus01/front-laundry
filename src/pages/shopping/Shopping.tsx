@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { Tooltip } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import SearchIcon from "@mui/icons-material/Search";
 import TableComponent from "../../components/TableComponent";
+import ModalDateRangeSearch from "../../components/ModalDateRangeSearch";
 import ModalEditShopping from "./components/ModalEditShopping";
 import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
 import { useShopping, type Shopping as ShoppingType } from "./hooks/useShopping";
@@ -35,16 +37,24 @@ export const Shopping = () => {
 
   const [data, setData] = useState<any[]>([]);
   const [openModal, setOpenModal] = useState(false);
+  const [openDateRangeModal, setOpenDateRangeModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [modalDelete, setModalDelete] = useState(false);
+
+  // Current month date range for initial load
+  const [startDate] = useState(dayjs().startOf('month').format('YYYY-MM-DD'));
+  const [endDate] = useState(dayjs().endOf('month').format('YYYY-MM-DD'));
 
   const [listProducts, setListProducts] = useState<OptionsComboBoxAutoComplete[]>([
     { id: "", name: "" }
   ]);
 
-  const getListShopping = async () => {
+  const getListShopping = async (searchStartDate: string = dayjs().format('YYYY-MM-DD'), searchEndDate: string = dayjs().format('YYYY-MM-DD')) => {
     try {
-      const response = await getShopping();
+      const dateStart = searchStartDate || startDate;
+      const dateEnd = searchEndDate || endDate;
+      
+      const response = await getShopping(dateStart, dateEnd);
       if (response && response.data && Array.isArray(response.data)) {
         const data = response.data.map((item: any) => {         
           return {
@@ -161,6 +171,10 @@ export const Shopping = () => {
     }
   };
 
+  const handleDateRangeSearch = (searchStartDate: string, searchEndDate: string) => {
+    getListShopping(searchStartDate, searchEndDate);
+  };
+
   useEffect(() => {
     getListShopping();
     getListProducts();
@@ -182,13 +196,27 @@ export const Shopping = () => {
         handleDelete={handleDelete}
         handleCloseDelete={() => setModalDelete(false)}
       />
+      <ModalDateRangeSearch
+        title="Buscar Compras por Fecha"
+        open={openDateRangeModal}
+        onClose={() => setOpenDateRangeModal(false)}
+        onSearch={handleDateRangeSearch}
+        initialStartDate={startDate}
+        initialEndDate={endDate}
+      />
       <div style={styleIconAdd}>
         <h2 className="color-lime">Compras</h2>
-        <div>
+        <div style={{ display: 'flex', gap: '10px' }}>
           <Tooltip title="Agregar Compra">
             <AddCircleIcon
               style={{ fontSize: 40, color: "#9FB404", cursor: "pointer" }}
               onClick={openModalCreate}
+            />
+          </Tooltip>
+          <Tooltip title="Buscar por Fecha">
+            <SearchIcon
+              style={{ fontSize: 40, color: "#9FB404", cursor: "pointer" }}
+              onClick={() => setOpenDateRangeModal(true)}
             />
           </Tooltip>
         </div>

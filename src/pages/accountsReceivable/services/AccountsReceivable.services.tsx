@@ -6,8 +6,14 @@ import {
   requestPut,
 } from "../../../services/axios/axios.services";
 
-export const getAccountsReceivable = async () => {
-  return await requestGet(environment.accountsReceivable);
+export const getAccountsReceivable = async (startDate?: string, endDate?: string) => {
+  let url = environment.accountsReceivable;
+  
+  if (startDate && endDate) {
+    url += `?startDate=${startDate}&endDate=${endDate}`;
+  }
+  
+  return await requestGet(url);
 };
 
 export const queryCreateAccountReceivableById = async (payload: any) => {

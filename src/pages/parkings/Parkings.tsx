@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import TableComponent from "../../components/TableComponent";
+import ModalDateRangeSearch from "../../components/ModalDateRangeSearch";
 import {
   getParkings,
   queryCreateParkingById,
@@ -12,6 +13,7 @@ import { ParkingSelected } from "../../interfaces/interfaces";
 import { useParkings } from "./hooks/useParkings";
 import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import SearchIcon from "@mui/icons-material/Search";
 import PaymentIcon from "@mui/icons-material/Payment";
 import { Tooltip, IconButton } from "@mui/material";
 import { useSnackbar } from "../../contexts/SnackbarContext";
@@ -44,12 +46,20 @@ export const Parkings = () => {
   const [data, setData] = useState<any[]>([]);
   const [openModal, setOpenModal] = useState(false);
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
+  const [openDateRangeModal, setOpenDateRangeModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [modalDelete, setModalDelete] = useState(false);
+  
+  // Current month date range for initial load
+  const [startDate] = useState(dayjs().startOf('month').format('YYYY-MM-DD'));
+  const [endDate] = useState(dayjs().endOf('month').format('YYYY-MM-DD'));
 
-  const getListParkings = async () => {
+  const getListParkings = async (searchStartDate?: string, searchEndDate?: string) => {
     try {
-      const response = await getParkings();
+      const dateStart = searchStartDate || startDate;
+      const dateEnd = searchEndDate || endDate;
+      
+      const response = await getParkings(dateStart, dateEnd);
       if (response && response.data && Array.isArray(response.data)) {
         const data = response.data.map((item: any) => {
           // Calculate balance: total value minus sum of payments
@@ -204,6 +214,9 @@ export const Parkings = () => {
     }
   };
 
+  const handleDateSearch = () => {
+    getListParkings(startDate, endDate);
+  };
 
   useEffect(() => {
     getListParkings();
@@ -230,13 +243,27 @@ export const Parkings = () => {
         handleDelete={handleDelete}
         handleCloseDelete={() => setModalDelete(false)}
       />
+      <ModalDateRangeSearch
+        open={openDateRangeModal}
+        onClose={() => setOpenDateRangeModal(false)}
+        onSearch={handleDateSearch}
+        title="Buscar por Fecha"
+        initialStartDate={startDate}
+        initialEndDate={endDate}
+      />
       <div style={styleIconAdd}>
         <h2 className="color-lime">Parqueos</h2>
-        <div>
+        <div style={{ display: 'flex', gap: '10px' }}>
           <Tooltip title="Agregar Parqueo">
             <AddCircleIcon
               style={{ fontSize: 40, color: "#9FB404", cursor: "pointer" }}
               onClick={openModalCreate}
+            />
+          </Tooltip>
+          <Tooltip title="Buscar por Fecha">
+            <SearchIcon
+              style={{ fontSize: 40, color: "#9FB404", cursor: "pointer" }}
+              onClick={() => setOpenDateRangeModal(true)}
             />
           </Tooltip>
         </div>

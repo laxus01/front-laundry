@@ -28,7 +28,6 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import RequestPageIcon from '@mui/icons-material/RequestPage';
-import DateRangeIcon from '@mui/icons-material/DateRange';
 import { Link } from "react-router-dom";
 import "../styles/dashboard.scss";
 
@@ -187,12 +186,12 @@ const MenuComponent: React.FC = () => {
                 </ListItem>
               </Link>
 
-              <Link to="/dashboard" onClick={toggleDrawer(false)}>
+              <Link to="/dashboard/reports" onClick={toggleDrawer(false)}>
                 <ListItem className="cursor-pointer" component="li" sx={{ pl: 4 }}>
                   <ListItemIcon>
                     <TrendingUpIcon className="color-dark" />
                   </ListItemIcon>
-                  <ListItemText primary="General" />
+                  <ListItemText primary="Reporte General" />
                 </ListItem>
               </Link>
 

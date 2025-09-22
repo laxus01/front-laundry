@@ -13,6 +13,8 @@ import SaveIcon from "@mui/icons-material/Save";
 import ComboBoxAutoComplete from "../../../components/ComboBoxAutoComplete";
 import { Washer } from "../../../interfaces/interfaces";
 import { useState } from "react";
+import DatePickerComponent from "../../../components/DatePickerComponent";
+import dayjs from "dayjs";
 
 const style = {
   position: "absolute" as "absolute",
@@ -100,6 +102,14 @@ const ModalEditSale: React.FC<ModalEditSaleProps> = ({
                   quantity: Number(e.target.value),
                 })
               }
+            />
+            <DatePickerComponent
+              label="Fecha"
+              value={dataSale.date ? dayjs(dataSale.date).toDate() : null}
+              onChange={(date) =>
+                setDataSale({ ...dataSale, date: date ? dayjs(date).format('YYYY-MM-DD') : '' })
+              }
+              required
             />
             <FormGroup>
               <FormControlLabel

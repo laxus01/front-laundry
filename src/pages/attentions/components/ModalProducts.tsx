@@ -90,6 +90,7 @@ const ModalProducts: React.FC<ModalProductsProps> = ({
               title="Producto"
               options={listProducts}
               onSelect={handleSelectProduct}
+              value={productId}
             />
           </Box>
           <Box display="flex" flexDirection="column" gap={2} mt={3}>

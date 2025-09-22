@@ -52,6 +52,7 @@ export interface ListSales {
   id: string;
   quantity: number;
   createAt: string;
+  date: string;
   productId: {
     id: string;
     product: string;
@@ -434,4 +435,46 @@ export interface ParkingDateRange {
   vehicle: ParkingDateRangeVehicle;
   typeParking: ParkingDateRangeTypeParking;
   parkingPayments: ParkingDateRangePayment[];
+}
+
+// Interfaces for Financial Report
+export interface FinancialReportPeriod {
+  startDate: string;
+  endDate: string;
+}
+
+export interface FinancialReportIncome {
+  totalSales: number;
+  totalServiceSales: number;
+  totalParkingPayments: number;
+  totalAccountsReceivablePayments: number;
+  totalIncome: number;
+}
+
+export interface FinancialReportCosts {
+  totalShoppingCosts: number;
+  totalExpenses: number;
+  totalCosts: number;
+}
+
+export interface FinancialReportSummary {
+  netProfit: number;
+  profitMargin: string;
+}
+
+export interface FinancialReportDetails {
+  salesCount: number;
+  serviceSalesCount: number;
+  parkingPaymentsCount: number;
+  accountsReceivablePaymentsCount: number;
+  shoppingCount: number;
+  expensesCount: number;
+}
+
+export interface FinancialReport {
+  period: FinancialReportPeriod;
+  income: FinancialReportIncome;
+  costs: FinancialReportCosts;
+  summary: FinancialReportSummary;
+  details: FinancialReportDetails;
 }

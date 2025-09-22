@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { Tooltip } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import SearchIcon from "@mui/icons-material/Search";
 import TableComponent from "../../components/TableComponent";
+import ModalDateRangeSearch from "../../components/ModalDateRangeSearch";
 import ModalEditExpense from "./components/ModalEditExpense";
 import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
 import { useExpenses, Expense } from "./hooks/useExpenses";
@@ -34,8 +36,13 @@ export const Expenses = () => {
 
   const [data, setData] = useState<any[]>([]);
   const [openModal, setOpenModal] = useState(false);
+  const [openDateRangeModal, setOpenDateRangeModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [modalDelete, setModalDelete] = useState(false);
+
+  // Current month date range for initial load
+  const [startDate] = useState(dayjs().startOf('month').format('YYYY-MM-DD'));
+  const [endDate] = useState(dayjs().endOf('month').format('YYYY-MM-DD'));
 
   const getListExpenses = async () => {
     try {
@@ -142,6 +149,29 @@ export const Expenses = () => {
     }
   };
 
+  const handleDateRangeSearch = async (startDate: string, endDate: string) => {
+    try {
+      const response = await getExpenses(startDate, endDate);
+      if (response && response.data && Array.isArray(response.data)) {
+        const data = response.data.map((item: any) => ({
+          id: item.id,
+          expense: item.expense,
+          value: `$${formatPrice(item.value)}`,
+          date: dayjs(item.date).format('DD/MM/YYYY'),
+          rawValue: item.value,
+          rawDate: item.date,
+        }));
+        setData(data);
+      } else {
+        setData([]);
+      }
+    } catch (error: any) {
+      console.error("Error loading expenses:", error);
+      setData([]);
+      showSnackbar("Error al cargar los gastos", "error");
+    }
+  };
+
   useEffect(() => {
     getListExpenses();
   }, []);
@@ -161,13 +191,27 @@ export const Expenses = () => {
         handleDelete={handleDelete}
         handleCloseDelete={() => setModalDelete(false)}
       />
+      <ModalDateRangeSearch
+        title="Buscar Gastos por Fecha"
+        open={openDateRangeModal}
+        onClose={() => setOpenDateRangeModal(false)}
+        onSearch={handleDateRangeSearch}
+        initialStartDate={startDate}
+        initialEndDate={endDate}
+      />
       <div style={styleIconAdd}>
         <h2 className="color-lime">Gastos</h2>
-        <div>
+        <div style={{ display: 'flex', gap: '10px' }}>
           <Tooltip title="Agregar Gasto">
             <AddCircleIcon
               style={{ fontSize: 40, color: "#9FB404", cursor: "pointer" }}
               onClick={openModalCreate}
+            />
+          </Tooltip>
+          <Tooltip title="Buscar por Fecha">
+            <SearchIcon
+              style={{ fontSize: 40, color: "#9FB404", cursor: "pointer" }}
+              onClick={() => setOpenDateRangeModal(true)}
             />
           </Tooltip>
         </div>

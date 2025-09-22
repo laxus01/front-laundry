@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import TableComponent from "../../components/TableComponent";
+import ModalDateRangeSearch from "../../components/ModalDateRangeSearch";
 import {
   getAccountsPayable,
   queryCreateAccountPayableById,
@@ -12,6 +13,7 @@ import { AccountPayableSelected } from "../../interfaces/interfaces";
 import { useAccountsPayable } from "./hooks/useAccountsPayable";
 import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import SearchIcon from "@mui/icons-material/Search";
 import PaymentIcon from "@mui/icons-material/Payment";
 import { Tooltip, IconButton } from "@mui/material";
 import { useSnackbar } from "../../contexts/SnackbarContext";
@@ -40,12 +42,17 @@ export const AccountsPayable = () => {
   const [data, setData] = useState<any[]>([]);
   const [openModal, setOpenModal] = useState(false);
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
+  const [openDateRangeModal, setOpenDateRangeModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [modalDelete, setModalDelete] = useState(false);
 
-  const getListAccountsPayable = async () => {
+  // Current month date range for initial load
+  const [startDate] = useState(dayjs().startOf('month').format('YYYY-MM-DD'));
+  const [endDate] = useState(dayjs().endOf('month').format('YYYY-MM-DD'));
+
+  const getListAccountsPayable = async (startDate: string = dayjs().format('YYYY-MM-DD'), endDate: string = dayjs().format('YYYY-MM-DD')) => {
     try {
-      const response = await getAccountsPayable();
+      const response = await getAccountsPayable(startDate, endDate);
       if (response && response.data && Array.isArray(response.data)) {
         const data = response.data.map((item: any) => {
           // Format date properly to avoid timezone issues
@@ -175,6 +182,41 @@ export const AccountsPayable = () => {
     }
   };
 
+  const handleDateRangeSearch = async (startDate: string, endDate: string) => {
+    try {
+      const response = await getAccountsPayable(startDate, endDate);
+      if (response && response.data && Array.isArray(response.data)) {
+        const data = response.data.map((item: any) => {
+          // Format date properly to avoid timezone issues
+          const formatDate = (dateString: string) => {
+            return dayjs(dateString).format('DD/MM/YYYY');
+          };
+
+          return {
+            id: item.id,
+            providerName: item.providerId?.name || "Proveedor no encontrado",
+            date: formatDate(item.date),
+            detail: item.detail,
+            value: `$${formatPrice(item.value)}`,
+            balance: `$${formatPrice(item.balance)}`,
+            // Store original data for editing
+            rawValue: item.value,
+            rawDate: item.date,
+            rawBalance: item.balance,
+            providerId: item.providerId?.id || "",
+          };
+        });
+        setData(data);
+      } else {
+        setData([]);
+      }
+    } catch (error: any) {
+      console.error("Error loading accounts payable:", error);
+      setData([]);
+      showSnackbar("Error al cargar las cuentas por pagar", "error");
+    }
+  };
+
   useEffect(() => {
     getListAccountsPayable();
   }, []);
@@ -200,13 +242,27 @@ export const AccountsPayable = () => {
         handleDelete={handleDelete}
         handleCloseDelete={() => setModalDelete(false)}
       />
+      <ModalDateRangeSearch
+        title="Buscar Cuentas por Pagar por Fecha"
+        open={openDateRangeModal}
+        onClose={() => setOpenDateRangeModal(false)}
+        onSearch={handleDateRangeSearch}
+        initialStartDate={startDate}
+        initialEndDate={endDate}
+      />
       <div style={styleIconAdd}>
         <h2 className="color-lime">Cuentas por Pagar</h2>
-        <div>
+        <div style={{ display: 'flex', gap: '10px' }}>
           <Tooltip title="Agregar Cuenta por Pagar">
             <AddCircleIcon
               style={{ fontSize: 40, color: "#9FB404", cursor: "pointer" }}
               onClick={openModalCreate}
+            />
+          </Tooltip>
+          <Tooltip title="Buscar por Fecha">
+            <SearchIcon
+              style={{ fontSize: 40, color: "#9FB404", cursor: "pointer" }}
+              onClick={() => setOpenDateRangeModal(true)}
             />
           </Tooltip>
         </div>

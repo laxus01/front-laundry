@@ -6,8 +6,14 @@ import {
   requestPut,
 } from "../../../services/axios/axios.services";
 
-export const getParkings = async () => {
-  return await requestGet(environment.parkings);
+export const getParkings = async (startDate?: string, endDate?: string) => {
+  let url = environment.parkings;
+  
+  if (startDate && endDate) {
+    url += `?startDate=${startDate}&endDate=${endDate}`;
+  }
+  
+  return await requestGet(url);
 };
 
 export const queryCreateParkingById = async (payload: any) => {

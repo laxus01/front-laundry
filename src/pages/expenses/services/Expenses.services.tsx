@@ -6,8 +6,14 @@ import {
   requestPut,
 } from "../../../services/axios/axios.services";
 
-export const getExpenses = async () => {
-  return await requestGet(environment.expenses);
+export const getExpenses = async (startDate?: string, endDate?: string) => {
+  let url = environment.expenses;
+  
+  if (startDate && endDate) {
+    url += `?startDate=${startDate}&endDate=${endDate}`;
+  }
+  
+  return await requestGet(url);
 };
 
 export const queryCreateExpense = async (payload: any) => {

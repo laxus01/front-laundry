@@ -12,6 +12,7 @@ import { Parkings } from "./pages/parkings";
 import { Expenses } from "./pages/expenses";
 import { Shopping } from "./pages/shopping";
 import { WasherActivityReport } from "./pages/reports";
+import { FinancialReport } from "./pages/reports/FinancialReport";
 import { AttentionSearch } from "./pages/reports/AttentionSearch";
 import { ParkingDateRangeSearch } from "./pages/reports/ParkingDateRangeSearch";
 import { AccountsReceivable } from "./pages/accountsReceivable";
@@ -47,6 +48,7 @@ function App() {
           <Route path="/dashboard/parkings" element={<Parkings />} />
           <Route path="/dashboard/expenses" element={<Expenses />} />
           <Route path="/dashboard/shopping" element={<Shopping />} />
+          <Route path="/dashboard/reports" element={<FinancialReport />} />
           <Route path="/dashboard/reports/washer-activity" element={<WasherActivityReport />} />
           <Route path="/dashboard/reports/attention-search" element={<AttentionSearch />} />
           <Route path="/dashboard/reports/parking-date-range" element={<ParkingDateRangeSearch />} />

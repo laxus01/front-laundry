@@ -1,6 +1,8 @@
 import { Tooltip } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import SearchIcon from "@mui/icons-material/Search";
 import TableComponent from "../../components/TableComponent";
+import ModalDateRangeSearch from "../../components/ModalDateRangeSearch";
 import { useEffect, useState } from "react";
 import {
   ListProducts,
@@ -20,12 +22,14 @@ import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
 import { useSales } from "./hooks/useSales";
 import { getWashers } from "../washers/services/Washer.services";
 import { getProducts } from "../attentions/services/Attentions.services";
+import dayjs from "dayjs";
 
 const columns = [
   { id: "product", label: "Producto", minWidth: 200 },
   { id: "quantity", label: "Cantidad", minWidth: 200 },
   { id: "saleValue", label: "Valor Venta", minWidth: 200 },
   { id: "totalSale", label: "Total", minWidth: 200 },
+  { id: "date", label: "Fecha", minWidth: 200 },
   { id: "washer", label: "Lavador", minWidth: 200 },
 ];
 
@@ -41,6 +45,7 @@ export const Sales = () => {
 
   const [data, setData] = useState([]);
   const [openModal, setOpenModal] = useState(false);
+  const [openDateRangeModal, setOpenDateRangeModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [modalDelete, setModalDelete] = useState(false);
 
@@ -51,6 +56,9 @@ export const Sales = () => {
   const [listProducts, setListProducts] = useState<
     OptionsComboBoxAutoComplete[]
   >([{ id: "", name: "" }]);
+
+  const [startDate, setStartDate] = useState(dayjs().startOf('month').format('YYYY-MM-DD'));
+  const [endDate, setEndDate] = useState(dayjs().endOf('month').format('YYYY-MM-DD'));
 
   const openModalCreate = () => {
     setIsEditing(false);
@@ -63,6 +71,7 @@ export const Sales = () => {
       productId: dataSale.productId,
       quantity: dataSale.quantity,
       washerId: dataSale.washerId ? dataSale.washerId : null,
+      date: dataSale.date,
     };
     const response = await queryCreateSale(payload);
     if (response) {
@@ -74,9 +83,10 @@ export const Sales = () => {
 
   const handleEdit = async () => {
     const payload = {
-        productId: dataSale.productId,
-        quantity: dataSale.quantity,
-        washerId: dataSale.washerId ? dataSale.washerId : null,
+      productId: dataSale.productId,
+      quantity: dataSale.quantity,
+      washerId: dataSale.washerId ? dataSale.washerId : null,
+      date: dataSale.date,
     };
     const response = await queryEditSaleById(dataSale.id, payload);
     if (response) {
@@ -101,7 +111,7 @@ export const Sales = () => {
 
   const openModalEdit = (row: any) => {
     console.log(row);
-    
+
     setIsEditing(true);
     setDataSale(row);
     setOpenModal(true);
@@ -112,8 +122,8 @@ export const Sales = () => {
     setModalDelete(true);
   };
 
-  const getListSales = async () => {
-    const response = await getSales();
+  const getListSales = async (startDate: string = dayjs().format('YYYY-MM-DD'), endDate: string = dayjs().format('YYYY-MM-DD')) => {
+    const response = await getSales(startDate, endDate);
     if (response) {
       const data = response.data.map((item: ListSales) => {
         return {
@@ -124,6 +134,7 @@ export const Sales = () => {
           saleValue: formatPrice(item.productId.saleValue),
           totalSale: formatPrice(item.quantity * item.productId.saleValue),
           washer: item.washerId && item.washerId.washer,
+          date: dayjs(item.date).format('DD/MM/YYYY'),
         };
       });
       setData(data);
@@ -156,7 +167,19 @@ export const Sales = () => {
     }
   };
 
+  const handleDateRangeSearch = async (newStartDate: string, newEndDate: string) => {
+    setStartDate(newStartDate);
+    setEndDate(newEndDate);
+    await getListSales(newStartDate, newEndDate);
+  };
+
   useEffect(() => {
+    const currentMonth = dayjs().month();
+    const currentYear = dayjs().year();
+    const startDate = dayjs(`${currentYear}-${currentMonth + 1}-01`).format('YYYY-MM-DD');
+    const endDate = dayjs(`${currentYear}-${currentMonth + 1}-${dayjs(`${currentYear}-${currentMonth + 1}-01`).daysInMonth()}`).format('YYYY-MM-DD');
+    setStartDate(startDate);
+    setEndDate(endDate);
     getListSales();
     getListWashers();
     getListProducts();
@@ -174,6 +197,14 @@ export const Sales = () => {
         handleClose={handleClose}
         sales={sales}
       />
+      <ModalDateRangeSearch
+        title="Buscar por Fecha"
+        open={openDateRangeModal}
+        onClose={() => setOpenDateRangeModal(false)}
+        onSearch={handleDateRangeSearch}
+        initialStartDate={startDate}
+        initialEndDate={endDate}
+      />
       <ConfirmDeleteModal
         openModalDelete={modalDelete}
         handleDelete={handleDelete}
@@ -181,11 +212,17 @@ export const Sales = () => {
       />
       <div style={styleIconAdd}>
         <h2 className="color-lime">Ventas</h2>
-        <div>
+        <div style={{ display: 'flex', gap: '10px' }}>
           <Tooltip title="Agregar Venta">
             <AddCircleIcon
               style={{ fontSize: 40, color: "#9FB404", cursor: "pointer" }}
               onClick={openModalCreate}
+            />
+          </Tooltip>
+          <Tooltip title="Buscar por Fecha">
+            <SearchIcon
+              style={{ fontSize: 40, color: "#9FB404", cursor: "pointer" }}
+              onClick={() => setOpenDateRangeModal(true)}
             />
           </Tooltip>
         </div>
