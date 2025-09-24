@@ -31,10 +31,11 @@ import { getAttentionsByDateRange } from './services/AttentionDateRangeSearch.se
 import DatePickerComponent from '../../components/DatePickerComponent';
 import { ModalServiceDetails } from './components/ModalServiceDetails';
 import { ModalProductDetails } from './components/ModalProductDetails';
+import dayjs from 'dayjs';
 
 export const AttentionDateRangeSearch: React.FC = () => {
-  const [startDate, setStartDate] = useState<Date | null>(new Date());
-  const [endDate, setEndDate] = useState<Date | null>(new Date());
+  const [startDate, setStartDate] = useState<Date | null>(dayjs().toDate());
+  const [endDate, setEndDate] = useState<Date | null>(dayjs().toDate());
   const [attentions, setAttentions] = useState<AttentionDateRange[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

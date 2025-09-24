@@ -1,4 +1,5 @@
 import { useState } from "react";
+import dayjs from "dayjs";
 
 export interface Shopping {
   id: string;
@@ -12,7 +13,7 @@ export const useShopping = () => {
     id: "",
     quantity: "",
     productId: "",
-    date: new Date().toISOString().split('T')[0],
+    date: dayjs().format('YYYY-MM-DD'),
   };
   
   const [dataShopping, setDataShopping] = useState<Shopping>(defaultShopping);

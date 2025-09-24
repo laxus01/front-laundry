@@ -32,8 +32,8 @@ import DatePickerComponent from '../../components/DatePickerComponent';
 import { ModalParkingPaymentDetails } from './components/ModalParkingPaymentDetails';
 
 export const ParkingDateRangeSearch: React.FC = () => {
-  const [startDate, setStartDate] = useState<Date | null>(new Date());
-  const [endDate, setEndDate] = useState<Date | null>(new Date());
+  const [startDate, setStartDate] = useState<Date | null>(dayjs().toDate());
+  const [endDate, setEndDate] = useState<Date | null>(dayjs().toDate());
   const [parkings, setParkings] = useState<ParkingDateRange[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

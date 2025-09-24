@@ -231,7 +231,7 @@ const ModalPaymentDetailsAccountPayable: React.FC<ModalPaymentDetailsAccountPaya
                   setNewPayment({ ...newPayment, paymentDate: date ? dayjs(date).format('YYYY-MM-DD') : '' })
                 }
                 required
-                maxDate={new Date()}
+                maxDate={dayjs().toDate()}
               />
               <TextField
                 label="Valor"

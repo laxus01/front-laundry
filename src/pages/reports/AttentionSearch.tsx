@@ -30,6 +30,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import { format } from 'date-fns';
+import dayjs from 'dayjs';
 import { es } from 'date-fns/locale';
 
 import { AttentionDateRange, OptionsComboBoxAutoComplete, Vehicle } from '../../interfaces/interfaces';
@@ -44,8 +45,8 @@ type SearchType = 'date' | 'vehicle';
 
 export const AttentionSearch: React.FC = () => {
   const [searchType, setSearchType] = useState<SearchType>('date');
-  const [startDate, setStartDate] = useState<Date | null>(new Date());
-  const [endDate, setEndDate] = useState<Date | null>(new Date());
+  const [startDate, setStartDate] = useState<Date | null>(dayjs().toDate());
+  const [endDate, setEndDate] = useState<Date | null>(dayjs().toDate());
   const [selectedVehicle, setSelectedVehicle] = useState<OptionsComboBoxAutoComplete | null>(null);
   const [vehicles, setVehicles] = useState<OptionsComboBoxAutoComplete[]>([]);
   const [attentions, setAttentions] = useState<AttentionDateRange[]>([]);

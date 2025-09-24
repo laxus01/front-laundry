@@ -85,7 +85,7 @@ const ModalPaymentDetails: React.FC<ModalPaymentDetailsProps> = ({
   const [showAddPayment, setShowAddPayment] = useState(false);
   const [editingPayment, setEditingPayment] = useState<EditingPayment | null>(null);
   const [newPayment, setNewPayment] = useState({
-    paymentDate: new Date().toISOString().split('T')[0],
+    paymentDate: dayjs().format('YYYY-MM-DD'),
     amount: 0,
     detail: "",
   });
@@ -120,7 +120,7 @@ const ModalPaymentDetails: React.FC<ModalPaymentDetailsProps> = ({
         onPaymentChange?.();
         setShowAddPayment(false);
         setNewPayment({
-          paymentDate: new Date().toISOString().split('T')[0],
+          paymentDate: dayjs().format('YYYY-MM-DD'),
           amount: 0,
           detail: "",
         });
@@ -241,7 +241,7 @@ const ModalPaymentDetails: React.FC<ModalPaymentDetailsProps> = ({
                   setNewPayment({ ...newPayment, paymentDate: date ? dayjs(date).format('YYYY-MM-DD') : '' })
                 }
                 required
-                maxDate={new Date()}
+                maxDate={dayjs().toDate()}
               />
               <TextField
                 label="Valor"

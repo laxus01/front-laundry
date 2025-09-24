@@ -106,7 +106,7 @@ const ModalEditShopping: React.FC<ModalEditShoppingProps> = ({
                 })
               }
               required
-              maxDate={new Date()}
+              maxDate={dayjs().toDate()}
             />
           </Box>
           <Box display="flex" justifyContent="space-around" mt={3}>

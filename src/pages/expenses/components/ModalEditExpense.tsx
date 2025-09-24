@@ -108,7 +108,7 @@ const ModalEditExpense: React.FC<ModalEditExpenseProps> = ({
                 setDataExpense({ ...dataExpense, date: date ? dayjs(date).format('YYYY-MM-DD') : '' })
               }
               required
-              maxDate={new Date()}
+              maxDate={dayjs().toDate()}
             />
           </Box>
           <Box display="flex" justifyContent="space-around" mt={3}>

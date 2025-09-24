@@ -28,8 +28,8 @@ import dayjs from 'dayjs';
 import DatePickerComponent from '../../components/DatePickerComponent';
 
 export const WasherActivityReport: React.FC = () => {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-  const [endDate, setEndDate] = useState<Date | null>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | null>(dayjs().toDate());
+  const [endDate, setEndDate] = useState<Date | null>(dayjs().toDate());
   const [selectedWasher, setSelectedWasher] = useState<OptionsComboBoxAutoComplete | null>(null);
   const [washers, setWashers] = useState<OptionsComboBoxAutoComplete[]>([]);
   const [reportData, setReportData] = useState<WasherActivityReportType | null>(null);

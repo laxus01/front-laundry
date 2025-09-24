@@ -25,8 +25,8 @@ import dayjs from 'dayjs';
 import DatePickerComponent from '../../components/DatePickerComponent';
 
 export const FinancialReport: React.FC = () => {
-  const [startDate, setStartDate] = useState<Date | null>(new Date());
-  const [endDate, setEndDate] = useState<Date | null>(new Date());
+  const [startDate, setStartDate] = useState<Date | null>(dayjs().toDate());
+  const [endDate, setEndDate] = useState<Date | null>(dayjs().toDate());
   const [reportData, setReportData] = useState<FinancialReportType | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

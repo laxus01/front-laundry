@@ -1,4 +1,5 @@
 import { useState } from "react";
+import dayjs from "dayjs";
 
 export interface Expense {
   id: string;
@@ -12,7 +13,7 @@ export const useExpenses = () => {
     id: "",
     expense: "",
     value: 0,
-    date: new Date().toISOString().split('T')[0],
+    date: dayjs().format('YYYY-MM-DD'),
   };
   
   const [dataExpense, setDataExpense] = useState<Expense>(defaultExpense);
