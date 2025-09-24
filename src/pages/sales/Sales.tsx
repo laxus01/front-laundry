@@ -85,7 +85,7 @@ export const Sales = () => {
     const payload = {
       productId: dataSale.productId,
       quantity: dataSale.quantity,
-      washerId: dataSale.washerId ? dataSale.washerId : null,
+      washerId: dataSale.washerId ? { id: dataSale.washerId } : null,
       date: dataSale.date,
     };
     const response = await queryEditSaleById(dataSale.id, payload);
@@ -113,7 +113,13 @@ export const Sales = () => {
     console.log(row);
 
     setIsEditing(true);
-    setDataSale(row);
+    setDataSale({
+      id: row.id,
+      productId: row.productId,
+      quantity: row.quantity,
+      washerId: row.washerId || "",
+      date: row.rawDate,
+    });
     setOpenModal(true);
   };
 
@@ -134,7 +140,9 @@ export const Sales = () => {
           saleValue: formatPrice(item.productId.saleValue),
           totalSale: formatPrice(item.quantity * item.productId.saleValue),
           washer: item.washerId && item.washerId.washer,
+          washerId: item.washerId ? item.washerId.id : "",
           date: dayjs(item.date).format('DD/MM/YYYY'),
+          rawDate: dayjs(item.date).format('YYYY-MM-DD'),
         };
       });
       setData(data);
@@ -233,7 +241,7 @@ export const Sales = () => {
         data={data}
         onEdit={openModalEdit}
         onDelete={openModalDelete}
-        edit={false}
+        edit={true}
       />
     </>
   );

@@ -90,6 +90,7 @@ const ModalEditSale: React.FC<ModalEditSaleProps> = ({
               options={listProducts}
               onSelect={handleProduct}
               value={dataSale.productId}
+              disabled={isEditing}
             />
             <TextField
               id="quantity"
@@ -117,9 +118,10 @@ const ModalEditSale: React.FC<ModalEditSaleProps> = ({
                   <Checkbox
                     checked={isWorkerSale}
                     onChange={(e) => setIsWorkerSale(e.target.checked)}
+                    
                   />
                 }
-                label="Venta a trabajador"
+                label="Venta a lavador"
               />
             </FormGroup>
             {isWorkerSale && (
