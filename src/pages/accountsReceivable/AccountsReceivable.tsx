@@ -15,7 +15,7 @@ import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import SearchIcon from "@mui/icons-material/Search";
 import PaymentIcon from "@mui/icons-material/Payment";
-import { Tooltip, IconButton } from "@mui/material";
+import { Tooltip, IconButton, Chip } from "@mui/material";
 import { useSnackbar } from "../../contexts/SnackbarContext";
 import { formatPrice } from "../../utils/utils";
 import dayjs from "dayjs";
@@ -28,6 +28,7 @@ const columns = [
   { id: "detail", label: "Detalle", minWidth: 250 },
   { id: "value", label: "Valor", minWidth: 150 },
   { id: "balance", label: "Saldo", minWidth: 150 },
+  { id: "state", label: "Estado", minWidth: 150 },
 ];
 
 const styleIconAdd = {
@@ -77,6 +78,9 @@ export const AccountsReceivable = () => {
             vehicleInfo = item.vehicle;
           }
 
+          const isPaid = item.balance === 0;
+          const statusText = isPaid ? "Cobrada" : "Por Cobrar";
+
           return {
             id: item.id,
             clientName: vehicleInfo?.client || "Cliente no encontrado",
@@ -86,6 +90,14 @@ export const AccountsReceivable = () => {
             detail: item.detail,
             value: `$${formatPrice(item.value)}`,
             balance: `$${formatPrice(item.balance)}`,
+            state: (
+              <Chip
+                label={statusText}
+                color={isPaid ? "success" : "warning"}
+                variant="filled"
+                size="small"
+              />
+            ),
             // Store original data for editing
             rawValue: item.value,
             rawDate: item.date,

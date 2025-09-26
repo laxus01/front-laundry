@@ -63,14 +63,13 @@ export const Vehicles = () => {
         phone: dataVehicle.phone,
       };
       const response = await queryCreateVehicleById(payload);
-      if (response.data) {
+      if (response) {
         getListVehicles();
         setOpenModal(false);
         setDataVehicle(defaultVehicle);
-        showSnackbar(response.data.message, response.data.success ? "success" : "error");
+        showSnackbar('Vehículo creado exitosamente', "success");
       }
     } catch (error: any) {
-      // Handle the specific error response from backend
       showSnackbar(error.message || "Error al crear el vehículo", "error");
     }
   };

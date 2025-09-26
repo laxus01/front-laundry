@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { AccountReceivableSelected } from "../../../interfaces/interfaces";
+import dayjs from "dayjs";
 
 export const useAccountsReceivable = () => {
   const defaultAccountReceivable = {
     id: "",
     value: 0,
-    date: "",
+    date: dayjs().format('YYYY-MM-DD'),
     detail: "",
     vehicleId: "",
     vehicleName: "",

@@ -15,7 +15,7 @@ import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import SearchIcon from "@mui/icons-material/Search";
 import PaymentIcon from "@mui/icons-material/Payment";
-import { Tooltip, IconButton } from "@mui/material";
+import { Tooltip, IconButton, Chip } from "@mui/material";
 import { useSnackbar } from "../../contexts/SnackbarContext";
 import { formatPrice } from "../../utils/utils";
 import dayjs from "dayjs";
@@ -28,6 +28,7 @@ const columns = [
   { id: "phone", label: "Teléfono", minWidth: 150 },
   { id: "value", label: "Valor", minWidth: 100 },
   { id: "balance", label: "Saldo", minWidth: 100 },
+  { id: "state", label: "Estado", minWidth: 150 },
   { id: "startDate", label: "Fecha Inicial", minWidth: 150 },
   { id: "endDate", label: "Fecha Final", minWidth: 150 },
 ];
@@ -65,7 +66,10 @@ export const Parkings = () => {
           // Calculate balance: total value minus sum of payments
           const totalPayments = item.parkingPayments?.reduce((sum: number, payment: any) => sum + payment.value, 0) || 0;
           const balance = item.value - totalPayments;
-          
+
+          const isPaid = balance === 0;
+          const statusText = isPaid ? "Pagado" : "Por Pagar";
+
           return {
             id: item.id,
             plate: item.vehicle.plate,
@@ -75,6 +79,14 @@ export const Parkings = () => {
             phone: item.vehicle.phone,
             value: `$${formatPrice(item.value)}`,
             balance: `$${formatPrice(balance)}`,
+            state: (
+              <Chip
+                label={statusText}
+                color={isPaid ? "success" : "warning"}
+                variant="filled"
+                size="small"
+              />
+            ),
             startDate: dayjs(item.dateInitial).format('DD/MM/YYYY'),
             endDate: dayjs(item.dateFinal).format('DD/MM/YYYY'),
             // Store original IDs and data for editing
