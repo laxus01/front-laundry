@@ -44,9 +44,9 @@ export const Expenses = () => {
   const [startDate] = useState(dayjs().startOf('month').format('YYYY-MM-DD'));
   const [endDate] = useState(dayjs().endOf('month').format('YYYY-MM-DD'));
 
-  const getListExpenses = async () => {
+  const getListExpenses = async (startDate: string = dayjs().format('YYYY-MM-DD'), endDate: string = dayjs().format('YYYY-MM-DD')) => {
     try {
-      const response = await getExpenses();
+      const response = await getExpenses(startDate, endDate);
       if (response && response.data && Array.isArray(response.data)) {
         const data = response.data.map((item: any) => ({
           id: item.id,

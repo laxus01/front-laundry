@@ -164,7 +164,7 @@ export const Attentions = () => {
         </div>
       </div>
       <Divider />
-      <div className="mt-20 mb-20">
+      <div className="attentions">
         {listAttentions.map((attention) => (
           <CardAttentions
             key={attention.attentionId}
