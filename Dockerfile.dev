@@ -1,0 +1,18 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copiar archivos de dependencias
+COPY package*.json ./
+
+# Instalar dependencias
+RUN npm install
+
+# Copiar el resto de la aplicación
+COPY . .
+
+# Puerto expuesto
+EXPOSE 5173
+
+# Comando para desarrollo con Vite
+CMD ["sh", "-c", "npm run dev -- --host"]
