@@ -64,7 +64,6 @@ const ModalEditVehicle: React.FC<ModalEditVehicleProps> = ({
   const validateButtonCreate = () => {
     if (
       dataVehicle.plate === "" ||
-      dataVehicle.client === "" ||
       dataVehicle.typeVehicleId === 0
     ) {
       return true;
@@ -73,7 +72,7 @@ const ModalEditVehicle: React.FC<ModalEditVehicleProps> = ({
   };
 
   const validateButtonEdit = () => {
-    if (dataVehicle.plate === "" || dataVehicle.client === "") {
+    if (dataVehicle.plate === "" || dataVehicle.typeVehicleId === 0) {
       return true;
     }
     return false;
