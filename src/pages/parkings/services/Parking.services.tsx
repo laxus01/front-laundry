@@ -1,4 +1,4 @@
-import { environment } from "../../../env";
+import { BASE_URL, environment } from "../../../env";
 import {
   requestDelete,
   requestGet,
@@ -33,17 +33,17 @@ export const queryDeleteParkingById = async (id: string) => {
 };
 
 export const getParkingPayments = async (parkingId: string) => {
-  return await requestGet(`http://localhost:3000/parking-payments?parkingId=${parkingId}`);
+  return await requestGet(`${BASE_URL}/parking-payments`, { parkingId });
 };
 
 export const queryCreatePayment = async (payload: any) => {
-  return await requestPost(`http://localhost:3000/parking-payments`, payload);
+  return await requestPost(`${BASE_URL}/parking-payments`, payload);
 };
 
 export const queryEditPayment = async (id: string, payload: any) => {
-  return await requestPut(`http://localhost:3000/parking-payments/${id}`, payload);
+  return await requestPut(`${BASE_URL}/parking-payments/${id}`, payload);
 };
 
 export const queryDeletePayment = async (id: string) => {
-  return await requestDelete(`http://localhost:3000/parking-payments/${id}`);
+  return await requestDelete(`${BASE_URL}/parking-payments/${id}`);
 };

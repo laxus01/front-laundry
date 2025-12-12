@@ -2,7 +2,7 @@
 // import { NotificationApp } from "@/common/notification-app";
 import axios from "axios";
 
-const URLV = process.env.VITE_API;
+const URLV = import.meta.env.VITE_API_URL;
 axios.defaults.baseURL = URLV;
 
 axios.interceptors.request.use(
