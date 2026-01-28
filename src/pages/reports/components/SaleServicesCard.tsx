@@ -1,6 +1,7 @@
-import React from 'react';
-import { Card, CardContent, Typography, Box, Chip } from '@mui/material';
+import React, { useState } from 'react';
+import { Card, CardContent, Typography, Box, Chip, IconButton, Collapse } from '@mui/material';
 import LocalCarWashIcon from '@mui/icons-material/LocalCarWash';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { WasherActivitySaleService } from '../../../interfaces/interfaces';
 
 interface SaleServicesCardProps {
@@ -8,6 +9,8 @@ interface SaleServicesCardProps {
 }
 
 export const SaleServicesCard: React.FC<SaleServicesCardProps> = ({ saleServices }) => {
+  const [expanded, setExpanded] = useState(true);
+
   const formatPrice = (price: number | undefined | null) => {
     const numPrice = Number(price) || 0;
     return new Intl.NumberFormat('es-CO', { 
@@ -21,19 +24,32 @@ export const SaleServicesCard: React.FC<SaleServicesCardProps> = ({ saleServices
   return (
     <Card sx={{ marginBottom: 2, borderRadius: 2, boxShadow: 3 }}>
       <CardContent>
-        <Box display="flex" alignItems="center" marginBottom={2}>
-          <LocalCarWashIcon sx={{ marginRight: 1, color: '#9FB404' }} />
-          <Typography variant="h6" component="h2" fontWeight="bold">
-            Servicios Vendidos
-          </Typography>
+        <Box display="flex" alignItems="center" justifyContent="space-between" marginBottom={2}>
+          <Box display="flex" alignItems="center">
+            <LocalCarWashIcon sx={{ marginRight: 1, color: '#9FB404' }} />
+            <Typography variant="h6" component="h2" fontWeight="bold">
+              Servicios Vendidos
+            </Typography>
+          </Box>
+          <IconButton
+            onClick={() => setExpanded(!expanded)}
+            sx={{
+              transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+              transition: 'transform 0.3s',
+            }}
+            size="small"
+          >
+            <ExpandMoreIcon />
+          </IconButton>
         </Box>
         
-        {saleServices.length === 0 ? (
-          <Typography variant="body2" color="text.secondary">
-            No hay servicios vendidos para este período y lavador.
-          </Typography>
-        ) : (
-          <Box>
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          {saleServices.length === 0 ? (
+            <Typography variant="body2" color="text.secondary">
+              No hay servicios vendidos para este período y lavador.
+            </Typography>
+          ) : (
+            <Box>
             {saleServices.map((service, index) => (
               <Box
                 key={`${service.id}-${index}`}
@@ -68,6 +84,7 @@ export const SaleServicesCard: React.FC<SaleServicesCardProps> = ({ saleServices
             ))}
           </Box>
         )}
+        </Collapse>
       </CardContent>
     </Card>
   );

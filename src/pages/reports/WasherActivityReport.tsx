@@ -24,6 +24,7 @@ import { getWashers } from '../washers/services/Washer.services';
 import { AttentionsCard } from './components/AttentionsCard';
 import { SaleServicesCard } from './components/SaleServicesCard';
 import { SalesCard } from './components/SalesCard';
+import { AdvancesCard } from './components/AdvancesCard';
 import dayjs from 'dayjs';
 import DatePickerComponent from '../../components/DatePickerComponent';
 
@@ -100,7 +101,16 @@ export const WasherActivityReport: React.FC = () => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
-      <Container maxWidth="lg" sx={{ paddingY: 3 }}>
+      <Container 
+        maxWidth="lg" 
+        sx={{ 
+          paddingTop: 3,
+          paddingBottom: 8,
+          height: '100vh',
+          overflowY: 'auto',
+          overflowX: 'hidden'
+        }}
+      >
         <Box display="flex" alignItems="center" marginBottom={3}>
           <AssessmentIcon sx={{ marginRight: 2, fontSize: 32, color: '#9FB404' }} />
           <Typography variant="h4" component="h1" fontWeight="bold">
@@ -185,27 +195,29 @@ export const WasherActivityReport: React.FC = () => {
         {reportData && (
           <Box>
             
-            <Stack 
-              direction={{ xs: 'column', lg: 'row' }} 
-              spacing={3}
+            <Box
               sx={{
-                overflowY: 'auto',
-                maxHeight: '30vh',
-                overflowX: 'hidden',
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                gap: 3,
               }}
             >
-              <Box sx={{ flex: 1 }}>
+              <Box>
                 <AttentionsCard attentions={reportData.attentions} />
               </Box>
               
-              <Box sx={{ flex: 1 }}>
+              <Box>
                 <SaleServicesCard saleServices={reportData.saleServices} />
               </Box>
               
-              <Box sx={{ flex: 1 }}>
+              <Box>
                 <SalesCard sales={reportData.sales} />
               </Box>
-            </Stack>
+              
+              <Box>
+                <AdvancesCard advances={reportData.advances || []} />
+              </Box>
+            </Box>
 
             <Paper elevation={2} sx={{ padding: 3, marginTop: 3, borderRadius: 2, backgroundColor: '#f8f9fa' }}>
               <Typography variant="h6" marginBottom={2} fontWeight="medium">
@@ -214,6 +226,7 @@ export const WasherActivityReport: React.FC = () => {
               <Stack 
                 direction={{ xs: 'column', sm: 'row' }} 
                 spacing={2}
+                marginBottom={3}
               >
                 <Box sx={{ flex: 1, textAlign: 'center' }}>
                   <Typography variant="h4" fontWeight="bold" color="primary">
@@ -242,19 +255,45 @@ export const WasherActivityReport: React.FC = () => {
                   </Typography>
                 </Box>
                 <Box sx={{ flex: 1, textAlign: 'center' }}>
-                  <Typography variant="h4" fontWeight="bold" color="info.main">
-                    {formatPrice(
-                      // Sumar ganancia del lavador por atenciones
-                      reportData.attentions.reduce((total, attention) => total + attention.washerProfit, 0) -
-                      // Restar el valor total de productos vendidos (saleValue * quantity)
-                      reportData.sales.reduce((total, sale) => {
-                        const productSaleValue = sale.productId.saleValue * sale.quantity;
-                        return total + productSaleValue;
-                      }, 0)
-                    )}
+                  <Typography variant="h4" fontWeight="bold" color="error.main">
+                    {reportData.summary.totalAdvances || 0}
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary">
+                    Avances
+                  </Typography>
+                </Box>
+              </Stack>
+              
+              <Stack 
+                direction={{ xs: 'column', sm: 'row' }} 
+                spacing={2}
+                sx={{ 
+                  borderTop: '2px solid #e0e0e0', 
+                  paddingTop: 2 
+                }}
+              >
+                <Box sx={{ flex: 1, textAlign: 'center' }}>
+                  <Typography variant="h5" fontWeight="bold" color="text.primary">
+                    {formatPrice(reportData.summary.totalProfit || 0)}
                   </Typography>
                   <Typography variant="body1" color="text.secondary">
                     Total Ganancia
+                  </Typography>
+                </Box>
+                <Box sx={{ flex: 1, textAlign: 'center' }}>
+                  <Typography variant="h5" fontWeight="bold" color="error.main">
+                    - {formatPrice(reportData.summary.totalAdvancesValue || 0)}
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary">
+                    Total Avances
+                  </Typography>
+                </Box>
+                <Box sx={{ flex: 1, textAlign: 'center' }}>
+                  <Typography variant="h4" fontWeight="bold" color="info.main">
+                    {formatPrice(reportData.summary.netProfit || 0)}
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary">
+                    Ganancia Neta
                   </Typography>
                 </Box>
               </Stack>

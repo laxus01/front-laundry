@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { Card, CardContent, Typography, Box, Chip, IconButton, Collapse } from '@mui/material';
-import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
+import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { WasherActivitySale } from '../../../interfaces/interfaces';
+import { Advance } from '../../../interfaces/interfaces';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 
-interface SalesCardProps {
-  sales: WasherActivitySale[];
+interface AdvancesCardProps {
+  advances: Advance[];
 }
 
-export const SalesCard: React.FC<SalesCardProps> = ({ sales }) => {
+export const AdvancesCard: React.FC<AdvancesCardProps> = ({ advances }) => {
   const [expanded, setExpanded] = useState(true);
 
   const formatPrice = (price: number | undefined | null) => {
@@ -21,15 +23,34 @@ export const SalesCard: React.FC<SalesCardProps> = ({ sales }) => {
     }).format(numPrice);
   };
 
+  const formatDateTime = (dateString: string) => {
+    try {
+      const date = new Date(dateString);
+      return format(date, "dd/MM/yyyy HH:mm", { locale: es });
+    } catch (error) {
+      return dateString;
+    }
+  };
+
+  const totalAdvances = advances.reduce((sum, advance) => sum + (advance.value || 0), 0);
+
   return (
     <Card sx={{ marginBottom: 2, borderRadius: 2, boxShadow: 3 }}>
       <CardContent>
         <Box display="flex" alignItems="center" justifyContent="space-between" marginBottom={2}>
-          <Box display="flex" alignItems="center">
-            <ShoppingBasketIcon sx={{ marginRight: 1, color: '#9FB404' }} />
+          <Box display="flex" alignItems="center" gap={1}>
+            <TrendingDownIcon sx={{ marginRight: 1, color: '#9FB404' }} />
             <Typography variant="h6" component="h2" fontWeight="bold">
-              Productos Vendidos
+              Avances
             </Typography>
+            {expanded && (
+              <Chip
+                label={`Total: ${formatPrice(totalAdvances)}`}
+                color="error"
+                size="small"
+                sx={{ fontWeight: 'bold' }}
+              />
+            )}
           </Box>
           <IconButton
             onClick={() => setExpanded(!expanded)}
@@ -44,46 +65,47 @@ export const SalesCard: React.FC<SalesCardProps> = ({ sales }) => {
         </Box>
         
         <Collapse in={expanded} timeout="auto" unmountOnExit>
-          {sales.length === 0 ? (
+          {advances.length === 0 ? (
             <Typography variant="body2" color="text.secondary">
-              No hay productos vendidos para este período y lavador.
+              No hay avances para este período y lavador.
             </Typography>
           ) : (
             <Box>
-            {sales.map((sale) => (
+            {advances.map((advance) => (
               <Box
-                key={sale.id}
+                key={advance.id}
                 sx={{
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   padding: 2,
                   marginBottom: 1,
-                  backgroundColor: '#f5f5f5',
+                  backgroundColor: '#fff3f3',
                   borderRadius: 1,
+                  border: '1px solid #ffcdd2',
                   '&:hover': {
-                    backgroundColor: '#e8e8e8',
+                    backgroundColor: '#ffe8e8',
                   },
                 }}
               >
                 <Box>
-                  <Typography variant="body1" fontWeight="medium">
-                    {sale.productId.product}
+                  <Typography variant="body1" fontWeight="medium" color="error.main">
+                    Avance
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    Cantidad: {sale.quantity} | Valor unitario: {formatPrice(sale.productId.saleValue)}
+                    {formatDateTime(advance.createAt || advance.date)}
                   </Typography>
                 </Box>
                 <Chip
-                  label={formatPrice(sale.productId.saleValue * sale.quantity)}
-                  color="warning"
+                  label={formatPrice(advance.value)}
+                  color="error"
                   size="small"
                   sx={{ fontWeight: 'bold' }}
                 />
               </Box>
             ))}
-          </Box>
-        )}
+            </Box>
+          )}
         </Collapse>
       </CardContent>
     </Card>

@@ -17,6 +17,7 @@ import { AttentionSearch } from "./pages/reports/AttentionSearch";
 import { ParkingDateRangeSearch } from "./pages/reports/ParkingDateRangeSearch";
 import { AccountsReceivable } from "./pages/accountsReceivable";
 import { AccountsPayable } from "./pages/accountsPayable/AccountsPayable";
+import { Advances } from "./pages/advances/Advances";
 import GlobalSnackbar from "./components/GlobalSnackbar";
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
         >
           <Route path="/dashboard/vehicles" element={<Vehicles />} />
           <Route path="/dashboard/attentions" element={<Attentions />} />
+          <Route path="/dashboard/advances" element={<Advances />} />
           <Route path="/dashboard/washers" element={<Washers />} />
           <Route path="/dashboard/products" element={<Products />} />
           <Route path="/dashboard/services" element={<Services />} />

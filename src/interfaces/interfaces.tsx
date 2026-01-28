@@ -225,11 +225,15 @@ export interface WasherActivityReport {
   attentions: WasherActivityAttention[];
   sales: WasherActivitySale[];
   saleServices: WasherActivitySaleService[];
+  advances: Advance[];
   summary: {
     totalAttentions: number;
     totalSales: number;
     totalSaleServices: number;
+    totalAdvances: number;
+    totalAdvancesValue: number;
     totalProfit: number;
+    netProfit: number;
   };
 }
 
@@ -480,4 +484,21 @@ export interface FinancialReport {
   costs: FinancialReportCosts;
   summary: FinancialReportSummary;
   details: FinancialReportDetails;
+}
+
+export interface Advance {
+  id: string;
+  value: number;
+  date: string;
+  washerId: string;
+  washer?: Washer;
+  createAt?: string;
+}
+
+export interface AdvanceSelected {
+  id: string;
+  value: number | string;
+  date: string;
+  washerId: string;
+  washerName?: string;
 }

@@ -1,6 +1,7 @@
-import React from 'react';
-import { Card, CardContent, Typography, Box, Chip } from '@mui/material';
+import React, { useState } from 'react';
+import { Card, CardContent, Typography, Box, Chip, IconButton, Collapse } from '@mui/material';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { WasherActivityAttention } from '../../../interfaces/interfaces';
 
 interface AttentionsCardProps {
@@ -8,6 +9,8 @@ interface AttentionsCardProps {
 }
 
 export const AttentionsCard: React.FC<AttentionsCardProps> = ({ attentions }) => {
+  const [expanded, setExpanded] = useState(true);
+
   const formatPrice = (price: number | undefined | null) => {
     const numPrice = Number(price) || 0;
     return new Intl.NumberFormat('es-CO', { 
@@ -21,19 +24,32 @@ export const AttentionsCard: React.FC<AttentionsCardProps> = ({ attentions }) =>
   return (
     <Card sx={{ marginBottom: 2, borderRadius: 2, boxShadow: 3 }}>
       <CardContent>
-        <Box display="flex" alignItems="center" marginBottom={2}>
-          <DirectionsCarIcon sx={{ marginRight: 1, color: '#9FB404' }} />
-          <Typography variant="h6" component="h2" fontWeight="bold">
-            Atenciones de Vehículos
-          </Typography>
+        <Box display="flex" alignItems="center" justifyContent="space-between" marginBottom={2}>
+          <Box display="flex" alignItems="center">
+            <DirectionsCarIcon sx={{ marginRight: 1, color: '#9FB404' }} />
+            <Typography variant="h6" component="h2" fontWeight="bold">
+              Atenciones de Vehículos
+            </Typography>
+          </Box>
+          <IconButton
+            onClick={() => setExpanded(!expanded)}
+            sx={{
+              transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+              transition: 'transform 0.3s',
+            }}
+            size="small"
+          >
+            <ExpandMoreIcon />
+          </IconButton>
         </Box>
         
-        {attentions.length === 0 ? (
-          <Typography variant="body2" color="text.secondary">
-            No hay atenciones registradas para este período y lavador.
-          </Typography>
-        ) : (
-          <Box>
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          {attentions.length === 0 ? (
+            <Typography variant="body2" color="text.secondary">
+              No hay atenciones registradas para este período y lavador.
+            </Typography>
+          ) : (
+            <Box>
             {attentions.map((attention) => (
               <Box
                 key={attention.id}
@@ -77,8 +93,9 @@ export const AttentionsCard: React.FC<AttentionsCardProps> = ({ attentions }) =>
                 </Box>
               </Box>
             ))}
-          </Box>
-        )}
+            </Box>
+          )}
+        </Collapse>
       </CardContent>
     </Card>
   );
