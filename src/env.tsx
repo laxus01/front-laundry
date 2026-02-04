@@ -20,4 +20,5 @@ export const environment = {
   accountsPayable: BASE_URL + "/accounts-payable",
   accountsPayablePayments: BASE_URL + "/accounts-payable-payments",
   advances: BASE_URL + "/advances",
+  defaulterWashers: BASE_URL + "/defaulter-washers",
 };

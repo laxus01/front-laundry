@@ -15,6 +15,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import SearchIcon from '@mui/icons-material/Search';
 import AssessmentIcon from '@mui/icons-material/Assessment';
+import SaveIcon from '@mui/icons-material/Save';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
@@ -27,6 +30,11 @@ import { SalesCard } from './components/SalesCard';
 import { AdvancesCard } from './components/AdvancesCard';
 import dayjs from 'dayjs';
 import DatePickerComponent from '../../components/DatePickerComponent';
+import ModalEditDefaulterWasher from '../defaulter-washers/components/ModalEditDefaulterWasher';
+import { useDefaulterWashers } from '../defaulter-washers/hooks/useDefaulterWashers';
+import { queryCreateDefaulterWasher } from '../defaulter-washers/services/DefaulterWashers.services';
+import { useSnackbar } from '../../contexts/SnackbarContext';
+import { removeFormatPrice } from '../../utils/utils';
 
 export const WasherActivityReport: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(dayjs().toDate());
@@ -36,6 +44,9 @@ export const WasherActivityReport: React.FC = () => {
   const [reportData, setReportData] = useState<WasherActivityReportType | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [openModalDefaulter, setOpenModalDefaulter] = useState(false);
+  const defaulterWasher = useDefaulterWashers();
+  const { showSnackbar } = useSnackbar();
 
   useEffect(() => {
     loadWashers();
@@ -97,6 +108,52 @@ export const WasherActivityReport: React.FC = () => {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0
     }).format(numPrice);
+  };
+
+  const handleOpenModalDefaulter = () => {
+    if (!reportData || !selectedWasher) return;
+
+    // Prellenar el modal con los datos del reporte
+    const netProfitAmount = Math.abs(reportData.summary.netProfit || 0);
+    const formattedAmount = new Intl.NumberFormat('es-CO', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(netProfitAmount);
+
+    defaulterWasher.setDataDefaulterWasher({
+      id: '',
+      amount: formattedAmount,
+      washerId: selectedWasher.id,
+      description: `Ganancia neta negativa del período ${format(selectedDate!, 'dd/MM/yyyy')} al ${format(endDate!, 'dd/MM/yyyy')}`,
+      date: dayjs().format('YYYY-MM-DD'),
+    });
+
+    setOpenModalDefaulter(true);
+  };
+
+  const handleCreateDefaulter = async () => {
+    try {
+      const payload = {
+        amount: removeFormatPrice(defaulterWasher.dataDefaulterWasher.amount),
+        washerId: defaulterWasher.dataDefaulterWasher.washerId,
+        description: defaulterWasher.dataDefaulterWasher.description,
+        date: defaulterWasher.dataDefaulterWasher.date,
+      };
+
+      const response = await queryCreateDefaulterWasher(payload);
+      if (response.data) {
+        setOpenModalDefaulter(false);
+        defaulterWasher.setDataDefaulterWasher(defaulterWasher.defaultDefaulterWasher);
+        showSnackbar(response.data.message || 'Lavador en mora registrado exitosamente', 'success');
+      }
+    } catch (error: any) {
+      showSnackbar(error.message || 'Error al registrar el lavador en mora', 'error');
+    }
+  };
+
+  const handleCloseModalDefaulter = () => {
+    setOpenModalDefaulter(false);
+    defaulterWasher.setDataDefaulterWasher(defaulterWasher.defaultDefaulterWasher);
   };
 
   return (
@@ -288,10 +345,34 @@ export const WasherActivityReport: React.FC = () => {
                     Total Avances
                   </Typography>
                 </Box>
-                <Box sx={{ flex: 1, textAlign: 'center' }}>
-                  <Typography variant="h4" fontWeight="bold" color="info.main">
-                    {formatPrice(reportData.summary.netProfit || 0)}
-                  </Typography>
+                <Box sx={{ flex: 1, textAlign: 'center', position: 'relative' }}>
+                  <Box display="flex" alignItems="center" justifyContent="center" gap={1}>
+                    <Typography 
+                      variant="h4" 
+                      fontWeight="bold" 
+                      color={(reportData.summary.netProfit || 0) < 0 ? 'error.main' : 'info.main'}
+                    >
+                      {formatPrice(reportData.summary.netProfit || 0)}
+                    </Typography>
+                    {(reportData.summary.netProfit || 0) < 0 && (
+                      <Tooltip title="Guardar como Lavador en Mora">
+                        <IconButton
+                          onClick={handleOpenModalDefaulter}
+                          color="primary"
+                          size="small"
+                          sx={{
+                            backgroundColor: '#1976d2',
+                            color: 'white',
+                            '&:hover': {
+                              backgroundColor: '#1565c0',
+                            },
+                          }}
+                        >
+                          <SaveIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    )}
+                  </Box>
                   <Typography variant="body1" color="text.secondary">
                     Ganancia Neta
                   </Typography>
@@ -300,6 +381,16 @@ export const WasherActivityReport: React.FC = () => {
             </Paper>
           </Box>
         )}
+
+        <ModalEditDefaulterWasher
+          isEditing={false}
+          openModal={openModalDefaulter}
+          handleCreate={handleCreateDefaulter}
+          handleEdit={() => {}}
+          handleClose={handleCloseModalDefaulter}
+          defaulterWasher={defaulterWasher}
+          listWashers={washers}
+        />
       </Container>
     </LocalizationProvider>
   );

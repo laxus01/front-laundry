@@ -27,3 +27,11 @@ export const saveListServicesByAttention = async (payload: any) => {
 export const saveListProductsByAttention = async (payload: any) => {
   return await requestPost(`${environment.attentions}/sales/products`, payload);
 };
+
+export const getPendingPaymentAttentions = async () => {
+  return await requestGet(`${environment.attentions}/pending-payments/list`);
+};
+
+export const updateAttentionPaymentStatus = async (attentionId: string, payload: any) => {
+  return await requestPost(`${environment.attentions}/${attentionId}/payment`, payload);
+};

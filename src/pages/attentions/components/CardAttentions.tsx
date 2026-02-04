@@ -3,7 +3,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { useState } from "react";
 import TableComponent from "../../../components/TableComponent";
-import { Stack, Tooltip } from "@mui/material";
+import { Stack, Tooltip, Chip } from "@mui/material";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
 import LocalCarWashIcon from "@mui/icons-material/LocalCarWash";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -12,6 +12,7 @@ import ModalProducts from "./ModalProducts";
 import {
   Attention,
   OptionsComboBoxAutoComplete,
+  PaymentStatus,
 } from "../../../interfaces/interfaces";
 import ConfirmDeleteModal from "../../../components/ConfirmDeleteModal";
 import ConfirmFinishModal from "./ConfirmFinishModal";
@@ -37,7 +38,7 @@ const styleIcon = {
 interface CardAttentionsProps {
   attention: Attention;
   deleteAttention: (atention: string) => void;
-  handleFinish: (attention: any) => void;
+  handleFinish: (attentionId: string, paymentStatus: PaymentStatus, notes?: string) => void;
 }
 
 export const CardAttentions: React.FC<CardAttentionsProps> = ({
@@ -143,9 +144,29 @@ export const CardAttentions: React.FC<CardAttentionsProps> = ({
     deleteAttention(attention.attentionId);
   };
 
-  const handleFinishAttention = () => {
-    handleFinish(attention.attentionId);
+  const handleFinishAttention = (paymentStatus: PaymentStatus, notes?: string) => {
+    handleFinish(attention.attentionId, paymentStatus, notes);
     setStateFinishModal(false);
+  };
+
+  const getPaymentStatusBadge = () => {
+    if (!attention.paymentStatus) return null;
+    
+    const statusConfig = {
+      PAID: { label: 'Pagado', color: 'success' as const },
+      PENDING: { label: 'Pendiente', color: 'warning' as const },
+      PARTIAL: { label: 'Parcial', color: 'info' as const },
+    };
+
+    const config = statusConfig[attention.paymentStatus];
+    return (
+      <Chip 
+        label={config.label} 
+        color={config.color} 
+        size="small"
+        sx={{ fontWeight: 'bold' }}
+      />
+    );
   };
 
   return (
@@ -184,6 +205,7 @@ export const CardAttentions: React.FC<CardAttentionsProps> = ({
       <div className="card-header">
         <Stack direction="row" spacing={3} alignItems="center">
           <div className="card-title">Vehiculo: {attention.vehicle.name}</div>
+          {getPaymentStatusBadge()}
           <div>
             <Tooltip title="Agregar Servicio">
               <LocalCarWashIcon

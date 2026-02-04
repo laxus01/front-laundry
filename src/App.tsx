@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Dashboard } from "./pages/dashboard/Dashboard";
 import { Vehicles } from "./pages/vehicles/Vehicles";
 import { Attentions } from "./pages/attentions/Attentions";
+import { PendingPayments } from "./pages/attentions/PendingPayments";
 import Login from "./pages/login/Login";
 import { Washers } from "./pages/washers/Washers";
 import { Products } from "./pages/products/Products";
@@ -11,6 +12,7 @@ import { Sales } from "./pages/sales/Sales";
 import { Parkings } from "./pages/parkings";
 import { Expenses } from "./pages/expenses";
 import { Shopping } from "./pages/shopping";
+import { DefaulterWashers } from "./pages/defaulter-washers";
 import { WasherActivityReport } from "./pages/reports";
 import { FinancialReport } from "./pages/reports/FinancialReport";
 import { AttentionSearch } from "./pages/reports/AttentionSearch";
@@ -42,6 +44,7 @@ function App() {
         >
           <Route path="/dashboard/vehicles" element={<Vehicles />} />
           <Route path="/dashboard/attentions" element={<Attentions />} />
+          <Route path="/dashboard/pending-payments" element={<PendingPayments />} />
           <Route path="/dashboard/advances" element={<Advances />} />
           <Route path="/dashboard/washers" element={<Washers />} />
           <Route path="/dashboard/products" element={<Products />} />
@@ -50,6 +53,7 @@ function App() {
           <Route path="/dashboard/parkings" element={<Parkings />} />
           <Route path="/dashboard/expenses" element={<Expenses />} />
           <Route path="/dashboard/shopping" element={<Shopping />} />
+          <Route path="/dashboard/defaulter-washers" element={<DefaulterWashers />} />
           <Route path="/dashboard/reports" element={<FinancialReport />} />
           <Route path="/dashboard/reports/washer-activity" element={<WasherActivityReport />} />
           <Route path="/dashboard/reports/attention-search" element={<AttentionSearch />} />

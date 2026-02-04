@@ -38,7 +38,7 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({ summary }) => {
           </Typography>
         </Box>
         
-        <Stack spacing={3}>
+        <Stack spacing={2}>
           <Box display="flex" justifyContent="space-between" alignItems="center">
             <Typography variant="body2" color="text.secondary">
               Ganancia Neta
@@ -64,6 +64,36 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({ summary }) => {
               color={getProfitColor(summary.netProfit)}
             >
               {summary.profitMargin}%
+            </Typography>
+          </Box>
+
+          <Divider />
+          
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Typography variant="body2" color="text.secondary">
+              Atenciones Pendientes
+            </Typography>
+            <Typography 
+              variant="h6" 
+              fontWeight="bold" 
+              color="#ff9800"
+            >
+              {formatPrice(summary.totalPendingPayments)}
+            </Typography>
+          </Box>
+
+          <Divider />
+          
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Typography variant="body2" color="text.secondary">
+              Lavadores en Mora
+            </Typography>
+            <Typography 
+              variant="h6" 
+              fontWeight="bold" 
+              color="#ff9800"
+            >
+              {formatPrice(summary.totalDefaulterWashers || 0)}
             </Typography>
           </Box>
         </Stack>

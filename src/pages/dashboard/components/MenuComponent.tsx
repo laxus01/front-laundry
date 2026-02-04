@@ -29,6 +29,8 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import RequestPageIcon from '@mui/icons-material/RequestPage';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
+import PendingActionsIcon from '@mui/icons-material/PendingActions';
+import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import { Link } from "react-router-dom";
 import "../styles/dashboard.scss";
 
@@ -114,12 +116,30 @@ const MenuComponent: React.FC = () => {
             </ListItem>
           </Link>
 
+          <Link to="/dashboard/pending-payments" onClick={toggleDrawer(false)}>
+            <ListItem className="cursor-pointer" component="li">
+              <ListItemIcon>
+                <PendingActionsIcon className="color-dark" />
+              </ListItemIcon>
+              <ListItemText primary="Atenciones Pendientes" />
+            </ListItem>
+          </Link>
+
           <Link to="/dashboard/advances" onClick={toggleDrawer(false)}>
             <ListItem className="cursor-pointer" component="li">
               <ListItemIcon>
                 <TrendingDownIcon className="color-dark" />
               </ListItemIcon>
               <ListItemText primary="Avances" />
+            </ListItem>
+          </Link>
+
+          <Link to="/dashboard/defaulter-washers" onClick={toggleDrawer(false)}>
+            <ListItem className="cursor-pointer" component="li">
+              <ListItemIcon>
+                <ReportProblemIcon className="color-dark" />
+              </ListItemIcon>
+              <ListItemText primary="Lavadores en Mora" />
             </ListItem>
           </Link>
 

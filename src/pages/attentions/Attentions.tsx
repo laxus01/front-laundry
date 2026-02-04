@@ -5,6 +5,7 @@ import {
   OptionsComboBoxAutoComplete,
   Vehicle,
   Washer,
+  PaymentStatus,
 } from "../../interfaces/interfaces";
 import { getWashers } from "../washers/services/Washer.services";
 import { Tooltip } from "@mui/material";
@@ -90,17 +91,46 @@ export const Attentions = () => {
     updateCurrentListAttentions(currentListAttentions);
   };
 
-  const handleFinish = async (attentionId: string) => {
+  const calculateTotalAmount = (services: any[], products: any[]) => {
+    let total = 0;
+    services.forEach((service) => {
+      const serviceValue = removeFormatPrice(service.value?.toString() ?? "0");
+      total += Number(serviceValue);
+    });
+    products.forEach((product) => {
+      const productValue = removeFormatPrice(product.value?.toString() ?? "0");
+      total += Number(productValue ?? 0) * (product.quantity ?? 0);
+    });
+    return total;
+  };
+
+  const handleFinish = async (
+    attentionId: string,
+    paymentStatus: PaymentStatus,
+    notes?: string
+  ) => {
     const currentListAttentions = currentAttention();
     const newListAttentions = currentListAttentions.find(
       (att: Attention) => att.attentionId === attentionId
     );
+
+    const totalAmount = calculateTotalAmount(
+      newListAttentions.services,
+      newListAttentions.products
+    );
+
+    const currentDate = new Date().toISOString();
 
     const payload = {
       id: attentionId,
       vehicleId: newListAttentions.vehicle.id,
       washerId: newListAttentions.washer.id,
       percentage: newListAttentions.percentage,
+      paymentStatus: paymentStatus,
+      paymentDate: paymentStatus === 'PAID' ? currentDate : null,
+      finishDate: currentDate,
+      totalAmount: totalAmount,
+      notes: notes || null,
     };
 
     const payloadServices = newListAttentions.services.map((service: any) => ({

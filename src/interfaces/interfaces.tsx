@@ -95,6 +95,8 @@ export interface Washer {
 
 //export interface Product {
 
+export type PaymentStatus = 'PENDING' | 'PAID' | 'PARTIAL';
+
 export interface Attention {
   attentionId: string;
   vehicle: OptionsComboBoxAutoComplete;
@@ -102,6 +104,11 @@ export interface Attention {
   percentage: number;
   services: Service[];
   products: Product[];
+  paymentStatus?: PaymentStatus;
+  paymentDate?: string;
+  finishDate?: string;
+  totalAmount?: number;
+  notes?: string;
 }
 
 export interface Parking {
@@ -467,6 +474,9 @@ export interface FinancialReportCosts {
 export interface FinancialReportSummary {
   netProfit: number;
   profitMargin: string;
+  totalPendingPayments: number;
+  totalPendingServices: number;
+  totalDefaulterWashers: number;
 }
 
 export interface FinancialReportDetails {
