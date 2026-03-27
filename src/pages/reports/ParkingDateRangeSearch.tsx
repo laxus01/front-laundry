@@ -91,14 +91,11 @@ export const ParkingDateRangeSearch: React.FC = () => {
     return dayjs(dateString).format('DD/MM/YYYY');
   };
 
-  const getStateText = (state: number) => {
-    switch (state) {
-      case 0:
-        return { text: 'Pagado', color: 'success' as const };
-      case 1:
-        return { text: 'Por pagar', color: 'warning' as const };
-      default:
-        return { text: 'Desconocido', color: 'default' as const };
+  const getStateText = (paymentStatus: number) => {
+    if (paymentStatus === 0) {
+      return { text: 'Pagado', color: 'success' as const };
+    } else {
+      return { text: 'Por pagar', color: 'warning' as const };
     }
   };
 
@@ -201,7 +198,7 @@ export const ParkingDateRangeSearch: React.FC = () => {
                   <TableBody>
                     {parkings.map((parking) => {
                       const balance = calculateBalance(parking);
-                      const state = getStateText(parking.state);
+                      const state = getStateText(parking.paymentStatus);
                       
                       return (
                         <TableRow key={parking.id} hover>
