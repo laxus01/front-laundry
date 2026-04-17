@@ -322,14 +322,7 @@ const FilterParkingsModal: React.FC<FilterParkingsModalProps> = ({
               onChange={handleFilterTypeChange}
             >
               <MenuItem value="vehicleId">Vehículo</MenuItem>
-              <MenuItem value="state">Estado del Parqueo</MenuItem>
               <MenuItem value="paymentStatus">Estado de Pago</MenuItem>
-              <MenuItem value="dateInitialFrom">Fecha Inicial Desde</MenuItem>
-              <MenuItem value="dateInitialTo">Fecha Inicial Hasta</MenuItem>
-              <MenuItem value="dateFinalFrom">Fecha Final Desde</MenuItem>
-              <MenuItem value="dateFinalTo">Fecha Final Hasta</MenuItem>
-              <MenuItem value="creationDateFrom">Fecha de Creación Desde</MenuItem>
-              <MenuItem value="creationDateTo">Fecha de Creación Hasta</MenuItem>
             </Select>
           </FormControl>
 
