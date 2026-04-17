@@ -93,11 +93,29 @@ export const Parkings = () => {
           const isPaid = balance === 0;
           const statusText = isPaid ? "Pagado" : "Por Pagar";
 
+          const parkingTypeText = item.typeParking.type;
+          let parkingTypeColor: "primary" | "default" | "secondary" = "default";
+          
+          if (parkingTypeText === "DIA") {
+            parkingTypeColor = "primary";
+          } else if (parkingTypeText === "NOCHE") {
+            parkingTypeColor = "default";
+          } else if (parkingTypeText === "MENSUAL") {
+            parkingTypeColor = "secondary";
+          }
+
           return {
             id: item.id,
             plate: item.vehicle.plate,
             vehicleType: item.vehicle.typeVehicle.type,
-            parkingType: item.typeParking.type,
+            parkingType: (
+              <Chip
+                label={parkingTypeText}
+                color={parkingTypeColor}
+                variant="filled"
+                size="small"
+              />
+            ),
             client: item.vehicle.client,
             phone: item.vehicle.phone,
             value: `$${formatPrice(item.value)}`,
