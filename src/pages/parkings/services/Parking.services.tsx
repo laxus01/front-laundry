@@ -48,13 +48,12 @@ export interface PaginatedParkingsResponse {
 export const searchParkings = async (params: SearchParkingsParams) => {
   const queryParams = new URLSearchParams();
   
-  if (params.page) queryParams.append('page', params.page.toString());
-  if (params.limit) queryParams.append('limit', params.limit.toString());
-  if (params.paymentStatus !== undefined) queryParams.append('paymentStatus', params.paymentStatus.toString());
-  if (params.startDate) queryParams.append('startDate', params.startDate);
-  if (params.endDate) queryParams.append('endDate', params.endDate);
-  if (params.sortBy) queryParams.append('sortBy', params.sortBy);
-  if (params.sortDirection) queryParams.append('sortDirection', params.sortDirection);
+  // Add all params dynamically
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      queryParams.append(key, value.toString());
+    }
+  });
   
   const url = `${environment.parkings}/search?${queryParams.toString()}`;
   return await requestGet(url);
