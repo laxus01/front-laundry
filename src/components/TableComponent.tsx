@@ -29,6 +29,14 @@ interface TableComponentProps {
   paginationEnabled?: boolean;
   emptyDataMessage?: string;
   customActions?: (row: any) => React.ReactNode;
+  // Server-side pagination props
+  serverSidePagination?: boolean;
+  totalCount?: number;
+  page?: number;
+  rowsPerPage?: number;
+  onPageChange?: (event: unknown, newPage: number) => void;
+  onRowsPerPageChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  rowsPerPageOptions?: number[];
 }
 
 export default function TableComponent({
@@ -40,24 +48,43 @@ export default function TableComponent({
   paginationEnabled = true,
   emptyDataMessage = "",
   customActions,
+  serverSidePagination = false,
+  totalCount,
+  page: controlledPage,
+  rowsPerPage: controlledRowsPerPage,
+  onPageChange: externalOnPageChange,
+  onRowsPerPageChange: externalOnRowsPerPageChange,
+  rowsPerPageOptions = [5, 10, 25, 50, 100],
 }: TableComponentProps) {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [internalPage, setInternalPage] = React.useState(0);
+  const [internalRowsPerPage, setInternalRowsPerPage] = React.useState(10);
 
-  const handleChangePage = (_event: unknown, newPage: number) => {
-    setPage(newPage);
+  const page = serverSidePagination ? (controlledPage ?? 0) : internalPage;
+  const rowsPerPage = serverSidePagination ? (controlledRowsPerPage ?? 10) : internalRowsPerPage;
+  const count = serverSidePagination ? (totalCount ?? 0) : data.length;
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    if (serverSidePagination && externalOnPageChange) {
+      externalOnPageChange(event, newPage);
+    } else {
+      setInternalPage(newPage);
+    }
   };
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
+    if (serverSidePagination && externalOnRowsPerPageChange) {
+      externalOnRowsPerPageChange(event);
+    } else {
+      setInternalRowsPerPage(+event.target.value);
+      setInternalPage(0);
+    }
   };
 
-  const displayedData = paginationEnabled
-    ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-    : data;
+  const displayedData = serverSidePagination || !paginationEnabled
+    ? data
+    : data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
@@ -160,16 +187,17 @@ export default function TableComponent({
           </TableBody>
         </Table>
       </TableContainer>
-      {paginationEnabled && data.length > 0 && (
+      {paginationEnabled && (serverSidePagination ? count > 0 : data.length > 0) && (
         <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
+          rowsPerPageOptions={rowsPerPageOptions}
           component="div"
-          count={data.length}
+          count={count}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
           labelRowsPerPage="Filas por página"
+          labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
         />
       )}
     </Paper>

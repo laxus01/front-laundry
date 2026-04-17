@@ -16,6 +16,50 @@ export const getParkings = async (startDate?: string, endDate?: string) => {
   return await requestGet(url);
 };
 
+export interface SearchParkingsParams {
+  page?: number;
+  limit?: number;
+  paymentStatus?: number;
+  startDate?: string;
+  endDate?: string;
+  sortBy?: string;
+  sortDirection?: 'ASC' | 'DESC';
+  vehicleId?: string;
+  state?: number;
+  dateInitialFrom?: string;
+  dateInitialTo?: string;
+  dateFinalFrom?: string;
+  dateFinalTo?: string;
+  creationDateFrom?: string;
+  creationDateTo?: string;
+}
+
+export interface PaginatedParkingsResponse {
+  items: any[];
+  meta: {
+    totalItems: number;
+    itemCount: number;
+    itemsPerPage: number;
+    totalPages: number;
+    currentPage: number;
+  };
+}
+
+export const searchParkings = async (params: SearchParkingsParams) => {
+  const queryParams = new URLSearchParams();
+  
+  if (params.page) queryParams.append('page', params.page.toString());
+  if (params.limit) queryParams.append('limit', params.limit.toString());
+  if (params.paymentStatus !== undefined) queryParams.append('paymentStatus', params.paymentStatus.toString());
+  if (params.startDate) queryParams.append('startDate', params.startDate);
+  if (params.endDate) queryParams.append('endDate', params.endDate);
+  if (params.sortBy) queryParams.append('sortBy', params.sortBy);
+  if (params.sortDirection) queryParams.append('sortDirection', params.sortDirection);
+  
+  const url = `${environment.parkings}/search?${queryParams.toString()}`;
+  return await requestGet(url);
+};
+
 export const queryCreateParkingById = async (payload: any) => {
   return await requestPost(environment.parkings, payload);
 };

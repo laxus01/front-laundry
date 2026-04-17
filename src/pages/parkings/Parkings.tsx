@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import TableComponent from "../../components/TableComponent";
-import ModalDateRangeSearch from "../../components/ModalDateRangeSearch";
+import FilterParkingsModal, { ParkingFilter } from "../../components/FilterParkingsModal";
 import {
-  getParkings,
+  searchParkings,
   queryCreateParkingById,
   queryDeleteParkingById,
   queryEditParkingById,
+  SearchParkingsParams,
 } from "./services/Parking.services";
 import ModalEditParking from "./components/ModalEditParking";
 import ModalPaymentDetails from "./components/ModalPaymentDetails.tsx";
@@ -15,7 +16,9 @@ import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import SearchIcon from "@mui/icons-material/Search";
 import PaymentIcon from "@mui/icons-material/Payment";
-import { Tooltip, IconButton, Chip } from "@mui/material";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import ClearIcon from "@mui/icons-material/Clear";
+import { Tooltip, IconButton, Chip, Select, MenuItem, FormControl, InputLabel, CircularProgress, Box, Button, Typography } from "@mui/material";
 import { useSnackbar } from "../../contexts/SnackbarContext";
 import { formatPrice } from "../../utils/utils";
 import dayjs from "dayjs";
@@ -47,26 +50,46 @@ export const Parkings = () => {
   const [data, setData] = useState<any[]>([]);
   const [openModal, setOpenModal] = useState(false);
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
-  const [openDateRangeModal, setOpenDateRangeModal] = useState(false);
+  const [openFilterModal, setOpenFilterModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [modalDelete, setModalDelete] = useState(false);
+  const [loading, setLoading] = useState(false);
   
-  // Current month date range for initial load
-  const [startDate] = useState(dayjs().startOf('month').format('YYYY-MM-DD'));
-  const [endDate] = useState(dayjs().endOf('month').format('YYYY-MM-DD'));
+  // Active filters
+  const [activeFilters, setActiveFilters] = useState<ParkingFilter[]>([]);
+  
+  // Pagination state
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  
+  // Sorting state
+  const [sortBy, setSortBy] = useState<string>('createAt');
+  const [sortDirection, setSortDirection] = useState<'ASC' | 'DESC'>('DESC');
 
-  const getListParkings = async (searchStartDate?: string, searchEndDate?: string) => {
+  const getListParkings = async () => {
     try {
-      const dateStart = searchStartDate || startDate;
-      const dateEnd = searchEndDate || endDate;
+      setLoading(true);
+      const params: SearchParkingsParams = {
+        page,
+        limit,
+        sortBy,
+        sortDirection,
+      };
       
-      const response = await getParkings(dateStart, dateEnd);
-      if (response && response.data && Array.isArray(response.data)) {
-        const data = response.data.map((item: any) => {
-          // Calculate balance: total value minus sum of payments
+      // Build params from active filters
+      activeFilters.forEach(filter => {
+        params[filter.field] = filter.value;
+      });
+      
+      const response = await searchParkings(params);
+      if (response && response.data) {
+        const { items, meta } = response.data;
+        
+        const mappedData = items.map((item: any) => {
           const totalPayments = item.parkingPayments?.reduce((sum: number, payment: any) => sum + payment.value, 0) || 0;
           const balance = item.value - totalPayments;
-
           const isPaid = balance === 0;
           const statusText = isPaid ? "Pagado" : "Por Pagar";
 
@@ -89,23 +112,32 @@ export const Parkings = () => {
             ),
             startDate: dayjs(item.dateInitial).format('DD/MM/YYYY'),
             endDate: dayjs(item.dateFinal).format('DD/MM/YYYY'),
-            // Store original IDs and data for editing
             vehicleId: item.vehicle.id,
             typeParkingId: item.typeParking.id,
             typeVehicleId: item.vehicle.typeVehicle.id,
             rawValue: item.value,
             rawDateInitial: item.dateInitial,
             rawDateFinal: item.dateFinal,
+            paymentStatus: item.paymentStatus,
           };
         });
-        setData(data);
+        
+        setData(mappedData);
+        setTotalItems(meta.totalItems);
+        setTotalPages(meta.totalPages);
       } else {
         setData([]);
+        setTotalItems(0);
+        setTotalPages(0);
       }
     } catch (error: any) {
       console.error("Error loading parkings:", error);
       setData([]);
+      setTotalItems(0);
+      setTotalPages(0);
       showSnackbar("Error al cargar los parqueos", "error");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -226,13 +258,30 @@ export const Parkings = () => {
     }
   };
 
-  const handleDateSearch = () => {
-    getListParkings(startDate, endDate);
+  const handleApplyFilters = (filters: ParkingFilter[]) => {
+    setActiveFilters(filters);
+    setPage(1);
+  };
+
+  const handleClearFilters = () => {
+    setActiveFilters([]);
+    setSortBy('createAt');
+    setSortDirection('DESC');
+    setPage(1);
+  };
+
+  const handlePageChange = (_event: unknown, newPage: number) => {
+    setPage(newPage + 1);
+  };
+
+  const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLimit(parseInt(event.target.value, 10));
+    setPage(1);
   };
 
   useEffect(() => {
     getListParkings();
-  }, []);
+  }, [page, limit, activeFilters, sortBy, sortDirection]);
 
   return (
     <>
@@ -255,49 +304,132 @@ export const Parkings = () => {
         handleDelete={handleDelete}
         handleCloseDelete={() => setModalDelete(false)}
       />
-      <ModalDateRangeSearch
-        open={openDateRangeModal}
-        onClose={() => setOpenDateRangeModal(false)}
-        onSearch={handleDateSearch}
-        title="Buscar por Fecha"
-        initialStartDate={startDate}
-        initialEndDate={endDate}
+      <FilterParkingsModal
+        open={openFilterModal}
+        onClose={() => setOpenFilterModal(false)}
+        onApply={handleApplyFilters}
+        initialFilters={activeFilters}
       />
       <div style={styleIconAdd}>
         <h2 className="color-lime">Parqueos</h2>
-        <div style={{ display: 'flex', gap: '10px' }}>
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
           <Tooltip title="Agregar Parqueo">
             <AddCircleIcon
               style={{ fontSize: 40, color: "#9FB404", cursor: "pointer" }}
               onClick={openModalCreate}
             />
           </Tooltip>
-          <Tooltip title="Buscar por Fecha">
-            <SearchIcon
+          <Tooltip title="Filtrar Parqueos">
+            <FilterListIcon
               style={{ fontSize: 40, color: "#9FB404", cursor: "pointer" }}
-              onClick={() => setOpenDateRangeModal(true)}
+              onClick={() => setOpenFilterModal(true)}
             />
           </Tooltip>
         </div>
       </div>
 
-      <TableComponent
-        columns={columns}
-        data={data}
-        onEdit={openModalEdit}
-        onDelete={openModalDelete}
-        emptyDataMessage="No hay parqueos registrados"
-        customActions={(row: any) => (
-          <Tooltip title="Ver Pagos">
-            <IconButton
-              onClick={() => openPaymentDetails(row)}
-              aria-label="payments"
-            >
-              <PaymentIcon />
-            </IconButton>
-          </Tooltip>
+      <Box sx={{ display: 'flex', gap: 2, mb: 2, px: 2.5, alignItems: 'center', flexWrap: 'wrap' }}>
+        {/* Active Filters Display */}
+        {activeFilters.length > 0 && (
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, flex: 1 }}>
+            <Typography variant="body2" sx={{ alignSelf: 'center', mr: 1, fontWeight: 'bold' }}>
+              Filtros activos:
+            </Typography>
+            {activeFilters.map((filter, index) => (
+              <Chip
+                key={index}
+                label={filter.label}
+                onDelete={() => {
+                  setActiveFilters(activeFilters.filter((_, i) => i !== index));
+                  setPage(1);
+                }}
+                color="primary"
+                size="small"
+              />
+            ))}
+          </Box>
         )}
-      />
+
+        <FormControl size="small" sx={{ minWidth: 200 }}>
+          <InputLabel>Ordenar por</InputLabel>
+          <Select
+            value={sortBy}
+            label="Ordenar por"
+            onChange={(e) => {
+              setSortBy(e.target.value);
+              setPage(1);
+            }}
+          >
+            <MenuItem value="createAt">Fecha de Creación</MenuItem>
+            <MenuItem value="paymentStatus">Estado de Pago</MenuItem>
+          </Select>
+        </FormControl>
+
+        <FormControl size="small" sx={{ minWidth: 150 }}>
+          <InputLabel>Dirección</InputLabel>
+          <Select
+            value={sortDirection}
+            label="Dirección"
+            onChange={(e) => {
+              setSortDirection(e.target.value as 'ASC' | 'DESC');
+              setPage(1);
+            }}
+          >
+            <MenuItem value="DESC">Descendente</MenuItem>
+            <MenuItem value="ASC">Ascendente</MenuItem>
+          </Select>
+        </FormControl>
+
+        {activeFilters.length > 0 && (
+          <Button
+            variant="outlined"
+            startIcon={<ClearIcon />}
+            onClick={handleClearFilters}
+            size="small"
+          >
+            Limpiar Filtros
+          </Button>
+        )}
+
+        <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Chip 
+            label={`${totalItems} registro${totalItems !== 1 ? 's' : ''}`} 
+            color="primary" 
+            size="small" 
+          />
+        </Box>
+      </Box>
+
+      {loading ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+          <CircularProgress />
+        </Box>
+      ) : (
+        <TableComponent
+          columns={columns}
+          data={data}
+          onEdit={openModalEdit}
+          onDelete={openModalDelete}
+          emptyDataMessage="No hay parqueos registrados"
+          customActions={(row: any) => (
+            <Tooltip title="Ver Pagos">
+              <IconButton
+                onClick={() => openPaymentDetails(row)}
+                aria-label="payments"
+              >
+                <PaymentIcon />
+              </IconButton>
+            </Tooltip>
+          )}
+          serverSidePagination={true}
+          totalCount={totalItems}
+          page={page - 1}
+          rowsPerPage={limit}
+          onPageChange={handlePageChange}
+          onRowsPerPageChange={handleRowsPerPageChange}
+          rowsPerPageOptions={[5, 10, 25, 50, 100]}
+        />
+      )}
     </>
   );
 };
