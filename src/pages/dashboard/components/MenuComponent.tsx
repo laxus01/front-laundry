@@ -45,10 +45,16 @@ const MenuComponent: React.FC = () => {
 
   const handleListadosClick = () => {
     setListadosOpen(!listadosOpen);
+    if (!listadosOpen) {
+      setInformesOpen(false);
+    }
   };
 
   const handleInformesClick = () => {
     setInformesOpen(!informesOpen);
+    if (!informesOpen) {
+      setListadosOpen(false);
+    }
   };
 
   return (
