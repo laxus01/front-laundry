@@ -13,7 +13,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import SearchIcon from '@mui/icons-material/Search';
 import AssessmentIcon from '@mui/icons-material/Assessment';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 import { FinancialReport as FinancialReportType } from '../../interfaces/interfaces';
@@ -153,7 +153,7 @@ export const FinancialReport: React.FC = () => {
                 Detalles del Período
               </Typography>
               <Typography variant="body2" color="text.secondary" marginBottom={2}>
-                {format(new Date(reportData.period.startDate), 'dd/MM/yyyy', { locale: es })} - {format(new Date(reportData.period.endDate), 'dd/MM/yyyy', { locale: es })}
+                {format(parseISO(reportData.period.startDate + 'T12:00:00'), 'dd/MM/yyyy', { locale: es })} - {format(parseISO(reportData.period.endDate + 'T12:00:00'), 'dd/MM/yyyy', { locale: es })}
               </Typography>
               
               <Stack 
