@@ -20,6 +20,12 @@ import {
 } from "../services/Attentions.services";
 import { formatPrice } from "../../../utils/utils";
 import ConfirmPaymentModal from "./ConfirmPaymentModal";
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export const PendingPayments = () => {
   const [pendingAttentions, setPendingAttentions] = useState<AttentionDateRange[]>([]);
@@ -52,7 +58,7 @@ export const PendingPayments = () => {
     try {
       const payload = {
         paymentStatus: "PAID",
-        paymentDate: new Date().toISOString(),
+        paymentDate: dayjs().tz('America/Bogota').toISOString(),
         notes: notes || null,
       };
 

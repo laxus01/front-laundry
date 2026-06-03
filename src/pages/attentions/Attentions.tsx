@@ -19,6 +19,12 @@ import {
   saveListServicesByAttention,
 } from "./services/Attentions.services";
 import { removeFormatPrice } from "../../utils/utils";
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const styleIconAdd = {
   display: "flex",
@@ -119,7 +125,7 @@ export const Attentions = () => {
       newListAttentions.products
     );
 
-    const currentDate = new Date().toISOString();
+    const currentDate = dayjs().tz('America/Bogota').toISOString();
 
     const payload = {
       id: attentionId,
