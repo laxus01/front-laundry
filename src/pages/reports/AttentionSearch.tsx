@@ -8,12 +8,6 @@ import {
   Paper,
   CircularProgress,
   Alert,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   IconButton,
   Chip,
   FormControl,
@@ -40,6 +34,7 @@ import DatePickerComponent from '../../components/DatePickerComponent';
 import ComboBoxAutoComplete from '../../components/ComboBoxAutoComplete';
 import { ModalServiceDetails } from './components/ModalServiceDetails';
 import { ModalProductDetails } from './components/ModalProductDetails';
+import TableComponent from '../../components/TableComponent';
 
 type SearchType = 'date' | 'vehicle';
 
@@ -50,6 +45,7 @@ export const AttentionSearch: React.FC = () => {
   const [selectedVehicle, setSelectedVehicle] = useState<OptionsComboBoxAutoComplete | null>(null);
   const [vehicles, setVehicles] = useState<OptionsComboBoxAutoComplete[]>([]);
   const [attentions, setAttentions] = useState<AttentionDateRange[]>([]);
+  const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
@@ -57,6 +53,11 @@ export const AttentionSearch: React.FC = () => {
   const [serviceModalOpen, setServiceModalOpen] = useState(false);
   const [productModalOpen, setProductModalOpen] = useState(false);
   const [selectedAttention, setSelectedAttention] = useState<AttentionDateRange | null>(null);
+  
+  // Pagination state
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [totalItems, setTotalItems] = useState(0);
 
   useEffect(() => {
     loadVehicles();
@@ -124,14 +125,21 @@ export const AttentionSearch: React.FC = () => {
       
       if (response && response.data) {
         setAttentions(response.data);
+        setTotalItems(response.data.length);
+        
         if (response.data.length === 0) {
           const searchCriteria = searchType === 'date' 
             ? 'el rango de fechas seleccionado' 
             : `el vehículo ${selectedVehicle?.name}`;
           setError(`No se encontraron atenciones para ${searchCriteria}`);
+          setData([]);
+        } else {
+          mapAttentionsToTableData(response.data);
         }
       } else {
         setError('No se encontraron datos para los criterios seleccionados');
+        setData([]);
+        setTotalItems(0);
       }
     } catch (error) {
       console.error('Error fetching attentions:', error);
@@ -185,6 +193,81 @@ export const AttentionSearch: React.FC = () => {
     setProductModalOpen(false);
     setSelectedAttention(null);
   };
+
+  const mapAttentionsToTableData = (attentionsData: AttentionDateRange[]) => {
+    const mappedData = attentionsData.map((attention) => {
+      const serviceTotal = calculateServiceTotal(attention);
+      const productTotal = calculateProductTotal(attention);
+      
+      return {
+        id: attention.id,
+        plate: attention.vehicleId.plate,
+        client: attention.vehicleId.client,
+        washer: attention.washerId.washer,
+        percentage: (
+          <Chip 
+            label={`${attention.percentage}%`} 
+            size="small" 
+            color="primary" 
+            variant="outlined"
+          />
+        ),
+        serviceTotal: (
+          <Box display="flex" alignItems="center" justifyContent="flex-end" gap={1}>
+            <Typography variant="body2" fontWeight="medium" color="success.main">
+              {formatPrice(serviceTotal)}
+            </Typography>
+            {attention.saleServices.length > 0 && (
+              <IconButton
+                size="small"
+                onClick={() => handleOpenServiceModal(attention)}
+                sx={{ color: 'primary.main' }}
+              >
+                <VisibilityIcon fontSize="small" />
+              </IconButton>
+            )}
+          </Box>
+        ),
+        productTotal: (
+          <Box display="flex" alignItems="center" justifyContent="flex-end" gap={1}>
+            <Typography variant="body2" fontWeight="medium" color="warning.main">
+              {formatPrice(productTotal)}
+            </Typography>
+            {attention.products.length > 0 && (
+              <IconButton
+                size="small"
+                onClick={() => handleOpenProductModal(attention)}
+                sx={{ color: 'warning.main' }}
+              >
+                <ShoppingCartIcon fontSize="small" />
+              </IconButton>
+            )}
+          </Box>
+        ),
+        date: formatDate(attention.createAt),
+        rawAttention: attention,
+      };
+    });
+    setData(mappedData);
+  };
+
+  const handlePageChange = (_event: unknown, newPage: number) => {
+    setPage(newPage + 1);
+  };
+
+  const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLimit(parseInt(event.target.value, 10));
+    setPage(1);
+  };
+
+  useEffect(() => {
+    if (attentions.length > 0) {
+      const startIndex = (page - 1) * limit;
+      const endIndex = startIndex + limit;
+      const paginatedAttentions = attentions.slice(startIndex, endIndex);
+      mapAttentionsToTableData(paginatedAttentions);
+    }
+  }, [page, limit]);
 
   const isSearchDisabled = () => {
     if (searchType === 'date') {
@@ -298,96 +381,45 @@ export const AttentionSearch: React.FC = () => {
         )}
 
         {attentions.length > 0 && (
-          <Paper elevation={3} sx={{ borderRadius: 2 }}>
-            <Box p={2}>              
-              <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
-                      <TableCell><strong>Placa</strong></TableCell>
-                      <TableCell><strong>Cliente</strong></TableCell>
-                      <TableCell><strong>Lavador</strong></TableCell>
-                      <TableCell align="center"><strong>Porcentaje</strong></TableCell>
-                      <TableCell align="right"><strong>Total Servicios</strong></TableCell>
-                      <TableCell align="right"><strong>Total Productos</strong></TableCell>
-                      <TableCell align="center"><strong>Fecha</strong></TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {attentions.map((attention) => {
-                      const serviceTotal = calculateServiceTotal(attention);
-                      const productTotal = calculateProductTotal(attention);
-                      
-                      return (
-                        <TableRow key={attention.id} hover>
-                          <TableCell>
-                            <Typography variant="body2" fontWeight="medium">
-                              {attention.vehicleId.plate}
-                            </Typography>
-                          </TableCell>
-                          <TableCell>
-                            <Typography variant="body2">
-                              {attention.vehicleId.client}
-                            </Typography>
-                          </TableCell>
-                          <TableCell>
-                            <Typography variant="body2">
-                              {attention.washerId.washer}
-                            </Typography>
-                          </TableCell>
-                          <TableCell align="center">
-                            <Chip 
-                              label={`${attention.percentage}%`} 
-                              size="small" 
-                              color="primary" 
-                              variant="outlined"
-                            />
-                          </TableCell>
-                          <TableCell align="right">
-                            <Box display="flex" alignItems="center" justifyContent="flex-end" gap={1}>
-                              <Typography variant="body2" fontWeight="medium" color="success.main">
-                                {formatPrice(serviceTotal)}
-                              </Typography>
-                              {attention.saleServices.length > 0 && (
-                                <IconButton
-                                  size="small"
-                                  onClick={() => handleOpenServiceModal(attention)}
-                                  sx={{ color: 'primary.main' }}
-                                >
-                                  <VisibilityIcon fontSize="small" />
-                                </IconButton>
-                              )}
-                            </Box>
-                          </TableCell>
-                          <TableCell align="right">
-                            <Box display="flex" alignItems="center" justifyContent="flex-end" gap={1}>
-                              <Typography variant="body2" fontWeight="medium" color="warning.main">
-                                {formatPrice(productTotal)}
-                              </Typography>
-                              {attention.products.length > 0 && (
-                                <IconButton
-                                  size="small"
-                                  onClick={() => handleOpenProductModal(attention)}
-                                  sx={{ color: 'warning.main' }}
-                                >
-                                  <ShoppingCartIcon fontSize="small" />
-                                </IconButton>
-                              )}
-                            </Box>
-                          </TableCell>
-                          <TableCell align="center">
-                            <Typography variant="body2" color="text.secondary">
-                              {formatDate(attention.createAt)}
-                            </Typography>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+          <>
+            <Box sx={{ display: 'flex', gap: 2, mb: 2, alignItems: 'center', justifyContent: 'flex-end' }}>
+              <Chip 
+                label={`${totalItems} registro${totalItems !== 1 ? 's' : ''}`} 
+                color="primary" 
+                size="small" 
+              />
             </Box>
-          </Paper>
+            
+            {loading ? (
+              <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+                <CircularProgress />
+              </Box>
+            ) : (
+              <TableComponent
+                columns={[
+                  { id: 'plate', label: 'Placa', minWidth: 120 },
+                  { id: 'client', label: 'Cliente', minWidth: 150 },
+                  { id: 'washer', label: 'Lavador', minWidth: 150 },
+                  { id: 'percentage', label: 'Porcentaje', minWidth: 100, align: 'center' },
+                  { id: 'serviceTotal', label: 'Total Servicios', minWidth: 150, align: 'right' },
+                  { id: 'productTotal', label: 'Total Productos', minWidth: 150, align: 'right' },
+                  { id: 'date', label: 'Fecha', minWidth: 120, align: 'center' },
+                ]}
+                data={data}
+                onEdit={() => {}}
+                onDelete={() => {}}
+                edit={false}
+                emptyDataMessage="No se encontraron atenciones"
+                serverSidePagination={false}
+                totalCount={totalItems}
+                page={page - 1}
+                rowsPerPage={limit}
+                onPageChange={handlePageChange}
+                onRowsPerPageChange={handleRowsPerPageChange}
+                rowsPerPageOptions={[5, 10, 25, 50]}
+              />
+            )}
+          </>
         )}
 
         {/* Service Details Modal */}
