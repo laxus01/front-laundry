@@ -15,6 +15,14 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Snackbar,
+  TextField,
+  Grid,
 } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -23,13 +31,18 @@ import DateRangeIcon from '@mui/icons-material/DateRange';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import DeleteIcon from '@mui/icons-material/Delete';
+import WarningIcon from '@mui/icons-material/Warning';
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
 import { format } from 'date-fns';
 import dayjs from 'dayjs';
 import { es } from 'date-fns/locale';
 
 import { AttentionDateRange, OptionsComboBoxAutoComplete, Vehicle } from '../../interfaces/interfaces';
-import { getAttentionsByDateRange, getAttentionsByVehicle } from './services/AttentionDateRangeSearch.services';
+import { getAttentionsByDateRange, getAttentionsByVehicle, deleteAttention, updateAttention } from './services/AttentionDateRangeSearch.services';
 import { getVehicles } from '../vehicles/services/Vehicle.services';
+import { getWashers } from '../washers/services/Washer.services';
 import DatePickerComponent from '../../components/DatePickerComponent';
 import ComboBoxAutoComplete from '../../components/ComboBoxAutoComplete';
 import { ModalServiceDetails } from './components/ModalServiceDetails';
@@ -44,6 +57,7 @@ export const AttentionSearch: React.FC = () => {
   const [endDate, setEndDate] = useState<Date | null>(dayjs().toDate());
   const [selectedVehicle, setSelectedVehicle] = useState<OptionsComboBoxAutoComplete | null>(null);
   const [vehicles, setVehicles] = useState<OptionsComboBoxAutoComplete[]>([]);
+  const [washers, setWashers] = useState<any[]>([]);
   const [attentions, setAttentions] = useState<AttentionDateRange[]>([]);
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -54,6 +68,26 @@ export const AttentionSearch: React.FC = () => {
   const [productModalOpen, setProductModalOpen] = useState(false);
   const [selectedAttention, setSelectedAttention] = useState<AttentionDateRange | null>(null);
   
+  // Delete confirmation states
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [attentionToDelete, setAttentionToDelete] = useState<any>(null);
+  const [deleting, setDeleting] = useState(false);
+  
+  // Edit dialog states
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [attentionToEdit, setAttentionToEdit] = useState<any>(null);
+  const [updating, setUpdating] = useState(false);
+  const [formData, setFormData] = useState({
+    percentage: 0,
+    washerId: '',
+  });
+  const [formErrors, setFormErrors] = useState<any>({});
+  
+  // Snackbar states
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
+  
   // Pagination state
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
@@ -61,6 +95,7 @@ export const AttentionSearch: React.FC = () => {
 
   useEffect(() => {
     loadVehicles();
+    loadWashers();
   }, []);
 
   const loadVehicles = async () => {
@@ -77,6 +112,17 @@ export const AttentionSearch: React.FC = () => {
     } catch (error) {
       console.error('Error loading vehicles:', error);
       setError('Error al cargar la lista de vehículos');
+    }
+  };
+
+  const loadWashers = async () => {
+    try {
+      const response = await getWashers();
+      if (response && response.data) {
+        setWashers(response.data);
+      }
+    } catch (error) {
+      console.error('Error loading washers:', error);
     }
   };
 
@@ -192,6 +238,130 @@ export const AttentionSearch: React.FC = () => {
   const handleCloseProductModal = () => {
     setProductModalOpen(false);
     setSelectedAttention(null);
+  };
+
+  const handleDeleteClick = (row: any) => {
+    setAttentionToDelete(row);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false);
+    setAttentionToDelete(null);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!attentionToDelete) return;
+
+    setDeleting(true);
+    try {
+      await deleteAttention(attentionToDelete.id);
+      
+      setSnackbarMessage(`Atención eliminada exitosamente (Placa: ${attentionToDelete.plate})`);
+      setSnackbarSeverity('success');
+      setSnackbarOpen(true);
+      
+      setDeleteDialogOpen(false);
+      setAttentionToDelete(null);
+      
+      await handleSearch();
+    } catch (error: any) {
+      console.error('Error deleting attention:', error);
+      setSnackbarMessage(error.message || 'Error al eliminar la atención. Por favor intenta nuevamente.');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
+
+  const handleEditClick = (row: any) => {
+    setAttentionToEdit(row);
+    
+    const attention = row.rawAttention;
+    setFormData({
+      percentage: attention.percentage || 0,
+      washerId: attention.washerId?.id || '',
+    });
+    setFormErrors({});
+    setEditDialogOpen(true);
+  };
+
+  const handleEditCancel = () => {
+    setEditDialogOpen(false);
+    setAttentionToEdit(null);
+    setFormData({
+      percentage: 0,
+      washerId: '',
+    });
+    setFormErrors({});
+  };
+
+  const handleFormChange = (field: string, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    if (formErrors[field]) {
+      setFormErrors((prev: any) => ({ ...prev, [field]: '' }));
+    }
+  };
+
+  const validateForm = () => {
+    const errors: any = {};
+    
+    if (formData.percentage === undefined || formData.percentage === null || formData.percentage < 0 || formData.percentage > 100) {
+      errors.percentage = 'El porcentaje debe estar entre 0 y 100';
+    }
+    
+    if (!formData.washerId) {
+      errors.washerId = 'Debes seleccionar un lavador';
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleEditSave = async () => {
+    if (!validateForm()) {
+      return;
+    }
+
+    if (!attentionToEdit) return;
+
+    setUpdating(true);
+    try {
+      const attention = attentionToEdit.rawAttention;
+      const payload = {
+        percentage: formData.percentage,
+        washerId: { id: formData.washerId },
+        vehicleId: { id: attention.vehicleId.id },
+        finishDate: attention.finishDate,
+        paymentStatus: attention.paymentStatus,
+        paymentDate: attention.paymentDate,
+        totalAmount: attention.totalAmount,
+        notes: attention.notes,
+      };
+
+      await updateAttention(attentionToEdit.id, payload);
+      
+      setSnackbarMessage(`Atención actualizada exitosamente (Placa: ${attentionToEdit.plate})`);
+      setSnackbarSeverity('success');
+      setSnackbarOpen(true);
+      
+      setEditDialogOpen(false);
+      setAttentionToEdit(null);
+      
+      await handleSearch();
+    } catch (error: any) {
+      console.error('Error updating attention:', error);
+      setSnackbarMessage(error.message || 'Error al actualizar la atención. Por favor intenta nuevamente.');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+    } finally {
+      setUpdating(false);
+    }
   };
 
   const mapAttentionsToTableData = (attentionsData: AttentionDateRange[]) => {
@@ -406,9 +576,9 @@ export const AttentionSearch: React.FC = () => {
                   { id: 'date', label: 'Fecha', minWidth: 120, align: 'center' },
                 ]}
                 data={data}
-                onEdit={() => {}}
-                onDelete={() => {}}
-                edit={false}
+                onEdit={handleEditClick}
+                onDelete={handleDeleteClick}
+                edit={true}
                 emptyDataMessage="No se encontraron atenciones"
                 serverSidePagination={false}
                 totalCount={totalItems}
@@ -441,6 +611,164 @@ export const AttentionSearch: React.FC = () => {
             vehiclePlate={selectedAttention.vehicleId.plate}
           />
         )}
+
+        {/* Delete Confirmation Dialog */}
+        <Dialog
+          open={deleteDialogOpen}
+          onClose={handleDeleteCancel}
+          aria-labelledby="delete-dialog-title"
+          aria-describedby="delete-dialog-description"
+        >
+          <DialogTitle id="delete-dialog-title" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <WarningIcon color="error" />
+            Confirmar Eliminación
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="delete-dialog-description">
+              {attentionToDelete && (
+                <>
+                  ¿Estás seguro que deseas eliminar esta atención?
+                  <Box sx={{ mt: 2, p: 2, bgcolor: 'grey.100', borderRadius: 1 }}>
+                    <Typography variant="body2" fontWeight="bold">
+                      Placa: {attentionToDelete.plate}
+                    </Typography>
+                    <Typography variant="body2">
+                      Cliente: {attentionToDelete.client}
+                    </Typography>
+                    <Typography variant="body2">
+                      Lavador: {attentionToDelete.washer}
+                    </Typography>
+                    <Typography variant="body2">
+                      Fecha: {attentionToDelete.date}
+                    </Typography>
+                  </Box>
+                  <Typography variant="body2" color="error" sx={{ mt: 2 }}>
+                    Esta acción no se puede deshacer.
+                  </Typography>
+                </>
+              )}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions sx={{ px: 3, pb: 2 }}>
+            <Button 
+              onClick={handleDeleteCancel} 
+              disabled={deleting}
+              variant="outlined"
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleDeleteConfirm}
+              color="error"
+              variant="contained"
+              disabled={deleting}
+              startIcon={deleting ? <CircularProgress size={20} color="inherit" /> : <DeleteIcon />}
+              autoFocus
+            >
+              {deleting ? 'Eliminando...' : 'Eliminar'}
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Edit Attention Dialog */}
+        <Dialog
+          open={editDialogOpen}
+          onClose={handleEditCancel}
+          maxWidth="sm"
+          fullWidth
+          aria-labelledby="edit-dialog-title"
+        >
+          <DialogTitle id="edit-dialog-title" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <EditIcon color="primary" />
+            Editar Atención
+          </DialogTitle>
+          <DialogContent>
+            {attentionToEdit && (
+              <>
+                <Box sx={{ mb: 3, mt: 1, p: 2, bgcolor: 'grey.50', borderRadius: 1 }}>
+                  <Typography variant="body2" fontWeight="bold">
+                    Placa: {attentionToEdit.plate}
+                  </Typography>
+                  <Typography variant="body2">
+                    Cliente: {attentionToEdit.client}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Lavador actual: {attentionToEdit.washer}
+                  </Typography>
+                </Box>
+
+                <Stack spacing={3}>
+                  <TextField
+                    fullWidth
+                    label="Porcentaje (%)"
+                    type="number"
+                    value={formData.percentage}
+                    onChange={(e) => handleFormChange('percentage', Number(e.target.value))}
+                    error={!!formErrors.percentage}
+                    helperText={formErrors.percentage || 'Porcentaje de comisión para el lavador'}
+                    inputProps={{ min: 0, max: 100 }}
+                    required
+                  />
+
+                  <FormControl fullWidth error={!!formErrors.washerId} required>
+                    <InputLabel>Lavador</InputLabel>
+                    <Select
+                      value={formData.washerId}
+                      label="Lavador"
+                      onChange={(e) => handleFormChange('washerId', e.target.value)}
+                    >
+                      {washers.map((washer) => (
+                        <MenuItem key={washer.id} value={washer.id}>
+                          {washer.washer}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    {formErrors.washerId && (
+                      <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 1.5 }}>
+                        {formErrors.washerId}
+                      </Typography>
+                    )}
+                  </FormControl>
+                </Stack>
+              </>
+            )}
+          </DialogContent>
+          <DialogActions sx={{ px: 3, pb: 2 }}>
+            <Button 
+              onClick={handleEditCancel} 
+              disabled={updating}
+              variant="outlined"
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleEditSave}
+              color="primary"
+              variant="contained"
+              disabled={updating}
+              startIcon={updating ? <CircularProgress size={20} color="inherit" /> : <SaveIcon />}
+            >
+              {updating ? 'Guardando...' : 'Guardar Cambios'}
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Snackbar for notifications */}
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={6000}
+          onClose={handleCloseSnackbar}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        >
+          <Alert 
+            onClose={handleCloseSnackbar} 
+            severity={snackbarSeverity} 
+            sx={{ width: '100%' }}
+            variant="filled"
+          >
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
       </Container>
     </LocalizationProvider>
   );
