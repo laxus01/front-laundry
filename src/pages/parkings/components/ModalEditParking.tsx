@@ -176,9 +176,8 @@ const ModalEditParking: React.FC<ModalEditParkingProps> = ({
 
   const validateButtonEdit = () => {
     if (
-      dataParking.plate === "" ||
-      dataParking.vehicleType === "" ||
-      dataParking.client === "" ||
+      !dataParking.value ||
+      !dataParking.typeParkingId ||
       dataParking.startDate === "" ||
       dataParking.endDate === ""
     ) {
