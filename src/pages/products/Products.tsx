@@ -1,5 +1,6 @@
 import { Tooltip } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import FilterListIcon from "@mui/icons-material/FilterList";
 import TableComponent from "../../components/TableComponent";
 import { useEffect, useState } from "react";
 import { ListProducts } from "../../interfaces/interfaces";
@@ -9,6 +10,7 @@ import { getProducts, queryCreateProduct, queryDeleteProductById, queryEditProdu
 import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
 import { useProducts } from "./hooks/useProducts";
 import { useSnackbar } from "../../contexts/SnackbarContext";
+import FilterProductsModal, { ProductFilter } from "../../components/FilterProductsModal";
 
 const columns = [
   { id: "product", label: "Producto", minWidth: 200 },
@@ -29,10 +31,13 @@ export const Products = () => {
   const { dataProduct, setDataProduct, defaultProduct } = products;
   const { showSnackbar } = useSnackbar();
 
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<any[]>([]);
+  const [filteredData, setFilteredData] = useState<any[]>([]);
   const [openModal, setOpenModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [modalDelete, setModalDelete] = useState(false);
+  const [openFilterModal, setOpenFilterModal] = useState(false);
+  const [activeFilters, setActiveFilters] = useState<ProductFilter[]>([]);
 
   const openModalCreate = () => {
     setIsEditing(false);
@@ -105,15 +110,67 @@ export const Products = () => {
           valueBuys: formatPrice(item.valueBuys),
           saleValue: formatPrice(item.saleValue),
           existence: formatPrice(item.existence),
+          rawValueBuys: item.valueBuys,
+          rawSaleValue: item.saleValue,
+          rawExistence: item.existence,
         };
       });
       setData(data);
+      applyFilters(data, activeFilters);
     }
+  };
+
+  const applyFilters = (dataToFilter: any[], filters: ProductFilter[]) => {
+    if (filters.length === 0) {
+      setFilteredData(dataToFilter);
+      return;
+    }
+
+    let filtered = [...dataToFilter];
+
+    filters.forEach((filter) => {
+      switch (filter.field) {
+        case 'product':
+          filtered = filtered.filter((item) =>
+            item.product.toLowerCase().includes(filter.value.toLowerCase())
+          );
+          break;
+        case 'valueBuysMin':
+          filtered = filtered.filter((item) => item.rawValueBuys >= filter.value);
+          break;
+        case 'valueBuysMax':
+          filtered = filtered.filter((item) => item.rawValueBuys <= filter.value);
+          break;
+        case 'saleValueMin':
+          filtered = filtered.filter((item) => item.rawSaleValue >= filter.value);
+          break;
+        case 'saleValueMax':
+          filtered = filtered.filter((item) => item.rawSaleValue <= filter.value);
+          break;
+        case 'existenceMin':
+          filtered = filtered.filter((item) => item.rawExistence >= filter.value);
+          break;
+        case 'existenceMax':
+          filtered = filtered.filter((item) => item.rawExistence <= filter.value);
+          break;
+      }
+    });
+
+    setFilteredData(filtered);
+  };
+
+  const handleApplyFilters = (filters: ProductFilter[]) => {
+    setActiveFilters(filters);
+    applyFilters(data, filters);
   };
 
   useEffect(() => {
     getListProducts();
   }, []);
+
+  useEffect(() => {
+    applyFilters(data, activeFilters);
+  }, [activeFilters, data]);
 
   return (
     <>
@@ -130,9 +187,21 @@ export const Products = () => {
       handleDelete={handleDelete}
       handleCloseDelete={() => setModalDelete(false)}
     />
+    <FilterProductsModal
+      open={openFilterModal}
+      onClose={() => setOpenFilterModal(false)}
+      onApply={handleApplyFilters}
+      initialFilters={activeFilters}
+    />
       <div style={styleIconAdd}>
         <h2 className="color-lime">Productos</h2>
-        <div>
+        <div style={{ display: "flex", gap: "10px" }}>
+          <Tooltip title="Filtrar Productos">
+            <FilterListIcon
+              style={{ fontSize: 40, color: "#9FB404", cursor: "pointer" }}
+              onClick={() => setOpenFilterModal(true)}
+            />
+          </Tooltip>
           <Tooltip title="Agregar Producto">
             <AddCircleIcon
               style={{ fontSize: 40, color: "#9FB404", cursor: "pointer" }}
@@ -144,7 +213,7 @@ export const Products = () => {
 
       <TableComponent
         columns={columns}
-        data={data}
+        data={filteredData}
         onEdit={openModalEdit}
         onDelete={openModalDelete}
       />
