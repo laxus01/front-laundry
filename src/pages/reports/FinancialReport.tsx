@@ -21,7 +21,6 @@ import { getFinancialReport } from './services/FinancialReport.services';
 import { IncomeCard } from './components/IncomeCard';
 import { CostsCard } from './components/CostsCard';
 import { SummaryCard } from './components/SummaryCard';
-import { DefaulterWashersCard } from './components/DefaulterWashersCard';
 import dayjs from 'dayjs';
 import DatePickerComponent from '../../components/DatePickerComponent';
 
@@ -217,9 +216,6 @@ export const FinancialReport: React.FC = () => {
               </Stack>
             </Paper>
 
-            {reportData.defaulterWashers && reportData.defaulterWashers.length > 0 && (
-              <DefaulterWashersCard defaulterWashers={reportData.defaulterWashers} />
-            )}
           </Box>
         )}
       </Container>
