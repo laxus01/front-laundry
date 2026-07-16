@@ -506,7 +506,6 @@ export interface FinancialReport {
   costs: FinancialReportCosts;
   summary: FinancialReportSummary;
   details: FinancialReportDetails;
-  defaulterWashers: DefaulterWasherItem[];
 }
 
 export interface Advance {

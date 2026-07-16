@@ -83,14 +83,14 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({ summary }) => {
           </Box>
 
           <Divider />
-          
+
           <Box display="flex" justifyContent="space-between" alignItems="center">
             <Typography variant="body2" color="text.secondary">
               Lavadores en Mora
             </Typography>
-            <Typography 
-              variant="h6" 
-              fontWeight="bold" 
+            <Typography
+              variant="h6"
+              fontWeight="bold"
               color="#ff9800"
             >
               {formatPrice(summary.totalDefaulterWashers || 0)}
