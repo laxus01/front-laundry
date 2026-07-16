@@ -56,12 +56,9 @@ export const DefaulterWashers = () => {
     { id: "", name: "" }
   ]);
 
-  const getListDefaulterWashers = async (searchStartDate: string = dayjs().format('YYYY-MM-DD'), searchEndDate: string = dayjs().format('YYYY-MM-DD')) => {
+  const getListDefaulterWashers = async (searchStartDate?: string, searchEndDate?: string) => {
     try {
-      const dateStart = searchStartDate || startDate;
-      const dateEnd = searchEndDate || endDate;
-      
-      const response = await getDefaulterWashers(dateStart, dateEnd);
+      const response = await getDefaulterWashers(searchStartDate, searchEndDate);
       if (response && response.data && Array.isArray(response.data)) {
         const data = response.data.map((item: any) => {
           const isPaid = item.isPaid;

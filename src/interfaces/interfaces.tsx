@@ -490,12 +490,23 @@ export interface FinancialReportDetails {
   expensesCount: number;
 }
 
+export interface DefaulterWasherItem {
+  id: string;
+  amount: number;
+  description: string;
+  date: string;
+  isPaid: boolean;
+  washerId: string;
+  washerName: string;
+}
+
 export interface FinancialReport {
   period: FinancialReportPeriod;
   income: FinancialReportIncome;
   costs: FinancialReportCosts;
   summary: FinancialReportSummary;
   details: FinancialReportDetails;
+  defaulterWashers: DefaulterWasherItem[];
 }
 
 export interface Advance {
