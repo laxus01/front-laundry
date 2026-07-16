@@ -468,6 +468,8 @@ export interface FinancialReportIncome {
 export interface FinancialReportCosts {
   totalShoppingCosts: number;
   totalExpenses: number;
+  totalPendingServicesDeduction: number;
+  totalWashersCost: number;
   totalCosts: number;
 }
 

@@ -52,6 +52,28 @@ export const CostsCard: React.FC<CostsCardProps> = ({ costs }) => {
               {formatPrice(costs.totalExpenses)}
             </Typography>
           </Box>
+
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Box display="flex" alignItems="center" gap={0.5}>
+              <Typography variant="body2" color="text.secondary">
+                Servicios Pendientes
+              </Typography>
+            </Box>
+            <Typography variant="body1" fontWeight="medium">
+              {formatPrice(costs.totalPendingServicesDeduction)}
+            </Typography>
+          </Box>
+
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Box display="flex" alignItems="center" gap={0.5}>
+              <Typography variant="body1" color="text.secondary">
+                Ganancias Lavadores
+              </Typography>
+            </Box>
+            <Typography variant="body1" fontWeight="medium">
+              {formatPrice(costs.totalWashersCost)}
+            </Typography>
+          </Box>
           
           <Divider sx={{ marginY: 1 }} />
           

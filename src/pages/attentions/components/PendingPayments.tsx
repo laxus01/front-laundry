@@ -6,6 +6,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TablePagination,
   Paper,
   Button,
   Chip,
@@ -32,6 +33,8 @@ export const PendingPayments = () => {
   const [loading, setLoading] = useState(false);
   const [selectedAttention, setSelectedAttention] = useState<AttentionDateRange | null>(null);
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const fetchPendingAttentions = async () => {
     setLoading(true);
@@ -137,7 +140,9 @@ export const PendingPayments = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {pendingAttentions.map((attention) => (
+              {pendingAttentions
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((attention) => (
                 <TableRow key={attention.id} hover>
                   <TableCell>
                     {new Date(attention.createAt).toLocaleDateString("es-CO", {
@@ -171,6 +176,20 @@ export const PendingPayments = () => {
               ))}
             </TableBody>
           </Table>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25, 50, 100]}
+            component="div"
+            count={pendingAttentions.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={(_, newPage) => setPage(newPage)}
+            onRowsPerPageChange={(e) => {
+              setRowsPerPage(parseInt(e.target.value, 10));
+              setPage(0);
+            }}
+            labelRowsPerPage="Filas por página"
+            labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
+          />
         </TableContainer>
       )}
 
