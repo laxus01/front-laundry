@@ -5,6 +5,7 @@ export interface Shopping {
   id: string;
   quantity: string;
   productId: string;
+  unitPrice: string;
   date: string;
 }
 
@@ -13,6 +14,7 @@ export const useShopping = () => {
     id: "",
     quantity: "",
     productId: "",
+    unitPrice: "",
     date: dayjs().format('YYYY-MM-DD'),
   };
   

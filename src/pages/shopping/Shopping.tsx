@@ -15,13 +15,16 @@ import {
 } from "./services/Shopping.services";
 import { useSnackbar } from "../../contexts/SnackbarContext";
 import { OptionsComboBoxAutoComplete } from "../../interfaces/interfaces";
+import { moneyToInteger } from "../../utils/utils";
 import { getProducts } from "../attentions/services/Attentions.services";
 import dayjs from "dayjs";
 
 const columns = [
   { id: "product", label: "Producto", minWidth: 200 },
-  { id: "quantity", label: "Cantidad", minWidth: 150 },
-  { id: "date", label: "Fecha", minWidth: 150 },
+  { id: "quantity", label: "Cantidad", minWidth: 100 },
+  { id: "unitPrice", label: "Precio Unitario", minWidth: 130 },
+  { id: "total", label: "Total", minWidth: 130 },
+  { id: "date", label: "Fecha", minWidth: 120 },
 ];
 
 const styleIconAdd = {
@@ -56,14 +59,18 @@ export const Shopping = () => {
       
       const response = await getShopping(dateStart, dateEnd);
       if (response && response.data && Array.isArray(response.data)) {
-        const data = response.data.map((item: any) => {         
+        const data = response.data.map((item: any) => {
+          const unitPrice = item.unitPrice || 0;
           return {
             id: item.id,
             product: item.product?.product || "Producto no encontrado",
             quantity: item.quantity,
+            unitPrice: new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(unitPrice),
+            total: new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(unitPrice * item.quantity),
             date: dayjs(item.date).format('DD/MM/YYYY'),
             productId: item.productId,
             rawDate: item.date,
+            rawUnitPrice: unitPrice,
           };
         });
         setData(data);
@@ -84,6 +91,7 @@ export const Shopping = () => {
         const productOptions = response.data.map((product: any) => ({
           id: product.id,
           name: product.product,
+          valueBuys: product.valueBuys,
         }));
         setListProducts(productOptions);
       }
@@ -97,6 +105,7 @@ export const Shopping = () => {
       const payload = {
         quantity: dataShopping.quantity,
         productId: dataShopping.productId,
+        unitPrice: dataShopping.unitPrice ? moneyToInteger(dataShopping.unitPrice.toString()) : undefined,
         date: dataShopping.date,
       };
 
@@ -117,6 +126,7 @@ export const Shopping = () => {
       const payload = {
         quantity: dataShopping.quantity,
         productId: dataShopping.productId,
+        unitPrice: dataShopping.unitPrice ? moneyToInteger(dataShopping.unitPrice.toString()) : undefined,
         date: dataShopping.date,
       };
 
@@ -146,6 +156,7 @@ export const Shopping = () => {
     setIsEditing(true);
     const editData = {
       ...row,
+      unitPrice: row.rawUnitPrice ? row.rawUnitPrice.toString() : '',
       date: row.rawDate ? dayjs(row.rawDate).format('YYYY-MM-DD') : dayjs(row.date).format('YYYY-MM-DD'),
     };
     setDataShopping(editData);

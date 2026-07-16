@@ -10,6 +10,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import ComboBoxAutoComplete from "../../../components/ComboBoxAutoComplete";
 import DatePickerComponent from "../../../components/DatePickerComponent";
 import dayjs from "dayjs"; // Import dayjs
+import { formatMoneyInput } from "../../../utils/utils";
 
 const style = {
   position: "absolute" as "absolute",
@@ -44,9 +45,12 @@ const ModalEditShopping: React.FC<ModalEditShoppingProps> = ({
   const { dataShopping, setDataShopping } = shopping;
 
   const handleSelectProduct = (productId: string) => {
+    const selectedProduct = listProducts.find((p: any) => p.id === productId);
+    const valueBuys = selectedProduct?.valueBuys || 0;
     setDataShopping({
       ...dataShopping,
       productId: productId,
+      unitPrice: valueBuys ? formatMoneyInput(valueBuys.toString()) : '',
     });
   };
 
@@ -88,13 +92,27 @@ const ModalEditShopping: React.FC<ModalEditShoppingProps> = ({
               type="text"
               value={dataShopping.quantity}
               onChange={(e) =>
-                setDataShopping({ 
-                  ...dataShopping, 
-                  quantity: parseInt(e.target.value) || 0 
+                setDataShopping({
+                  ...dataShopping,
+                  quantity: parseInt(e.target.value) || 0
                 })
               }
               required
               inputProps={{ min: 1 }}
+            />
+            <TextField
+              id="unitPrice"
+              label="Precio Unitario"
+              variant="outlined"
+              type="text"
+              value={dataShopping.unitPrice}
+              onChange={(e) =>
+                setDataShopping({
+                  ...dataShopping,
+                  unitPrice: formatMoneyInput(e.target.value)
+                })
+              }
+              required
             />
             <DatePickerComponent
               label="Fecha de Compra"
