@@ -71,6 +71,15 @@ export const IncomeCard: React.FC<IncomeCardProps> = ({ income }) => {
             </Typography>
           </Box>
           
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Typography variant="body2" color="text.secondary">
+              Cobros Diferidos
+            </Typography>
+            <Typography variant="body1" fontWeight="medium">
+              {formatPrice(income.totalDeferredPayments)}
+            </Typography>
+          </Box>
+          
           <Divider sx={{ marginY: 1 }} />
           
           <Box display="flex" justifyContent="space-between" alignItems="center">

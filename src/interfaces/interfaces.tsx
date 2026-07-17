@@ -462,6 +462,7 @@ export interface FinancialReportIncome {
   totalServiceSales: number;
   totalParkingPayments: number;
   totalAccountsReceivablePayments: number;
+  totalDeferredPayments: number;
   totalIncome: number;
 }
 
